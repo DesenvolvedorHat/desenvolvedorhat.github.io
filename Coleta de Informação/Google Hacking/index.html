@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Google Hacking</title>
+    <meta charset="UTF-8">
+    <meta name="keywords" content="desenvolvedor hat, hacking, linux, vulnerabilidades web, coleta de informação, Google Hacking">
+    <meta name="description" content="introducao ao linux. Resumo sobre diversas vulnerabilidades web.">
+    <meta name="robots" content="index">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link type="text/css" rel="stylesheet" href="style.css">
+    <script src='https://kit.fontawesome.com/a076d05399.js'></script>
+  </head>
+  <body>
+    <div id="conteiner">
+      <header id="header">
+        <section id="titulo">
+          <h1>Desenvolvedor Hat</h1>
+       </section>
+       <nav id="menu">
+         <ul>
+           <li class="lista"><a href="/index.html"  target="_blank" class="link">Home</a></li>
+           
+           <li class="lista"><a href="/Linux/index.html" target="_blank" class="link">Linux</a></li>
+           
+           <li class="lista"><a href="/Vulnerabilidades/index.html" class="link">Vulnerabilidades</a></li>
+           
+           <li class="lista"><a href="/Coleta de Informação/index.html" target="_blank" class="link">Coleta de Informações</a></li>
+           
+           <li class="lista"><a href="/Sobre/index.html" target="_blank" class="link">Sobre</a></li>
+         </ul>
+       </nav>
+      </header>
+      <main id="main">
+        <article id="artigo">
+          <h1>Google Hacking</h1>
+          <p class="p1">Na atualidade o Google é uma das principais ferramentas de pesquisa na internet. Mas, além de se obter informações comuns sobre um determinado assunto, também é possível descobrir informações "sensíveis" sobre um determinado site, usando técnicas do Google Hacking.</p>
+          
+          <p class="p1">O Google Hacking consiste em fazer consultas avançadas no navegador, onde se tem como objetivo conseguir informações sobre um determinado alvo. Esta é uma das principais técnicas usadas na coleta de informações.</p>
+          
+          <p class="p1">A seguir iremos descrever algumas dessas técnicas:</p>
+          
+          <h3 class="sub">Coringas do Google:</h3>
+          <p class="p1">O curinga do Google, é representado pelo asterisco (*), ele é usado para substituir alguma palavra da pesquisa.</p>
+          
+          <p class="p1">O Google limita as pesquisas a 32 palavras, caso você precise de um limite maior, você pode substituir algumas palavras pelo caractere curinga, pois o Google não conta o caractere curinga como um termo da pesquisa.</p>
+          
+          <h3 class="sub">Operadores booleanos:</h3>
+          <p class="p1">Os operadores booleanos são:</p>
+          <ul class="lista2">
+            <li class="l1"><span class="s1">AND:</span> equivale a letra e normal.</li>
+            <li class="l1"><span class="s1">NOT:</span> exclui uma palavra da busca, mas a melhor maneira de excluir uma palavra é antecedendo a palavra com o sinal de subtração (-).</li>
+            <li class="l1"><span class="s1">OR:</span> esse operador equivale a palavra ou. Também é possível representar esse operador usando uma barra (|).</li>
+          </ul>
+          
+          <div>
+            <h4 class="sub">Exemplo:</h4>
+            <div>
+              intex:password | passcode intex:username | userid | user filetype:csv
+            </div>
+          </div>
+          
+          <p class="p1">O "código" acima manda o navegador:</p>
+          <p class="p1">Localizar todas as páginas que tenham a senha (password) ou o código de entrada (passcode) no texto do documento, é das páginas encontradas, mostrar apenas as que contém as palavras username, userid ou user no texto é, entre elas mostrar apenas os documentos que sejam arquivos CSV.</p>
+          
+          <h3 class="sub">Operadores avançados:</h3>
+          <p class="p1">Para tornar as pesquisas mais eficientes você deve usar os operadores avançados, que são:</p>
+          <ul class="lista2">
+            <li class="l1">intitle, allintitle</li>
+            <li class="l1">inurl, allinurl</li>
+            <li class="l1">filetype</li>
+            <li class="l1">allintext</li>
+            <li class="l1">site</li>
+            <li class="l1">link</li>
+            <li class="l1">inanchor</li>
+            <li class="l1">daterange</li>
+            <li class="l1">cache</li>
+            <li class="l1">info</li>
+            <li class="l1">related</li>
+            <li class="l1">phonebook</li>
+            <li class="l1">bphonebook</li>
+            <li class="l1">author</li>
+            <li class="l1">group</li>
+            <li class="l1">msgid</li>
+            <li class="l1">insubject</li>
+            <li class="l1">stocks</li>
+            <li class="l1">define</li>
+            <li class="l1">ext</li>
+         </ul>
+         
+         <p class="p1">A sintaxe básica de um operador avançado é a seguinte:</p>
+         <div class="s1">
+           <span>operador:termo_de_pesquisa</span>
+         </div>
+         
+         <p class="p1">É importante ressaltar que:</p>
+         <ul class="lista2">
+           <li class="l1">Não pode haver espaço entre o operador, os dois pontos e o termo da pesquisa.</li>
+           
+           <li class="l1">O termo da pesquisa pode ser uma palavra ou uma expressão inserida entre aspas.</li>
+           
+           <li class="l1">Os operadores booleanos e caracteres especiais (como OR  e +) podem ser usados em conjunto com os operadores avançados.</li>
+         </ul>
+        
+         <p class="p1">Agora vamos entender melhor o que os comandos descritos anteriormente fazem.</p>
+        
+         <p class="p1"><span class="s1">Intitle, Allintitle:</span> esses comandos fazem uma busca dentro do título de uma página, ou seja, pesquisa o texto que está dentro das tags &#60;title&#62;.</p>
+        
+         <p class="p1">O comando intitle considera apenas a primeira palavra ou expressão para fazer a busca no título da página. Já o comando allintitle considera todas as palavras ou expressões na frente do operador.</p>
+         <div>
+             <h4 class="sub">Exemplo 01:</h4>
+             <div>
+               intitle:"index.of" "backup files"
+             </div>
+         </div>
+         <div>
+           <h4 class="sub">Exemplo 02:</h4>
+           <div>
+             allintitle:"index.of" "backup files"
+           </div>
+         </div>
+       
+       <p class="p1"><span class="s1">Allintext:</span> esse comando localiza uma determinada palavra/texto dentro da página web. Esse comando ignora o conteúdo do título, URL e links. Este comando não deve ser combinado com outros operadores avançados.</p>
+       
+       <p class="p1"><span class="s1">Inurl, Allinurl:</span> esse comando pesquisa por um determinado texto em uma URL.</p>
+       <div>
+         <h4 class="sub">Exemplo 01:</h4>
+         <div>
+           inurl:admin index
+       </div>
+       </div>
+       <div>
+         <h4 class="sub">Exemplo 02:</h4>
+         <div>
+           allinurl:admin index
+         </div>
+       </div>
+       
+       <p class="p1"><span class="s1">Site:</span> esse operador procura por páginas que estejam hospedadas em um servidor ou domínio específico.</p>
+       
+       <p class="p1">O Google lê os nomes dos domínios da direita para a esquerda, sendo assim, procura por site:br retornará todos os domínios que terminam em .br e pesquisar por site:com.br retornará todos os domínios terminados em .com.br.</p>
+       
+       <p class="p1"><span class="s1">Filetype:</span> esse operador é usado para pesquisar por arquivos de um tipo específico, ou seja, procura por arquivos com uma determinada extensão.</p>
+       
+       <div>
+         <h4 class="sub">Exemplo:</h4>
+         <div>
+           filetype:doc pirate
+         </div>
+       </div>
+       
+       <p class="p1"><span class="s1">Link:</span> esse operador procura links que levem a uma determinada página, ou seja, pesquisa por páginas vinculadas a outras páginas. No lugar de um termo de pesquisa, esse operador requer um URL ou nome de servidor como argumento. Esse operador não pode ser utilizado em conjunto com outros operadores ou termos de pesquisa.</p>
+       
+       <p class="p1"><span class="s1">Inanchor:</span> esse comando pesquisa um texto dentro do texto de um link. Esse operador procura a representação em texto de um link e não a URL real. Esse comando ajuda a procurar a âncora, ou o texto exibido no link.</p>
+       
+       <h4 class="sub">Exemplo:</h4>
+       <p class="p1">Para encontrar o seguinte link dentro de uma tag &#60;a&#62;:</p>
+       <div>
+         &#60;a href="http://www.ertech.com.br/"&#62;Minha Página&#60;/a&#62;
+       </div>
+       <p class="p1">Precisamos pesquisar por:</p>
+       <div>
+         inanchor:"Minha Página"
+       </div>
+       
+       <p class="p1"><span class="s1">Cache:</span> esse operador exibe a versão da página existente no cache. Como por exemplo:</p>
+       
+       <div>
+         cache:ertech.com.br
+       </div>
+       
+       <p class="p1">Ou</p>
+       
+       <div>
+         cache:www.netsec.net/content/index.jsp
+       </div>
+       
+       <p class="p1"><span class="s1">Numrange:</span> esse operador é usado para pesquisar números dentro de um intervalo. Esse comando precisa de dois parâmetros, um número baixo e um número alto, separados por um travessão.</p>
+       
+       <p class="p1">O Google ignora símbolos (como marcadores de moeda e vírgulas), tornando assim a busca de números em uma página web mais fácil.</p>
+       
+       <p class="p1">Esse operador também possui uma forma abreviada. Sendo necessário fornecer dois números na consulta separados por dois pontos horizontais. Como por exemplo: 1234..1453</p>
+       
+       <p class="p1"><span class="s1">Daterange:</span> esse operador pesquisa por páginas publicadas dentro de um determinado intervalo de datas.</p>
+       
+       <p class="p1">Esse operador é útil para localizar as páginas indexadas pelo Google dentro de um intervalo de datas. Quando o Google rastreia uma página, a data é mudada.</p>
+       
+       <p class="p1">Os parâmetros desse operador devem ser definidos como um intervalo, com duas datas separadas por um travessão. As datas especificadas no operador devem estar na forma de duas datas julianas. É importante notar que a data juliana é o número de dias passados desde primeiro de Janeiro de 4713 a.C.</p>
+       
+       <p class="p1"><span class="s1"> Info:</span> esse operador exibe um resumo informativo de um site e fornece links de outras buscas do Google que possam estar relacionadas a ele.</p>
+       
+       <p class="p1"><span class="s1">Related:</span> esse operador exibe sites determinados pelo Google como sendo relacionado a outro site.</p>
+       
+       <p class="p1"><span class="s1">Stocks:</span> esse operador pesquisa por informações sobre uma determinada empresa no mercado de ações.</p>
+       
+       <p class="p1"><span class="s1">Define:</span> este operador retorna definições para o termo de pesquisa especificado. Os argumentos desse operador podem ser uma palavra ou uma expressão.</p>
+       
+       <p class="p1"><span class="s1">Ext:</span> esse operador é usado para excluir um determinado tipo de arquivo da pesquisa.</p>
+       
+       <p class="p1">O operador ext não retorna resultados quando usado individualmente, sendo assim, deve ser usado em conjunto com o operador site para funcionar.</p>
+       
+       <div>
+         <h4 class="sub">Exemplo:</h4>
+         <div>
+           site:ertech.com.br -ext:html
+         </div>
+       </div>
+       
+       <h4 class="sub">Referências:</h4>
+       <div>
+         <a href="https://docs.andalik.com.br/porta-101/pentest/rota-2-varrendo-e-ou-atacando-alvos-na-internet/google-hacking" target="_blank"  class="referencia">docs.andalik.com.br</a>
+         
+         <a href="https://securitytrails.com/blog/google-hacking-techniques" target="_blank" class="referencia">securitytrails.com</a>
+         
+         <a href="https://en.m.wikipedia.org/wiki/Google_hacking" target="_blank" class="referencia">en.m.wikipedia.org</a>
+       </div>
+      </article>
+      </main>
+      <footer id="footer">
+        <section id="rede">
+         <a href="https://instagram.com/desenvolvedor_hat?igshid=oaq65vlq2yfa" target="_blank"><span class="fab fa-instagram"></span></a>
+         <a href="https://github.com/DesenvolvedorHat" target="_blank"><span class="fab fa-github"></span></a>
+       </section>
+       <section id="direitos">
+         <p><span class="fa fa-copyright"></span>Alguns direitos reservados</p>
+       </section>
+      </footer>
+    </div>
+  </body>
+</html>
