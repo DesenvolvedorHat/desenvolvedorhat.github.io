@@ -61,34 +61,12 @@ li > a{
   grid-area: main;
 }
 
-#artigo{
-  margin-top: 5em;
-  padding: 1.8em;
-}
-
-#tutoriais{
-  margin-top: 10%;
-  display: grid;
-  align-content: center;
-  justify-content: center;
-}
-
-.comandos{
-  text-decoration: none;
-  background-color: rgb(15,15,15);
-  border-radius: 0.2em;
-  text-align: center;
-  height: 12em;
-  width: 20em;
-  margin: 0.8em;
-  display: grid;
-  align-items: center;
-}
-
 .p1{
   color: rgb(255,255,255);
   font-size: 1.4em;
 }
+
+.p2{}
 
 #footer{
   grid-area: footer;
