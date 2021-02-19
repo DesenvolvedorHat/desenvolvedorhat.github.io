@@ -3,7 +3,7 @@
   <head>
     <title>Vulnerabilidades</title>
     <meta charset="UTF-8">
-    <meta name="keywords" content="desenvolvedor hat, hacking, linux, vulnerabilidades web, coleta de informação">
+    <meta name="keywords" content="desenvolvedor hat, hacking, linux, comando ls">
     <meta name="description" content="introducao ao linux. Resumo sobre diversas vulnerabilidades web.">
     <meta name="robots" content="index">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -31,37 +31,47 @@
        </nav>
       </header>
       <main id="main">
-        <article>
+        <article id="artigo">
+          <h1>ls:</h1>
           <p>O comando <span class="p2">ls</span> lista o conteúdo do diretório</p>
 
-       <span class="p2">Sintaxe:</span>
-       <span class="p2">ls [OPÇÃO] [ARQUIVO]</span>
+       <span class="p3">Sintaxe:</span>
+       
+       <span class="p3">ls [OPÇÃO] [ARQUIVO]</span>
 
-       <span class="p2">Opções:</span>
+       <span class="p3">Opções:</span>
 
        <span class="p2">-a</span>
-       <p class="p1">não ignore entradas que começam com .</p>
+       <p class="p1">Essa opção ignora entradas que começam com . (ponto).</p>
 
        <span class="p2">-b,</span>
-       <p class="p1">imprimir escapes de estilo C para caracteres não gráficos</p>
+       <p class="p1">Imprimir escapes de estilo C para caracteres não gráficos.</p>
 
        <span class="p2">-B</span>
-       <p class="p1">não liste entradas implícitas terminando com ~</p>
+       <p class="p1">Essa opção não lista entradas implícitas terminadas com ~ .</p>
 
        <span class="p2">-C</span>
-       <p class="p1">listar entradas por colunas</p>
+       <p class="p1">Listar entradas por colunas.</p>
 
        <span class="p2">--color [= QUANDO]</span>
-       <p class="p1">colorir a saída</p>
+       <p class="p1">Essa opção colori a saída.</p>
 
        <span class="p2">-d, --directory</span>
-       liste os próprios diretórios, não seus conteúdos
+       <p class="p1">liste os próprios diretórios, não seus conteúdos.</p>
      
-          <span class="p2">Exemplo:</span>
-          <p>Para listar todos os arquivos (inclusive os ocultos) do diretório, deve-se digitar:
-          <div class="exemplo">
+          <span class="p3">Exemplo:</span>
+          
+          <p class="p1">Para listar todos os arquivos (inclusive os ocultos) do diretório, deve-se digitar:
+          <div class="p1">
             ls -al
           </div>
+          
+          <section>
+            <p>Para obter mais informações sobre o comando <span class="p2">ls</span>, digite no terminal:</p>
+            <div class="p1">
+              man ls
+            </div>
+          </section>
         </article>
       </main>
       <footer id="footer">
