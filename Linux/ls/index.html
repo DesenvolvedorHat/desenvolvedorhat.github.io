@@ -34,16 +34,10 @@
         <article>
           <p>O comando <span class="p2">ls</span> lista o conteúdo do diretório</p>
 
-       <span>Sintaxe:</span>
-    ls [OPÇÃO] ... [ARQUIVO] ...
+       <span class="p2">Sintaxe:</span>
+       <span class="p2">ls [OPÇÃO] [ARQUIVO]</span>
 
- DESCRIÇÃO
-    Lista as informações sobre os FILEs (o diretório atual
-    por padrão).  Classifique as entradas em ordem alfabética se nenhuma
-    -cftuvSUX nem --sort é especificado.
-
-    Argumentos obrigatórios para opções longas são obrigatórios para
-    opções curtas também.
+       <span class="p2">Opções:</span>
 
     -a, --todos
        não ignore entradas que começam com.
@@ -77,7 +71,20 @@
 
     -d, --directory
        liste os próprios diretórios, não seus conteúdos
-      </article>
+     
+ Exemplos
+Para listar todos os arquivos (inclusive os ocultos) do diretório corrente no formato longo, basta digitar
+ls -al
+
+O comando
+ls /home/aluno
+
+lista todos os arquivos do subdiretório aluno que se encontra no diretório /home, enquanto o comando
+
+ls /etc /usrl
+
+lista todos os arquivos e subdiretórios dos diretórios /etc e /usr.
+</article>
       </main>
       <footer id="footer">
         <section id="rede">
