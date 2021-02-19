@@ -61,18 +61,29 @@ li > a{
   grid-area: main;
 }
 
-.p1{
-  color: rgb(255,255,255);
-  font-size: 1.4em;
+#artigo{
+  margin-top: 5em;
+  padding: 1.8em;
 }
 
-.p2{}
+.p1{
+  padding: 0.5em;
+}
+
+.p2{
+  font-weight: bold;
+}
+
+.p3{
+  font-weight: bold;
+  display: block;
+  padding: 0.8em;
+}
 
 #footer{
   grid-area: footer;
   background-color: rgb(128,128,128);
   height: 8em;
-  margin-top: 10em;
   margin-bottom: 0;
   padding-bottom: 1.8em;
   max-height: 100%;
