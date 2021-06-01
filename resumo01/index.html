@@ -13,6 +13,70 @@
     
     <h1>Gerenciamento de sessão de ataque</h1>
     
-    <p>O mecanismo de gerenciamento de sessão é um componente de segurança fundamental na maioria dos aplicativos da web.  É o que permite que o aplicativo identifique com exclusividade um determinado usuário em uma série de solicitações diferentes e lide com os dados que ele acumula sobre o estado da interação desse usuário com o aplicativo.  Onde um aplicativo implementa a funcionalidade de login, o gerenciamento de sessão é de particular importância, porque é o que permite que o aplicativo mantenha sua garantia da identidade de qualquer usuário além da solicitação na qual ele fornece suas credenciais.</p>
-  </body>
+    <p class = "p1">O mecanismo de gerenciamento de sessão é um componente de segurança fundamental na maioria dos aplicativos da web.  É o que permite que o aplicativo identifique com exclusividade um determinado usuário em uma série de solicitações diferentes e lide com os dados que ele acumula sobre o estado da interação desse usuário com o aplicativo.  Onde um aplicativo implementa a funcionalidade de login, o gerenciamento de sessão é de particular importância, porque é o que permite que o aplicativo mantenha sua garantia da identidade de qualquer usuário além da solicitação na qual ele fornece suas credenciais.</p>
+  <p class = "p1">Devido ao papel fundamental desempenhado pelos mecanismos de gerenciamento de sessão, eles são o principal alvo de ataques maliciosos contra o aplicativo.  Se um invasor pode quebrar o gerenciamento de sessão de um aplicativo, ele pode efetivamente ignorar seus controles de autenticação e se mascarar como outros usuários do aplicativo sem saber suas credenciais.  Se um invasor compromete um usuário administrativo dessa forma, o invasor pode ser o proprietário de todo o aplicativo.</p>
+
+<p class = "p1">Como ocorre com os mecanismos de autenticação, uma ampla variedade de defeitos pode ser comumente encontrada nas funções de gerenciamento de sessão.  Nos casos mais vulneráveis, um invasor simplesmente precisa incrementar o valor de um token emitido a ele pelo aplicativo para mudar seu contexto para o de um usuário diferente.  Nessa situação, o aplicativo fica aberto para qualquer pessoa acessar todas as áreas.  Na outra extremidade do espectro, um invasor pode ter que trabalhar muito, decifrando várias camadas de ofuscação e planejando um ataque automatizado sofisticado, antes de encontrar uma fenda na armadura do aplicativo.</p>
+
+<p class = "p1">Este capítulo examina todos os tipos de fraquezas que os autores encontraram em aplicativos da web do mundo real.  Ele descreve em detalhes as etapas práticas que você precisa seguir para encontrar e explorar esses defeitos.  Por fim, descreve as medidas defensivas que os aplicativos devem tomar para se protegerem contra esses ataques.</p>
+
+ <h1>MITO COMUM</h1>
+
+<p class = "p1">“Usamos cartões inteligentes para autenticação e as sessões dos usuários não podem ser comprometidas sem eles.”</p>
+
+<p class = "p1">Por mais robusto que seja o mecanismo de autenticação de um aplicativo, as solicitações dos usuários são vinculadas apenas a essa autenticação por meio da sessão resultante.</p>
+
+<p class = "p1">Se o gerenciamento de sessão do aplicativo apresentar falhas, um invasor pode ignorar a autenticação robusta e ainda comprometer os usuários.</p>
+
+<h1>A necessidade de estado</h1>
+
+<p class = "p1">O protocolo HTTP é essencialmente sem estado.  Baseia-se em um modelo simples de solicitação-resposta, em que cada par de mensagens representa uma transação independente.</p>
+
+<p class = "p1">O protocolo em si não contém nenhum mecanismo para vincular a série de solicitações feitas por um determinado usuário e distingui-las de todas as outras solicitações recebidas pelo servidor da web.  Nos primeiros dias da Web, não havia necessidade de qualquer mecanismo: sites foram usados ​​para publicar páginas HTML estáticas para qualquer pessoa ver.  Hoje as coisas são muito diferentes.</p>
+
+<p class = "p1">A maioria dos “sites” da web são, na verdade, aplicativos da web.  Eles permitem que você se registre e faça login. Eles permitem que você compre e venda produtos.  Eles se lembrarão de suas preferências na próxima vez que você os visitar.  Eles oferecem experiências ricas de multimídia com conteúdo criado dinamicamente com base no que você clica e digita. Para implementar qualquer uma dessas funcionalidades, os aplicativos da web precisam usar o conceito de uma sessão.</p>
+
+<p class = "p1">O uso mais óbvio de sessões é em aplicativos que suportam login.</p>
+
+<p class = "p1">Depois de inserir seu nome de usuário e senha, você pode usar o aplicativo como o usuário cujas credenciais você inseriu, até fazer o logout ou a sessão expirar devido à inatividade.  Sem uma sessão, o usuário teria que inserir novamente sua senha em todas as páginas do aplicativo.  Portanto, depois de autenticar o usuário uma vez, o aplicativo cria uma sessão para ele e trata todas as solicitações pertencentes a essa sessão como provenientes desse usuário.</p>
+
+<p class = "p1">Os aplicativos que não possuem uma função de login também geralmente precisam usar sessões.  Muitos sites que vendem mercadorias não exigem que os clientes criem contas.</p>
+
+<p class = "p1">No entanto, eles permitem que os usuários naveguem no catálogo, adicionem itens a uma cesta de compras,
+ fornecer detalhes de entrega e fazer um pagamento.  Neste cenário, não há necessidade de autenticar a identidade do usuário: na maior parte de sua visita, o aplicativo não sabe ou se importa com quem é o usuário.  Mas para fazer negócios com ele, ele precisa saber qual série de solicitações recebe originadas do mesmo usuário.</p>
+
+<p class = "p1">O meio mais simples e ainda mais comum de implementar sessões é emitir para cada usuário um token ou identificador de sessão exclusivo.  Em cada solicitação subsequente ao aplicativo, o usuário reenvia esse token, permitindo que o aplicativo determine a qual sequência de solicitações anteriores a solicitação atual está relacionada.</p>
+
+<p class = "p1">Na maioria dos casos, os aplicativos usam cookies HTTP como mecanismo de transmissão para passar esses tokens de sessão entre o servidor e o cliente.  O servidor é o primeiro
+ a resposta a um novo cliente contém um cabeçalho HTTP.</p>
+
+<p class = "p1">Este mecanismo de gerenciamento de sessão padrão é inerentemente vulnerável a várias categorias de ataque.  O objetivo principal de um invasor ao atingir o mecanismo é, de alguma forma, sequestrar a sessão de um usuário legítimo e, assim, disfarçar-se dessa pessoa.  Se o usuário foi autenticado no aplicativo, o invasor pode acessar dados privados pertencentes ao usuário ou realizar ações não autorizadas em nome dessa pessoa.  Se o usuário não estiver autenticado, o invasor ainda poderá ver as informações confidenciais enviadas pelo usuário durante a sessão.</p>
+
+<p class = "p1">Como no exemplo anterior de um servidor Microsoft IIS executando ASP.NET, a maioria dos servidores web comerciais e plataformas de aplicativos web implementam sua própria solução de gerenciamento de sessão pronta para uso com base em cookies HTTP.  Eles fornecem APIs que os desenvolvedores de aplicativos da web podem usar para integrar sua própria funcionalidade dependente de sessão com esta solução.</p>
+
+<p class = "p1">Algumas implementações de prateleira de gerenciamento de sessão foram encontradas para ser vulnerável a vários ataques, o que resulta no comprometimento das sessões dos usuários (discutidos posteriormente neste capítulo).  Além disso, alguns desenvolvedores acham que precisam de um controle mais refinado sobre o comportamento da sessão do que o fornecido pelas soluções integradas ou desejam evitar algumas vulnerabilidades inerentes às soluções baseadas em cookies.  Por essas razões, é bastante comum ver mecanismos de gerenciamento de sessão personalizados e / ou não baseados em cookies usados ​​em aplicativos de segurança crítica, como banco online.</p>
+
+<p class = "p1">As vulnerabilidades que existem nos mecanismos de gerenciamento de sessão se enquadram em duas categorias:</p>
+
+ <p class = "p1">Fraquezas na geração de tokens de sessão
+
+<p class = "p1">Fraquezas no manuseio de tokens de sessão ao longo de seu ciclo de vida
+
+<p class = "p1">Veremos cada uma dessas áreas separadamente, descrevendo os diferentes tipos de defeitos que são comumente encontrados em mecanismos de gerenciamento de sessão do mundo real e técnicas práticas para descobri-los e explorá-los.  Por fim, descreveremos as medidas que os aplicativos podem tomar para se defender contra esses ataques.</p>
+
+<h1>HACK STEPS</h1>
+
+<p class = "p1">Em muitos aplicativos que usam o mecanismo de cookie padrão para transmitir tokens de sessão, é simples identificar qual item de dados contém o token.  No entanto, em outros casos, isso pode exigir algum trabalho de detetive.</p>
+
+ <p class = "p1">1. O aplicativo pode frequentemente empregar vários itens diferentes de dados coletivamente como um token, incluindo cookies, parâmetros de URL e campos de formulário ocultos.  Alguns desses itens podem ser usados ​​para manter o estado da sessão em diferentes componentes de back-end.  Não presuma que um determinado parâmetro é o token de sessão sem prová-lo, ou que as sessões estão sendo rastreadas usando apenas um item.</p>
+
+ <p class = "p1">2. Às vezes, os itens que parecem ser o token de sessão do aplicativo podem não ser.  Em particular, o cookie de sessão padrão gerado pelo servidor da web ou plataforma de aplicativo pode estar presente, mas não é realmente usado pelo aplicativo.</p>
+
+ <p class = "p1">3. Observe quais novos itens são passados ​​para o navegador após a autenticação.</p>
+
+<p class = "p1">Freqüentemente, novos tokens de sessão são criados depois que um usuário se autentica.</p>
+
+<p class = "p1">4. Para verificar quais itens estão realmente sendo empregados como tokens, encontre uma página que seja definitivamente dependente da sessão (como uma página “meus detalhes” específica do usuário).  Faça várias solicitações para ele, removendo sistematicamente cada item que você suspeita que esteja sendo usado como um token.  Se remover um item causa a página dependente da sessão não deve ser retornada, isso pode confirmar que o item é um token de sessão.  O Burp Repeater é uma ferramenta útil para realizar esses testes.</p>
+
+</body>
 </html>
