@@ -1,0 +1,17 @@
+. n1 {
+  altura :  2,1 em ;
+  largura :  3,8 em ;
+  cor de fundo : preto;
+  raio da borda :  0,3 em ;
+}
+
+. menu {
+  decoração de texto : nenhum;
+  cor : branco;
+  display : flex;
+  justificar o conteúdo : centro;
+}
+
+. p1 {
+  preenchimento :  0,5 em ;
+}
