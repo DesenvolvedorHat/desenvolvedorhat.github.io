@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <title>Resumo 02</title>
+<meta charset="UTF-8">
+    <meta name="keywords" content="desenvolvedor hat, hacking, linux, comando ls">
+    <meta name="description" content="introducao ao linux. Resumo sobre diversas vulnerabilidades web.">
+    <meta name="robots" content="index">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link type="text/css" rel="stylesheet" href="style.css">
+    <script src='https://kit.fontawesome.com/a076d05399.js'></script>
+    <script data-ad-client="ca-pub-6493599991997784" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css">
+  </head>
+  <body>
+    <menu>
+      <nav class="n1">
+        <a href="/index.html" class="menu">HOME</a>
+      </nav>
+    </menu>
+<h1>Alternativas para Sessões</h1>
+
+<p class = "p1">Nem todo aplicativo da web emprega sessões, e alguns aplicativos de segurança crítica que contêm mecanismos de autenticação e funcionalidade complexa optam por usar outras técnicas para gerenciar o estado.  Você provavelmente encontrará duas alternativas possíveis:</p>
+
+<p class = "p1">Autenticação HTTP - os aplicativos que usam as várias tecnologias de autenticação baseada em HTTP (básica, digest, NTLM) às vezes evitam a necessidade de usar sessões.</p>
+
+<p class = "p1">Com a autenticação HTTP, o componente cliente interage com o mecanismo de autenticação diretamente por meio do navegador, usando cabeçalhos HTTP, e não por meio do código específico do aplicativo contido em qualquer página individual.  Depois que o usuário insere suas credenciais em uma caixa de diálogo do navegador, o navegador reenvia efetivamente essas credenciais (ou repõe qualquer handshake necessário) com cada solicitação subsequente para o mesmo servidor.  Isso é equivalente a um aplicativo que usa autenticação baseada em formulários HTML e coloca um formulário de login em cada aplicativo página, exigindo que os usuários se autentiquem novamente a cada ação que executam.</p>
+
+<p class = "p1">Portanto, quando a autenticação baseada em HTTP é usada, é possível que um aplicativo identifique o usuário em várias solicitações sem usar sessões.  No entanto, a autenticação HTTP raramente é usada em aplicativos baseados na Internet de qualquer complexidade, e os outros benefícios versáteis que os mecanismos de sessão totalmente desenvolvidos oferecem significa que virtualmente todos os aplicativos da web, de fato, empregam esses mecanismos.</p>
+
+<p class = "p1">Mecanismos de estado sem sessão - alguns aplicativos não emitem tokens de sessão para gerenciar o estado da interação de um usuário com o aplicativo.</p>
+
+<p class = "p1">Em vez disso, eles transmitem todos os dados necessários para gerenciar esse estado por meio do cliente, geralmente em um cookie ou em um campo de formulário oculto.  Na verdade, esse mecanismo usa o estado sem sessão de maneira muito semelhante ao ASP.NET ViewState.  Para este tipo de mecanismo para ser seguro, os dados transmitidos através do cliente devem ser protegidos adequadamente.  Isso geralmente envolve a construção de um blob binário contendo todas as informações de estado e criptografando ou assinando isso usando um algoritmo reconhecido.  Contexto suficiente deve ser incluído nos dados para evitar que um invasor colete um objeto de estado em um local dentro do aplicativo e o envie a outro local para causar algum comportamento indesejável.  O aplicativo também pode incluir um tempo de expiração nos dados do objeto para realizar o equivalente aos tempos limite de sessão.</p>
+
+<p class = "p1">O Capítulo 5 descreve com mais detalhes os mecanismos seguros para a transmissão de dados por meio do cliente.</p>
+
+<h1>HACK STEPS</h1>
+
+<p class = "p1">1. Se a autenticação HTTP estiver sendo usada, é possível que nenhum mecanismo de gerenciamento de sessão seja implementado.  Use os métodos descritos anteriormente para examinar a função desempenhada por quaisquer itens de dados semelhantes a tokens.</p>
+
+<p class = "p1">2. Se o aplicativo usar um mecanismo de estado sem sessão, transmitindo todos os dados necessários para manter o estado por meio do cliente, isso às vezes pode ser difícil de detectar com certeza, mas os seguintes são fortes indicadores de que esse tipo de mecanismo está sendo usado:</p>
+
+<p class = "p1">Os itens de dados do tipo token emitidos para o cliente são bastante longos (100 ou mais bytes).</p>
+
+<p class = "p1">O aplicativo emite um novo item semelhante a um token em resposta a cada solicitação.</p>
+
+<p class = "p1">Os dados no item parecem ser criptografados (e, portanto, não têm estrutura discernível) ou assinados (e, portanto, têm uma estrutura significativa acompanhada por alguns bytes de dados binários sem sentido).</p>
+
+<p class = "p1">O aplicativo pode rejeitar tentativas de enviar o mesmo item com mais de uma solicitação.</p>
+
+<p class = "p1">3. Se a evidência sugerir fortemente que o aplicativo não está usando tokens de sessão para gerenciar o estado, é improvável que qualquer um dos ataques descritos neste capítulo atinja alguma coisa.  Seu tempo provavelmente seria melhor
+ gasto procurando por outros problemas sérios, como controles de acesso quebrados ou injeção de código</p>
+
+<h1>Fraquezas na geração de token</h1>
+
+<p class = "p1">Os mecanismos de gerenciamento de sessão geralmente são vulneráveis ​​a ataques porque os tokens são gerados de maneira insegura, permitindo que um invasor identifique os valores dos tokens que foram emitidos para outros usuários.</p>
+
+<p class = "p1">Existem vários locais onde a segurança de um aplicativo depende da imprevisibilidade dos tokens que ele gera.  aqui estão alguns exemplos:</p>
+
+<p class = "p1">Tokens de recuperação de senha enviados para o endereço de e-mail registrado do usuário</p>
+
+<p class = "p1">Tokens colocados em campos de formulário ocultos para evitar ataques de falsificação de solicitação entre sites (consulte o Capítulo 13)</p>
+
+<p class = "p1">Tokens usados ​​para dar acesso único a recursos protegidos</p>
+
+<p class = "p1">Tokens persistentes usados ​​em funções de "lembrar de mim"</p>
+
+<p class = "p1">Tokens que permitem aos clientes de um aplicativo de compras que não usa autenticação para recuperar o status atual de um pedido existente</p>
+
+<p class = "p1">As considerações neste capítulo relacionadas aos pontos fracos na geração de tokens se aplicam a todos esses casos.  Na verdade, como muitos dos aplicativos de hoje dependem de mecanismos de plataforma maduros para gerar tokens de sessão, muitas vezes é nessas outras áreas de funcionalidade que os pontos fracos exploráveis ​​na geração de tokens são encontrados.</p>
+
+<h1>Tokens Significativos</h1>
+
+<p class = "p1">Alguns tokens de sessão são criados usando uma transformação do nome de usuário ou endereço de e-mail do usuário ou outras informações associadas a essa pessoa.  Essas informações podem ser codificadas ou ofuscadas de alguma forma e podem ser combinadas com outros dados.</p>
+
+<p class = "p1">Por exemplo, o seguinte token pode inicialmente parecer uma longa string aleatória:</p>
+
+<p class = "p1">No entanto, em uma inspeção mais próxima, você pode ver que ele contém apenas caracteres hexadecimais.</p>
+
+<p class = "p1">Supondo que a string pode realmente ser uma codificação hexadecimal de uma string de caracteres ASCII, você pode executá-la por meio de um decodificador para revelar o seguinte:</p>
+
+<p class = "p1">usuário = daf; app = admin; data = 09/10/11</p>
+
+<p class = "p1">Os invasores podem explorar o significado deste token de sessão para tentar adivinhar as sessões atuais de outros usuários do aplicativo.  Usando uma lista de nomes de usuário enumerados ou comuns, eles podem gerar rapidamente um grande número de tokens potencialmente válidos e testá-los para confirmar quais são válidos.</p>
+
+<p class = "p1">Os tokens que contêm dados significativos geralmente exibem uma estrutura.  Em outras palavras, eles contêm vários componentes, muitas vezes separados por um delimitador, que podem ser extraídos e analisados ​​separadamente para permitir que um invasor entenda sua função e meio de geração.  Aqui estão alguns componentes que podem ser encontrados em tokens estruturados:</p>
+
+<p class = "p1">O nome de usuário da conta</p>
+
+<p class = "p1">O identificador numérico que o aplicativo usa para distinguir entre contas</p>
+
+<p class = "p1">O nome e o sobrenome do usuário</p>
+
+<p class = "p1">O endereço de e-mail do usuário</p>
+
+<p class = "p1">O grupo ou função do usuário no aplicativo</p>
+
+<p class = "p1">Um carimbo de data / hora</p>
+
+<p class = "p1">Um número crescente ou previsível</p>
+
+<p class = "p1">O endereço IP do cliente</p>
+
+<p class = "p1">Cada componente diferente em um token estruturado, ou mesmo o token inteiro, pode ser codificado de maneiras diferentes.  Isso pode ser uma medida deliberada para ofuscar seu conteúdo ou pode simplesmente garantir o transporte seguro de dados binários via HTTP.  Os esquemas de codificação comumente encontrados incluem XOR, Base64 e representação hexadecimal usando caracteres ASCII (consulte o Capítulo 3).  Pode ser necessário testar várias decodificações em cada componente de um token estruturado para desempacotá-lo em sua forma original.</p>
+
+<p class = "p1">Quando um aplicativo lida com uma solicitação contendo um token estruturado, ele pode não processar todos os componentes com o token ou todos os dados contidos em cada componente.  No exemplo anterior, o aplicativo pode decodificar o token em Base64 e, em seguida, processar apenas os componentes “usuário” e “data”.  Nos casos em que um token contém um blob de dados binários, grande parte deste os dados podem ser preenchidos.  Apenas uma pequena parte dele pode realmente ser relevante para a validação que o servidor executa no token.</p>
+
+<p class = "p1">Limitar as sub partes de um token que são realmente necessárias muitas vezes pode reduzir consideravelmente a quantidade de entropia aparente e complexidade que o token contém.</p>
+
+<p class = "p1">1. Obtenha um único token do aplicativo e modifique-o de maneiras sistemáticas para determinar se todo o token é validado ou se alguns de seus subcomponentes são ignorados.  Tente alterar o valor um do token byte por vez (ou mesmo um bit por vez) e reenviar o token modificado para o aplicativo para determinar se ele ainda é aceito.  Se você achar que certas partes do token não precisam realmente estar corretas, você pode excluí-las de qualquer análise posterior, reduzindo potencialmente a quantidade de trabalho que você precisa executar.  Você pode usar o tipo de carga útil "char frobber" no Burp Intruder para modificar o valor de um token em uma posição de caractere por vez, para ajudar nesta tarefa.</p>
+
+<p class = "p1">2. Faça login como vários usuários diferentes em momentos diferentes e registre os tokens recebidos do servidor.  Se o auto registro estiver disponível e você puder escolher seu nome de usuário, faça login com uma série de nomes de usuário semelhantes contendo pequenas variações entre eles, como A, AA, AAA, AAAA, AAAB, AAAC, AABA e assim por diante.  Se outros dados específicos do usuário forem enviados no login ou armazenados em perfis de usuário (como um endereço de e-mail), execute um exercício semelhante para variar esses dados sistematicamente e registre os tokens recebidos após o login.</p>
+
+<p class = "p1">3. Analise os tokens para quaisquer correlações que pareçam estar relacionadas ao nome de usuário e outros dados controláveis ​​pelo usuário.</p>
+
+<p class = "p1">4. Analise os tokens para qualquer codificação ou ofuscação detectável.  Onde o nome de usuário contém uma sequência do mesmo caractere, procure uma sequência de caracteres correspondente no token, que pode indicar o uso de ofuscação XOR.  Procure sequências no token contendo apenas caracteres hexadecimais, o que pode indicar uma codificação hexadecimal de uma string ASCII ou outro em formação.  Procure sequências que terminem em um sinal de igual e / ou que contenham apenas os outros caracteres Base64 válidos: a a z, A a Z, 0 a 9, + e /.</p>
+
+<p class = "p1">5. Se algum significado puder ser submetido à engenharia reversa a partir da amostra de tokens de sessão, considere se você tem informações suficientes para tentar adivinhar os tokens emitidos recentemente para outros usuários do aplicativo.  Encontre uma página do aplicativo que seja dependente da sessão, como aquela que retorna uma mensagem de erro ou um redirecionamento para outro lugar se acessada sem uma sessão válida.</p>
+
+<p class = "p1">Em seguida, use uma ferramenta como Burp Intruder para fazer um grande número de solicitações a esta página usando tokens adivinhados.  Monitore os resultados de todos os casos em que a página foi carregada corretamente, indicando um token de sessão válido.</p>
+
+<h1>Tokens previsíveis</h1>
+
+<p class = "p1">Alguns tokens de sessão não contêm nenhum dado significativo que os associe a um usuário específico.  No entanto, eles podem ser adivinhados porque contêm sequências ou padrões que permitem a um invasor extrapolar a partir de uma amostra de tokens para encontrar outros tokens válidos recentemente emitidos pelo aplicativo.</p>
+
+<p class = "p1">Mesmo que a extrapolação envolva alguma tentativa e erro (por exemplo, uma estimativa válida por 1.000 tentativas), isso ainda permitiria um ataque automatizado para identificar um grande número de tokens válidos em um período de tempo relativamente curto.</p>
+
+<p class = "p1">Vulnerabilidades relacionadas à geração de token previsível podem ser muito mais fáceis de descobrir em implementações comerciais de gerenciamento de sessão, como servidores web ou plataformas de aplicativos web, do que em aplicativos personalizados.</p>
+
+<p class = "p1">Quando você está alvejando remotamente um mecanismo de gerenciamento de sessão personalizado, sua amostra de tokens emitidos pode ser restrita pela capacidade do servidor, a atividade de outros usuários, sua largura de banda, latência de rede e assim por diante.  Em um ambiente de laboratório, no entanto, você pode criar rapidamente milhões de tokens de amostra, todos precisamente sequenciados e com data e hora, e pode eliminar a interferência causada por outros usuários.</p>
+
+<p class = "p1">Nos casos mais simples e mais descaradamente vulneráveis, um aplicativo pode usar um número sequencial simples como token de sessão.  Nesse caso, você só precisa obter uma amostra de dois ou três tokens antes de lançar um ataque que irá capturar rapidamente 100% das sessões atualmente válidas.</p>
+
+<p class = "p1">A Figura 7-1 mostra o Burp Intruder sendo usado para percorrer os dois últimos dígitos de um token de sessão sequencial para encontrar valores onde a sessão ainda está ativa e pode ser sequestrada.</p>
+
+<p class = "p1">Aqui, a duração da resposta do servidor é um indicador confiável de que uma sessão válida foi encontrada.  O recurso extrair grep também foi usado para mostrar o nome do usuário logado para cada sessão.</p>
+
+<p class = "p1">Em outros casos, os tokens de um aplicativo podem conter sequências mais elaboradas que exigem algum esforço para serem descobertas.  Os tipos de variações potenciais que você pode encontrar aqui são ilimitados, mas a experiência dos autores no campo indica que tokens de sessão previsíveis geralmente surgem de três fontes diferentes:</p>
+
+<h1>Sequências ocultas</h1>
+
+<p class = "p1">Dependência de tempo</p>
+
+<p class = "p1">Geração de número aleatório fraco</p>
+
+<p class = "p1">Veremos cada uma dessas áreas separadamente.</p>
+
+<h1>Sequências ocultas</h1>
+
+<p class = "p1">É comum encontrar tokens de sessão que não podem ser facilmente previstos quando analisados ​​em sua forma bruta, mas que contêm sequências que se revelam quando os tokens são adequadamente decodificados ou desempacotados.</p>
+
+<p class = "p1">Figura 7-1: Um ataque para descobrir sessões válidas onde o token de sessão está previsível</p>
+
+<p class = "p1">Considere a seguinte série de valores, que formam um componente de um token de sessão estruturado:</p>
+
+<p class = "p1">Nenhum padrão imediato é discernível;  no entanto, uma inspeção superficial indica que os tokens podem conter dados codificados em Base64.  Além dos caracteres alfabéticos e numéricos de maiúsculas e minúsculas, há um caractere +, que também é válido em uma string codificada em Base64.  Executar os tokens por meio de um decodificador Base64 revela o seguinte:</p>
+
+<p class = "p1">Essas cadeias de caracteres parecem ser sem sentido e também contêm caracteres não imprimíveis.  Esta normalmente indica que você está lidando com dados binários em vez de texto ASCII.</p>
+
+<p class = "p1">Renderizar os dados decodificados como números hexadecimais oferece o seguinte:</p>
+
+<p class = "p1">Ainda não há um padrão visível.  No entanto, se você subtrair cada número do anterior, chegará ao seguinte: que imediatamente revela o padrão oculto.</p>
+
+<p class = "p1">O algoritmo usado para gerar tokens adiciona 0x97C4EB6A ao valor anterior, trunca o resultado para um número de 32 bits e Base64 codifica esses dados binários para permitir que eles sejam transportados usando o protocolo HTTP baseado em texto.  Usando esse conhecimento, você pode facilmente escrever um script para produzir a série de tokens que o servidor produzirá em seguida e a série que ele produziu antes da amostra capturada.</p>
+</body>
+</html>
