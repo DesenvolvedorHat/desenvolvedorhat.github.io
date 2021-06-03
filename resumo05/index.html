@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <title>Resumo 01</title>
+<meta charset="UTF-8">
+    <meta name="keywords" content="desenvolvedor hat, hacking, linux, comando ls">
+    <meta name="description" content="introducao ao linux. Resumo sobre diversas vulnerabilidades web.">
+    <meta name="robots" content="index">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link type="text/css" rel="stylesheet" href="style.css">
+    <script src='https://kit.fontawesome.com/a076d05399.js'></script>
+    <script data-ad-client="ca-pub-6493599991997784" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css">
+  </head>
+  <body>
+    <menu>
+      <nav class="n1">
+        <a href="/index.html" class="menu">HOME</a>
+      </nav>
+    </menu>
+
+<h1>Manipulação de dados do lado do cliente com segurança</h1>
+
+<p class = "p1">Como você viu, o principal problema de segurança com aplicativos da web surge porque os componentes do lado do cliente e a entrada do usuário estão fora do controle direto do servidor.</p>
+
+<p class = "p1">O cliente e todos os dados recebidos dele são inerentemente não confiáveis.</p>
+
+<h1>Transmitindo dados através do cliente</h1>
+
+<p class = "p1">Muitos aplicativos ficam expostos porque transmitem dados críticos, como preços de produtos e taxas de desconto, por meio do cliente de maneira insegura.</p>
+
+<p class = "p1">Se possível, os aplicativos devem evitar a transmissão desse tipo de dados por meio do cliente.  Em praticamente qualquer cenário concebível, é possível manter esses dados no servidor e referenciá-los diretamente da lógica do lado do servidor quando necessário.  Por exemplo, um aplicativo que recebe pedidos de usuários para vários produtos deve permitir que os usuários enviem um código de produto e quantidade e consultem o preço de cada produto solicitado em um banco de dados do lado do servidor.  Não há necessidade de os usuários enviarem os preços dos itens de volta ao servidor.</p>
+
+<p class = "p1">Mesmo quando um aplicativo oferece preços ou descontos diferentes para usuários diferentes, não há necessidade de se desviar desse modelo.</p>
+
+<p class = "p1">Os preços podem ser mantidos no banco de dados por usuário e as taxas de desconto podem ser armazenadas em perfis de usuário ou até mesmo em objetos de sessão.  A aplicação já possui, do lado do servidor, todas as informações de que necessita para calcular o preço de um determinado produto para um determinado utilizador.  Isso deve.  Caso contrário, não seria possível, no modelo inseguro, armazenar esse preço em um campo de formulário oculto.</p>
+
+<p class = "p1">Se os desenvolvedores decidirem que não têm alternativa a não ser transmitir dados críticos por meio do cliente, os dados devem ser assinados e / ou criptografados para evitar a violação do usuário.  Se este curso de ação for realizado, há duas armadilhas importantes a serem evitadas:</p>
+
+<p class = "p1">Algumas maneiras de usar dados assinados ou criptografados podem ser vulneráveis ​​a ataques de repetição.  Por exemplo, se o preço do produto for criptografado antes de ser armazenado em um campo oculto, pode ser possível copiar o preço criptografado de um produto mais barato e enviá-lo no lugar do preço original.</p>
+
+<p class = "p1">Para evitar esse ataque, o aplicativo precisa incluir contexto suficiente nos dados criptografados para evitar que sejam reproduzidos em um contexto diferente.  Por exemplo, o aplicativo pode concatenar o produto código e preço, criptografar o resultado como um único item e, em seguida, validar se a sequência criptografada enviada com um pedido realmente corresponde ao produto que está sendo pedido.</p>
+
+<p class = "p1">Se os usuários sabem e / ou controlam o valor do texto simples das strings criptografadas que são enviadas a eles, eles podem ser capazes de montar vários ataques criptográficos para descobrir a chave de criptografia que o servidor está usando.  Feito isso, eles podem criptografar valores arbitrários e contornar totalmente a proteção oferecida pela solução.</p>
+
+<p class = "p1">Em aplicativos executados na plataforma ASP.NET, é aconselhável nunca armazenar nenhum dado personalizado dentro do ViewState - especialmente qualquer coisa confidencial que você não gostaria que fosse exibida na tela para os usuários.</p>
+
+<p class = "p1">A opção de habilitar o ViewState MAC deve estar sempre ativada.</p>
+
+<h1>Validando Dados Gerados pelo Cliente</h1>
+
+<p class = "p1">Os dados gerados no cliente e transmitidos ao servidor não podem, em princípio, ser validados com segurança no cliente:</p>
+
+<p class = "p1">Controles leves do lado do cliente, como campos de formulário HTML e JavaScript, podem ser contornados facilmente e não fornecem nenhuma garantia sobre a entrada que o servidor recebe.</p>
+
+<p class = "p1">Os controles implementados nos componentes de extensão do navegador às vezes são mais difíceis de contornar, mas isso pode simplesmente desacelerar um invasor por um curto período.</p>
+
+<p class = "p1">O uso de código do lado do cliente altamente ofuscado ou compactado fornece obstáculos adicionais;  no entanto, um invasor determinado sempre pode superá-los. (Um ponto de comparação em outras áreas é o uso de tecnologias DRM para evitar que os usuários copiem arquivos de mídia digital. Muitas empresas investiram pesadamente nesses controles do lado do cliente, e cada nova solução geralmente é quebrada em um curto espaço de tempo.)</p>
+
+<p class = "p1">A única maneira segura de validar os dados gerados pelo cliente é no lado do servidor do a aplicação.  Cada item de dados recebido do cliente deve ser considerado contaminado e potencialmente malicioso.</p>
+
+<p class = "p1">Às vezes, acredita-se que qualquer uso de controles do lado do cliente é ruim.  Em particular, alguns testadores de invasão profissionais relatam a presença de controles do lado do cliente como uma “descoberta”, sem verificar se eles são replicados no servidor ou se há qualquer explicação não relacionada à segurança para sua existência.</p>
+
+<p class = "p1">Na verdade, apesar das advertências significativas decorrentes dos vários ataques descritos neste capítulo, existem maneiras de usar controles do lado do cliente que não dão origem a nenhuma vulnerabilidade de segurança:</p>
+
+<p class = "p1">Os scripts do lado do cliente podem ser usados ​​para validar a entrada como um meio de aprimorar a usabilidade, evitando a necessidade de comunicação de ida e volta com o servidor.  Por exemplo, se o usuário inserir sua data de nascimento em um formato incorreto, alertá-lo sobre o problema por meio de um script do lado do cliente proporciona uma experiência muito mais integrada.  Claro, o aplicativo deve revalidar o item enviado quando ele chega ao servidor.</p>
+
+<p class = "p1">Às vezes, a validação de dados do lado do cliente pode ser eficaz como uma medida de segurança - por exemplo, como uma defesa contra ataques de script entre sites baseados em DOM.  No entanto, esses são casos em que o foco do ataque é outro usuário do aplicativo, em vez do aplicativo do lado do servidor, e a exploração de uma vulnerabilidade potencial não depende necessariamente da transmissão de quaisquer dados maliciosos para o servidor.  Consulte os Capítulos 12 e 13 para obter mais detalhes sobre esse tipo de cenário.</p>
+
+<p class = "p1">Conforme descrito anteriormente, existem maneiras de transmitir dados criptografados por meio do cliente que não são vulneráveis ​​a adulterações ou ataques de repetição.</p>
+
+<p class = "p1">Quando um aplicativo emprega mecanismos como limites de comprimento e validação baseada em JavaScript para aprimorar o desempenho e a usabilidade, eles devem ser integrados às defesas de detecção de intrusão do lado do servidor.  A lógica do lado do servidor que executa a validação dos dados enviados pelo cliente deve estar ciente da validação que já ocorreu no lado do cliente.  Se dados que teriam sido bloqueados pela validação do lado do cliente forem recebidos, o aplicativo pode inferir que um usuário está evitando ativamente essa validação e, portanto, provavelmente é mal-intencionado.</p>
+
+<p class = "p1">As anomalias devem ser registradas e, se apropriado, os administradores do aplicativo devem ser alertados em tempo real para que possam monitorar qualquer tentativa de ataque e tomar as medidas cabíveis conforme necessário.  O aplicativo também pode se defender ativamente encerrando a sessão do usuário ou até mesmo suspendendo sua conta.</p>
+
+<p class = "p1">Em alguns casos em que o JavaScript é empregado, o aplicativo ainda pode ser usado por usuários que desativaram o JavaScript em seus navegadores.  Nessa situação, o navegador simplesmente ignora o código de validação do formulário baseado em JavaScript e a entrada bruta inserida pelo usuário é enviada.  Para evitar falsos positivos, o mecanismo de registro e alerta deve estar ciente de onde e como isso pode ocorrer.</p>
+
+<p class = "p1">Praticamente todos os aplicativos cliente / servidor devem aceitar o fato de que o componente cliente e todo o processamento que ocorre nele não podem ser confiáveis ​​para se comportar como esperado. Como você viu, os métodos de comunicação transparentes geralmente empregados por aplicativos da web significam que um invasor equipado com ferramentas simples e habilidade mínima pode facilmente contornar a maioria dos controles implementados em o cliente.</p>
+
+<p class = "p1">Mesmo quando um aplicativo tenta ofuscar dados e processamento residindo no lado do cliente, um determinado invasor pode comprometer essas defesas.</p>
+
+<p class = "p1">Em cada instância onde você identifica dados sendo transmitidos através do cliente, ou validação de entrada fornecida pelo usuário sendo implementada no cliente, você deve testar como o servidor responde a dados inesperados que ignoram esses controles.</p>
+
+<p class = "p1">Muitas vezes, vulnerabilidades sérias se escondem por trás das suposições de um aplicativo sobre a proteção oferecida a ele pelas defesas que são implementadas no cliente.</p>
+</body>
+</html>
