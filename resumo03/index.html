@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <title>Resumo 01</title>
+<meta charset="UTF-8">
+    <meta name="keywords" content="desenvolvedor hat, hacking, linux, comando ls">
+    <meta name="description" content="introducao ao linux. Resumo sobre diversas vulnerabilidades web.">
+    <meta name="robots" content="index">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link type="text/css" rel="stylesheet" href="style.css">
+    <script src='https://kit.fontawesome.com/a076d05399.js'></script>
+    <script data-ad-client="ca-pub-6493599991997784" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css">
+  </head>
+  <body>
+    <menu>
+      <nav class="n1">
+        <a href="/index.html" class="menu">HOME</a>
+      </nav>
+    </menu>
+
+<h1>Dependência de tempo</h1>
+
+<p class = "p1">Alguns servidores e aplicativos da web empregam algoritmos para gerar tokens de sessão que usam o tempo de geração como uma entrada para o valor do token.  Se outra entropia insuficiente for incorporada ao algoritmo, você poderá prever os tokens de outros usuários.</p>
+
+<p class = "p1">Embora qualquer sequência de tokens por si só possa parecer aleatória, a mesma sequência acoplada com informações sobre o hora em que cada token foi gerado pode conter um padrão discernível.  Em um aplicativo ocupado com um grande número de sessões sendo criadas a cada segundo, um ataque com script pode ter sucesso na identificação de um grande número de tokens de outros usuários.</p>
+
+<p class = "p1">Ao testar o aplicativo da web de um varejista online, os autores encontraram a seguinte sequência de tokens de sessão:</p>
+
+<p class = "p1">Cada token é claramente composto por dois componentes numéricos separados.  O primeiro número segue uma sequência de incremento simples e é fácil de prever.</p>
+
+<p class = "p1">O segundo número aumenta em uma quantidade variável a cada vez.  O cálculo das diferenças entre seu valor em cada token sucessivo revela o seguinte:</p>
+
+<p class = "p1">A sequência não parece conter um padrão previsível confiável.  No entanto, seria claramente possível usar a força bruta no intervalo de números relevante em um ataque automatizado para descobrir valores válidos na sequência.  Antes de tentar esse ataque, no entanto, esperamos alguns minutos e reunimos mais uma sequência de tokens:</p>
+
+<p class = "p1">Comparando esta segunda sequência de tokens com a primeira, dois pontos são imediatamente óbvios:</p>
+
+<p class = "p1">A primeira sequência numérica continua a progredir de forma incremental;  no entanto, cinco valores foram ignorados desde o final da primeira sequência.  Presumivelmente, isso ocorre porque os valores ausentes foram emitidos para outros usuários que efetuaram login no aplicativo na janela entre os dois testes.</p>
+
+<p class = "p1">A segunda sequência numérica continua a progredir em intervalos semelhantes aos anteriores;  no entanto, o primeiro valor que obtemos é 539.578 massivo maior do que o valor anterior.</p>
+
+<p class = "p1">Essa segunda observação nos alerta imediatamente para o papel desempenhado pelo tempo na geração de tokens de sessão.  Aparentemente, apenas cinco tokens foram emitidos entre os dois exercícios de captura de tokens.  No entanto, um período de aproximadamente 10 minutos se passou.</p>
+
+<p class = "p1">A explicação mais provável é que o segundo número depende do tempo e é provavelmente uma contagem simples de milissegundos.</p>
+
+<p class = "p1">Na verdade, nosso palpite está correto.  Em uma fase subsequente de nossos testes, realizamos uma revisão de código, que revela o seguinte algoritmo de geração de tokens:</p>
+
+<p class = "p1">Dada nossa análise de como os tokens são criados, é simples construir um ataque com script para coletar os tokens de sessão que o aplicativo emite para outros usuários:</p>
+
+<p class = "p1">Continuamos sondando o servidor para obter novos tokens de sessão em rápida sucessão.</p>
+
+<p class = "p1">Monitoramos os incrementos do primeiro número.  Quando isso aumenta em mais de 1, sabemos que um token foi emitido para outro usuário.</p>
+
+<p class = "p1">Quando um token é emitido para outro usuário, sabemos os limites superior e inferior do segundo número emitido para essa pessoa, porque possuímos os tokens que foram emitidos imediatamente antes e depois do dele.</p>
+
+<p class = "p1">Como estamos obtendo novos tokens de sessão com frequência, o intervalo entre esses limites geralmente consiste em apenas algumas centenas de valores.</p>
+
+<p class = "p1">Cada vez que um token é emitido para outro usuário, lançamos um ataque de força bruta para iterar cada número no intervalo, acrescentando isso ao número incremental ausente que sabemos que foi emitido para o outro usuário.  Tentamos acessar uma página protegida usando cada token que construímos, até que a tentativa seja bem-sucedida e tenhamos comprometido a sessão do usuário.</p>
+
+<p class = "p1">Executar esse ataque com script continuamente nos permitirá capturar o token de sessão de todos os outros usuários do aplicativo.  Quando um usuário administrativo efetua login, comprometeremos totalmente todo o aplicativo.</p>
+
+ <h1>Geração de número aleatório fraco</h1>
+
+<p class = "p1">Muito pouco que ocorre dentro de um computador é aleatório.</p>
+
+<p class = "p1">Portanto, quando a aleatoriedade é necessária para algum propósito, o software usa várias técnicas para gerar números de maneira pseudo-aleatória.  Alguns dos algoritmos usados ​​produzem sequências que parecem ser estocásticas e manifestam uma distribuição uniforme em toda a gama de valores possíveis.  No entanto, eles podem ser extrapolados para frente ou para trás com perfeita precisão por qualquer um que obtenha uma pequena amostra de valores.</p>
+
+<p class = "p1">Quando um gerador de número pseudo aleatório previsível é usado para produzir tokens de sessão, os tokens resultantes são vulneráveis ​​ao sequenciamento por um invasor.</p>
+
+<p class = "p1">Jetty é um servidor web popular escrito em 100% Java que fornece um mecanismo de gerenciamento de sessão para uso por aplicativos executados nele.  Em 2006, Chris Anley da NGSSoftware descobriu que o mecanismo era vulnerável a um ataque de predição de token de sessão.</p>
+
+<p class = "p1">O servidor usou a API Java java.util.Random para gerar tokens de sessão.  Isso implementa um "gerador de congruência linear", que gera o próximo número na sequência da seguinte forma:</p>
+
+<p class = "p1">Este algoritmo pega o último número gerado, multiplica-o por uma constante e adiciona outra constante para obter o próximo número.  O número é truncado para 48 bits e o algoritmo muda o resultado para retornar o número específico de bits solicitados pelo chamador.</p>
+
+<p class = "p1">Conhecendo esse algoritmo e um único número gerado por ele, podemos facilmente derivar a sequência de números que o algoritmo gerará a seguir.  Com um pouco da teoria dos números, também podemos derivar a sequência que gerou anteriormente.  Isso significa que um invasor que obtém um único token de sessão do servidor pode obter os tokens de todas as sessões atuais e futuras.</p>
+
+<p class = "p1">Às vezes, quando tokens são criados com base na saída de um gerador de números pseudo-aleatórios, os desenvolvedores decidem construir cada token concatenando várias saídas sequenciais do gerador.  A justificativa percebida para isso é que ele cria um token mais longo e, portanto, "mais forte".</p>
+
+<p class = "p1">No entanto, essa tática geralmente é um erro.  Se um invasor puder obter várias saídas consecutivas do gerador, isso pode permitir que ele deduza algumas informações sobre seu estado interno.  Na verdade, pode ser mais fácil para o invasor extrapolar a sequência de saídas do gerador, para frente ou para trás.</p>
+
+<p class = "p1">Outras estruturas de aplicativos disponíveis no mercado usam fontes surpreendentemente simples ou previsíveis de entropia na geração de tokens de sessão, muitas das quais são determinísticas.</p>
+
+<p class = "p1">Por exemplo, nos frameworks PHP 5.3.2 e anteriores, o token de sessão é gerado com base no endereço IP do cliente, tempo na criação do token, microssegundos na criação do token e um gerador congruencial linear.</p>
+
+<p class = "p1">Embora existam vários valores desconhecidos aqui, alguns aplicativos podem divulgar informações que permitem que eles sejam inferidos.  Um site de rede social pode divulgar a hora de login e o endereço IP dos usuários do site.</p>
+
+<p class = "p1">Além disso, a semente usada neste gerador é o momento em que o processo PHP foi iniciado, o que pode ser determinado como estando dentro de uma pequena faixa de valores se o invasor estiver monitorando o servidor.</p>
+
+<p class = "p1">Esta é uma área de pesquisa em evolução.  As fraquezas na geração de tokens de sessão do PHP foram apontadas na lista de discussão Full Disclosure em 2001, mas não foram demonstradas como realmente exploráveis.  A teoria de 2001 foi finalmente posta em prática por Samy Kamkar com a ferramenta phpwn em 2010.</p>
+
+<h1>Testando a qualidade da aleatoriedade</h1>
+
+<p class = "p1">Em alguns casos, você pode identificar padrões em uma série de tokens apenas pela inspeção visual ou por uma quantidade modesta de análise manual.</p>
+
+<p class = "p1">Em geral, no entanto, você precisa usar uma abordagem mais rigorosa para testar a qualidade da aleatoriedade nos tokens de um aplicativo.</p>
+
+<p class = "p1">A abordagem padrão para essa tarefa aplica os princípios de teste de hipótese estatística e emprega vários testes bem documentados que procuram evidências de não aleatoriedade em uma amostra de tokens.  As etapas de alto nível neste processo são as seguintes:</p>
+
+<p class = "p1">1. Comece com a hipótese de que os tokens são gerados aleatoriamente.</p>
+
+<p class = "p1">2. Aplique uma série de testes, cada um observando propriedades específicas da amostra que provavelmente terão certas características se os tokens forem gerados aleatoriamente.</p>
+
+<p class = "p1">3. Para cada teste, calcule a probabilidade de ocorrência das características observadas, partindo do pressuposto de que a hipótese é verdadeira.</p>
+
+<p class = "p1">4. Se essa probabilidade cair abaixo de um certo nível (o “nível de significância”), rejeite a hipótese e conclua que os tokens não são gerados aleatoriamente.</p>
+
+<p class = "p1">A boa notícia é que você não precisa fazer nada disso manualmente!  A melhor ferramenta disponível atualmente para testar a aleatoriedade de tokens de aplicativos da web é o Burp Sequencer.  Esta ferramenta aplica vários testes padrão de forma flexível e fornece resultados claros e fáceis de interpretar.</p>
+
+<p class = "p1">Para usar o Burp Sequencer, você precisa encontrar uma resposta do aplicativo que emite o token que deseja testar, como uma resposta a uma solicitação de login que emite um novo cookie contendo um token de sessão.  Selecione a opção "enviar para o sequenciador" no menu de contexto do Burp e, na configuração do Sequenciador, defina a localização do token dentro da resposta, conforme mostrado na Figura 7-2.  Você também pode configurar várias opções que afetam como os tokens são coletados e, em seguida, clicar no botão Iniciar captura para começar a capturar os tokens.  Se você já obteve uma amostra adequada de tokens por outros meios (por exemplo, salvando os resultados de um ataque de Burp Intruder), você pode usar a guia de carregamento manual para pular a captura de tokens e prosseguir direto para a análise estatística.</p>
+
+<p class = "p1">Figura 7-2: Configurando Burp Sequencer para testar a aleatoriedade de um token de sessão</p>
+
+<p class = "p1">Depois de obter uma amostra adequada de tokens, você pode realizar a análise estatística da amostra.  Você também pode realizar análises provisórias enquanto a amostra ainda está sendo capturada.  Em geral, a obtenção de uma amostra maior melhora a confiabilidade da análise.  O tamanho mínimo da amostra que o Burp exige é de 100 tokens, mas o ideal é obter uma amostra muito maior do que essa.  Se o análise de algumas centenas de tokens mostra conclusivamente que os tokens falham nos testes de aleatoriedade, você pode razoavelmente decidir que é desnecessário capturar
+ mais tokens.  Caso contrário, você deve continuar capturando tokens e executar novamente a análise periodicamente.  Se você capturar 5.000 tokens que passaram nos testes de aleatoriedade, você pode decidir que isso é suficiente.  No entanto, para obter conformidade com os testes FIPS formais para aleatoriedade, você precisa obter uma amostra de 20.000 tokens.  Este é o maior tamanho de amostra que o Burp suporta.</p>
+
+<p class = "p1">O Burp Sequencer executa os testes estatísticos em nível de caractere e nível de bit.</p>
+
+<p class = "p1">Os resultados de todos os testes são agregados para fornecer uma estimativa geral do número de bits de entropia efetiva dentro do token;  este é o principal resultado a ser considerado.</p>
+
+<p class = "p1">No entanto, você também pode detalhar os resultados de cada teste para entender exatamente como e por que diferentes partes do token foram aprovadas ou reprovadas em cada teste, conforme mostrado na Figura 7-3.  A metodologia usada para cada tipo de teste é descrita abaixo dos resultados do teste.</p>
+
+<p class = "p1">Figura 7-3: Analisando os resultados do Burp Sequencer para compreender as propriedades de os tokens que foram testados</p>
+
+<p class = "p1">Observe que o Burp executa todos os testes individualmente em cada caractere e bit de dados dentro do token.  Em muitos casos, você descobrirá que grandes partes de um token estruturado não são aleatórias;  isso por si só pode não apresentar nenhum tipo de fraqueza.  O que importa é que o token contém um número suficiente de bits que passam nos testes de aleatoriedade.  Por exemplo, se um grande token contém 1.000 bits de informação e apenas 50 desses bits passam nos testes de aleatoriedade, o token como um todo não é menos robusto do que um token de 50 bits que passa totalmente nos testes.</p>
+
+<p class = "p1">Lembre-se de duas advertências importantes ao realizar testes estatísticos de aleatoriedade.</p>
+
+<p class = "p1">Essas advertências afetam a interpretação correta dos resultados do teste e suas consequências para a postura de segurança do aplicativo.  Primeiro, os tokens gerados de uma forma completamente determinística podem passar nos testes estatísticos de aleatoriedade.  Por exemplo, um gerador de número pseudo-aleatório congruencial linear ou um algoritmo que calcula o hash de um número sequencial pode produzir uma saída que passa nos testes.  No entanto, um invasor que conhece o algoritmo e o estado interno do gerador pode extrapolar sua saída com total confiabilidade nas direções direta e reversa.</p>
+
+<p class = "p1">Em segundo lugar, os tokens que falham nos testes estatísticos de aleatoriedade podem não ser realmente previsíveis em qualquer situação prática.  Se um dado bit de um token falhar nos testes, isso significa apenas que a sequência de bits observada naquela posição contém características que provavelmente não ocorrerão em um token genuinamente aleatório.</p>
+
+<p class = "p1">Mas tentar prever o valor desse bit no próximo token, com base nas características observadas, pode ser um pouco mais confiável do que suposições cegas.</p>
+
+<p class = "p1">Multiplicar essa falta de confiabilidade por um grande número de bits que precisam ser previstos simultaneamente pode significar que a probabilidade de fazer uma previsão correta é extremamente baixa.</p>
+
+<p class = "p1">1. Determine quando e como os tokens de sessão são emitidos percorrendo o aplicativo a partir da primeira página do aplicativo por meio de quaisquer funções de login.  Dois comportamentos são comuns:</p>
+
+<p class = "p1">O aplicativo cria uma nova sessão sempre que uma solicitação é recebida e não envia um token.</p>
+
+<p class = "p1">O aplicativo cria uma nova sessão após um login bem-sucedido.</p>
+
+<p class = "p1">Para coletar um grande número de tokens de maneira automatizada, o ideal é identificar uma única solicitação (normalmente GET / ou um envio de login) que faz com que um novo token seja emitido.</p>
+
+<p class = "p1">2. No Burp Suite, envie a solicitação que cria uma nova sessão para o Burp Sequencer e configure a localização do token.  Em seguida, inicie uma captura ao vivo para reunir tantos tokens quanto possível.  Se um gerenciamento de sessão personalizado. Se o mecanismo estiver em uso e você só tiver acesso remoto ao aplicativo, reúna os tokens o mais rápido possível para minimizar a perda de tokens emitidos para outros usuários e reduzir a influência de qualquer dependência de tempo.</p>
+
+<p class = "p1">3. Se um mecanismo de gerenciamento de sessão comercial estiver em uso e / ou você tiver acesso local ao aplicativo, poderá obter sequências indefinidamente grandes de tokens de sessão em condições controladas.</p>
+
+<p class = "p1">4. Enquanto o Burp Sequencer está capturando tokens, habilite a configuração “análise automática” para que o Burp execute automaticamente a análise estatística periodicamente.  Colete pelo menos 500 tokens antes de revisar os resultados detalhadamente.</p>
+
+<p class = "p1">Se um número suficiente de bits dentro do token tiver passado nos testes, continue coletando tokens pelo tempo que for viável, revisando os resultados da análise à medida que mais tokens são capturados.</p>
+
+<p class = "p1">5. Se os tokens falharem nos testes de aleatoriedade e parecerem conter padrões que podem ser explorados para prever tokens futuros, refaça o exercício a partir de um endereço IP diferente e (se relevante) de um nome de usuário diferente.  Isso ajudará você a identificar se o mesmo padrão é detectado e se os tokens recebidos no primeiro exercício podem ser extrapolados para identificar tokens recebidos no segundo.  Às vezes, a sequência de tokens capturados por um usuário manifesta um padrão.  Mas isso não permitirá uma extrapolação direta para os tokens emitidos para outros usuários, porque informações como o IP de origem são usadas como uma fonte de entropia (como uma semente para um gerador de números aleatórios).</p>
+
+<p class = "p1">6. Se você acredita que tem informações suficientes sobre o algoritmo de geração de tokens para montar um ataque automatizado contra as sessões de outros usuários, é provável que o melhor meio de conseguir isso seja por meio de um script personalizado.</p>
+
+<p class = "p1">Isso pode gerar tokens usando os padrões específicos que você observou e aplicar qualquer codificação necessária.  Consulte o Capítulo 14 para obter algumas técnicas genéricas para aplicar a automação a esse tipo de problema.</p>
+
+<p class = "p1">7. Se o código-fonte estiver disponível, analise atentamente o código responsável por gerar tokens de sessão para entender o mecanismo usado e determinar se ele é vulnerável à previsão.  Se a entropia for extraída de dados que pode ser determinado dentro do aplicativo dentro de um intervalo de força bruta, considere o número prático de solicitações que seriam necessárias para forçar um token de aplicativo de força bruta.</p>
+</body>
+</html>
