@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <title>Resumo 01</title>
+<meta charset="UTF-8">
+    <meta name="keywords" content="desenvolvedor hat, hacking, linux, comando ls">
+    <meta name="description" content="introducao ao linux. Resumo sobre diversas vulnerabilidades web.">
+    <meta name="robots" content="index">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link type="text/css" rel="stylesheet" href="style.css">
+    <script src='https://kit.fontawesome.com/a076d05399.js'></script>
+    <script data-ad-client="ca-pub-6493599991997784" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css">
+  </head>
+  <body>
+    <menu>
+      <nav class="n1">
+        <a href="/index.html" class="menu">HOME</a>
+      </nav>
+    </menu>
+
+<h1>Capturando dados do usuário: extensões do navegador</h1>
+
+<p class = "p1">Além dos formulários HTML, o outro método principal para capturar, validar e enviar dados do usuário é usar um componente do lado do cliente que é executado em uma extensão de navegador, como Java ou Flash.  Quando empregadas pela primeira vez em aplicativos da web, as extensões do navegador costumavam ser usadas para realizar tarefas simples e muitas vezes cosméticas.  Agora, as empresas estão usando cada vez mais extensões de navegador para criar componentes do lado do cliente totalmente funcionais.  Eles são executados no navegador, em vários clientes
+ plataformas e fornecem feedback, flexibilidade e manuseio de um aplicativo de desktop.  Um efeito colateral é que as tarefas de processamento que anteriormente ocorriam no servidor podem ser transferidas para o cliente por motivos de velocidade e experiência do usuário.  Em alguns casos, como aplicativos de comércio online, a velocidade é tão crítica que grande parte da lógica do aplicativo principal ocorre no lado do cliente.  O design do aplicativo pode sacrificar deliberadamente a segurança em favor da velocidade, talvez na crença equivocada de que os comerciantes são usuários confiáveis ​​ou que a extensão do navegador inclui suas próprias defesas.  Recordando o problema central de segurança discutido no Capítulo 2 e nas seções anteriores deste capítulo, sabemos que o conceito de um componente do lado do cliente defendendo sua lógica de negócios é impossível.</p>
+
+<p class = "p1">As extensões do navegador podem capturar dados de várias maneiras - por meio de formulários de entrada e, em alguns casos, interagindo com o sistema de arquivos ou registro do sistema operacional do cliente.  Eles podem executar validação e manipulação arbitrariamente complexas dos dados capturados antes do envio ao servidor.  Além disso, como seus funcionamentos internos são menos transparentes do que formulários HTML e JavaScript, os desenvolvedores têm mais probabilidade de presumir que a validação que executam não pode ser contornada.  Por esse motivo, as extensões do navegador costumam ser um alvo útil para descobrir vulnerabilidades em aplicativos da web.</p>
+
+<p class = "p1">Um exemplo clássico de extensão de navegador que aplica controles no lado do cliente é um componente de cassino.  Dado o que observamos sobre a natureza falível dos controles do lado do cliente, a ideia de implementar um aplicativo de jogo online usando uma extensão de navegador que roda localmente na máquina de um invasor em potencial é intrigante.  Se qualquer aspecto do jogo for controlado pelo cliente em vez de pelo servidor, um invasor pode manipular o jogo com precisão para melhorar as probabilidades, mudar as regras ou alterar as pontuações enviadas ao servidor.  Vários tipos de ataques podem ocorrer neste cenário:</p>
+
+<p class = "p1">O componente cliente pode ser confiável para manter o estado do jogo.  Nesse caso, a violação local do estado do jogo daria a um invasor uma vantagem no jogo.</p>
+
+<p class = "p1">Um invasor pode ignorar um controle do lado do cliente e executar uma ação ilegal projetada para dar a si mesmo uma vantagem dentro do jogo.</p>
+
+<p class = "p1">Um invasor pode encontrar uma função, parâmetro ou recurso oculto que, quando invocado, permite acesso ilegítimo a um recurso do lado do servidor.</p>
+
+<p class = "p1">Se o jogo envolver qualquer colega, ou um jogador da casa, o componente cliente pode estar recebendo e processando informações sobre outros jogadores que, se conhecidas, podem ser usadas para a vantagem do atacante.</p>
+
+<p class = "p1">Tecnologias comuns de extensão de navegador</p>
+
+<p class = "p1">As tecnologias de extensão do navegador que você provavelmente encontrará são miniaplicativos Java, Flash e Silverlight.  Como estão competindo para atingir objetivos semelhantes, eles têm propriedades semelhantes em sua arquitetura que são relevantes para a segurança:</p>
+
+<p class = "p1">Eles são compilados em um bytecode intermediário.</p>
+
+<p class = "p1">Eles são executados em uma máquina virtual que fornece um ambiente de sandbox para execução.</p>
+
+<p class = "p1">Eles podem usar estruturas remotas que empregam serialização para transmitir estruturas de dados ou objetos complexos sobre HTTP.</p>
+
+<p class = "p1">Os miniaplicativos Java são executados na Java Virtual Machine (JVM) e estão sujeitos ao sand-boxing aplicado pela Política de Segurança Java.  Como o Java existe desde o início da história da web, e como seus conceitos básicos permaneceram relativamente inalterados, um grande corpo de conhecimento e ferramentas estão disponíveis para atacar e defender miniaplicativos Java, conforme descrito posteriormente neste capítulo.</p>
+
+<p class = "p1">Os objetos Flash são executados na máquina virtual Flash e, como os miniaplicativos Java, são isolados no computador host.  Uma vez usado principalmente como um método de entrega conteúdo animado, o Flash mudou.  Com as versões mais recentes do ActionScript, o Flash agora é diretamente faturado como capaz de fornecer aplicativos de desktop completos.  Uma mudança importante no Flash é o ActionScript 3 e sua capacidade de remoting com serialização Action Message Format (AMF).</p>
+
+<p class = "p1">Silverlight é a alternativa da Microsoft ao Flash.</p>
+
+<p class = "p1">Ele foi projetado com o objetivo semelhante de habilitar aplicativos ricos, semelhantes aos de desktop, permitindo que os aplicativos da Web forneçam uma experiência .NET reduzida dentro do navegador, em um ambiente de área restrita.</p>
+
+<p class = "p1">Tecnicamente, os aplicativos Silverlight podem ser desenvolvidos em qualquer linguagem compatível com .NET, de C # a Python, embora C # seja de longe a mais comum.</p>
+
+<p class = "p1">Abordagens para extensões de navegador</p>
+
+<p class = "p1">Você precisa empregar duas técnicas amplas ao direcionar aplicativos que usam componentes de extensão do navegador.</p>
+
+<p class = "p1">Primeiro, você pode interceptar e modificar as solicitações feitas pelo componente e as respostas recebidas do servidor.  Em muitos casos, esta é a maneira mais rápida e fácil de começar a testar o componente, mas você pode encontrar várias limitações.  Os dados transmitidos podem ser ofuscados ou criptografados ou podem ser serializados usando esquemas específicos para a tecnologia que está sendo usada.</p>
+
+<p class = "p1">Observando apenas o tráfego gerado pelo componente, você pode ignorar algumas funcionalidades-chave ou lógica de negócios que podem ser descobertas apenas pela análise do próprio componente.  Além disso, você pode encontrar obstáculos para usar seu proxy de interceptação da maneira normal; entretanto, normalmente eles podem ser contornados com alguma configuração cuidadosa, conforme descrito posteriormente neste capítulo.</p>
+
+<p class = "p1">Em segundo lugar, você pode direcionar o próprio componente diretamente e tentar descompilar seu bytecode para visualizar a fonte original ou interagir dinamicamente com o componente usando um depurador.  Essa abordagem tem a vantagem de, se feita de forma completa, você identificar todas as funcionalidades que o componente oferece suporte ou faz referência.  Ele também permite que você modifique os dados principais enviados em solicitações ao servidor, independentemente de qualquer ofuscação ou mecanismo de criptografia usado para dados em trânsito.</p>
+
+<p class = "p1">Uma desvantagem dessa abordagem é que pode ser demorada e pode exigir compreensão detalhada das tecnologias e linguagens de programação usadas no componente.</p>
+
+<p class = "p1">Em muitos casos, uma combinação de ambas as técnicas é apropriada.  As seções a seguir examinam cada um com mais detalhes.</p>
+
+<p class = "p1">Interceptando tráfego de extensões de navegador. Se o seu navegador já estiver configurado para usar um proxy de interceptação e o aplicativo carregar um componente cliente usando uma extensão do navegador, você poderá ver as solicitações desse componente passando pelo seu proxy.  Em alguns casos, você não precisa fazer mais nada para começar a testar a funcionalidade relevante, porque você pode interceptar e modificar as solicitações do componente da maneira usual.</p>
+
+<p class = "p1">No contexto de contornar a validação de entrada do lado do cliente que é implementada em uma extensão do navegador, se o componente enviar os dados validados para o servidor de forma transparente, esses dados podem ser modificados usando um proxy de interceptação da mesma maneira que já descrita para dados de formulário HTML.Por exemplo, uma extensão do navegador que oferece suporte a um mecanismo de autenticação pode capturar as credenciais do usuário, execute alguma validação neles e envie os valores ao servidor como parâmetros de texto simples na solicitação.</p>
+
+<p class = "p1">A validação pode ser facilmente contornada sem realizar nenhuma análise ou ataque ao próprio componente.</p>
+
+<p class = "p1">Em outros casos, você pode encontrar vários obstáculos que dificultam o teste, conforme descrito nas seções a seguir.</p>
+
+<h1>Tratamento de dados serializados</h1>
+
+<p class = "p1">Os aplicativos podem serializar dados ou objetos antes de transmiti-los nas solicitações HTTP.  Embora seja possível decifrar alguns dos dados baseados em string simplesmente inspecionando os dados serializados brutos, em geral você precisa descompactar os dados serializados antes que possam ser totalmente compreendidos.  E se você quiser modificar os dados para interferir no processamento do aplicativo, primeiro você precisa descompactar o conteúdo serializado, editá-lo conforme necessário e reerializá-lo corretamente.  A simples edição dos dados serializados brutos quase certamente quebrará o formato e causará um erro de análise quando o aplicativo processa a mensagem.</p>
+
+<p class = "p1">Cada tecnologia de extensão de navegador vem com seu próprio esquema para serializar dados em mensagens HTTP.  Em geral, portanto, você pode inferir o formato de serialização com base no tipo de componente do cliente que está sendo empregado, mas o formato geralmente é evidente em qualquer caso a partir de uma inspeção cuidadosa das mensagens HTTP relevantes.</p>
+
+<p class = "p1">A linguagem Java contém suporte nativo para serialização de objetos, e miniaplicativos Java podem usar isso para enviar estruturas de dados serializadas entre os componentes do aplicativo cliente e servidor.  As mensagens que contêm objetos Java serializados geralmente podem ser identificadas porque têm o seguinte</p>
+
+<p class = "p1">Tendo interceptado os dados serializados brutos usando seu proxy, você pode desserializá-los usando o próprio Java para obter acesso aos itens de dados primitivos que ele contém.</p>
+
+<p class = "p1">DSer é um plug-in útil para Burp Suite que fornece uma estrutura para visualizar e manipular objetos Java serializados que foram interceptados no Burp.</p>
+
+<p class = "p1">Esta ferramenta converte os dados primitivos dentro do objeto interceptado em formato XML para edição fácil.  Depois de modificar os dados relevantes, o DSer então resserializa o objeto e atualiza a solicitação HTTP de acordo.</p>
+
+<p class = "p1">Você pode baixar o DSer e saber mais sobre como ele funciona no seguinte URL:</p>
+
+<p class = "p1">O Flash usa seu próprio formato de serialização que pode ser usado para transmitir estruturas de dados complexas entre componentes de servidor e cliente.  O Formato da Mensagem de Ação (AMF) normalmente pode ser identificado por meio do seguinte</p>
+
+<p class = "p1">Burp suporta nativamente o formato AMF.  Ao identificar uma solicitação ou resposta HTTP contendo dados AMF serializados, ele descompacta o conteúdo e o apresenta em forma de árvore para visualização e edição, conforme mostrado na Figura 5-5.</p>
+
+<p class = "p1">Quando você modifica os itens de dados primitivos relevantes dentro da estrutura, o Burp resserializa a mensagem e você pode encaminhá-la para o servidor ou cliente para ser processada.</p>
+
+<p class = "p1">Os aplicativos do Silverlight podem usar a estrutura remota do Windows Communication Foundation (WCF) que é integrada à plataforma .NET. Os componentes do cliente Silverlight que usam WCF normalmente empregam o .NET da Microsoft</p>
+
+<p class = "p1">Formato binário para SOAP (NBFS), que pode ser identificado por meio do seguinte</p>
+
+<p class = "p1">Um plug-in está disponível para Burp Proxy que desserializa automaticamente os dados codificados por NBFS antes de serem exibidos na janela de interceptação do Burp. Depois de visualizar ou editar os dados decodificados, o plug-in recodifica os dados antes de serem encaminhados ao servidor ou cliente para processamento.</p>
+
+<p class = "p1">O plug-in SOAP binário WCF para Burp foi produzido por Brian Holyfi eld e está disponível para download aqui:</p>
+
+<p class = "p1">Obstáculos para interceptar o tráfego de</p>
+
+<p class = "p1">Extensões do navegador Se você configurou seu navegador para usar um proxy de interceptação, poderá descobrir que as solicitações feitas pelos componentes de extensão do navegador não estão sendo interceptadas por seu proxy ou estão falhando.  Esse problema geralmente é devido a problemas com o manuseio do componente de proxies HTTP ou SSL (ou ambos).  Normalmente pode ser tratado através de alguma configuração cuidadosa de suas ferramentas.</p>
+
+<p class = "p1">O primeiro problema é que o componente cliente pode não respeitar a configuração de proxy que você especificou em seu navegador ou nas configurações de seu computador.  Isso ocorre porque os componentes podem emitir suas próprias solicitações HTTP, fora das APIs fornecidas pelo próprio navegador ou pela estrutura de extensão.  Se isso estiver acontecendo, você ainda pode interceptar as solicitações do componente.  Você precisa modificar o arquivo hosts do seu computador para conseguir a interceptação e configurar o seu proxy para suporte proxy invisível e redirecionamento automático para o host de destino correto.</p>
+
+<p class = "p1">Consulte o Capítulo 20 para obter mais detalhes sobre como fazer isso.</p>
+
+<p class = "p1">O segundo problema é que o componente cliente pode não aceitar o certificado SSL apresentado pelo proxy de interceptação.  Se o seu proxy estiver usando um certificado autoassinado genérico, e você configurou seu navegador para aceitá-lo, o componente de extensão do navegador pode rejeitar o certificado mesmo assim.  Isso pode ser porque a extensão do navegador não seleciona a configuração do navegador para certificados temporariamente confiáveis ​​ou pode ser porque o próprio componente requer programaticamente que certificados não confiáveis ​​não sejam aceitos.</p>
+
+<p class = "p1">Em ambos os casos, você pode contornar esse problema configurando seu proxy para usar um certificado CA mestre, que é usado para assinar certificados por host válidos para cada site que você visita, e instalando o certificado CA no armazenamento de certificados confiáveis ​​do seu computador.  Consulte o Capítulo 20 para obter mais detalhes sobre como fazer isso.</p>
+
+<p class = "p1">Em alguns casos raros, você pode descobrir que os componentes do cliente estão se comunicando usando um protocolo diferente de HTTP, que simplesmente não pode ser manipulado usando um proxy de interceptação.  Nessas situações, você ainda pode visualizar e modificar o tráfego afetado usando um sniffer de rede ou uma ferramenta de conexão de função.</p>
+
+<p class = "p1">Um exemplo é o Echo Mirage, que pode injetar em um processo e interceptar chamadas para APIs de soquete, permitindo que você visualize e modifique os dados antes de serem enviados pela rede. O Echo Mirage pode ser baixado do seguinte URL:</p>
+
+<p class = "p1">1. Certifique-se de que seu proxy está interceptando corretamente todo o tráfego do navegador. Se necessário, use um sniffer para identificar qualquer tráfego que não esteja sendo proxy corretamente.</p>
+
+<p class = "p1">2. Se o componente cliente usar um esquema de serialização padrão, certifique-se de ter as ferramentas necessárias para desempacotar e modificá-lo.</p>
+
+<p class = "p1">Se o componente estiver usando um mecanismo de codificação ou criptografia proprietário, você precisará descompilar ou depurar o componente para testá-lo totalmente.</p>
+
+<p class = "p1">3. Revise as respostas do servidor que acionam a lógica principal do lado do cliente.  Freqüentemente, a interceptação e modificação oportuna de uma resposta do servidor pode permitir que você “desbloqueie” a GUI do cliente, tornando-a fácil de revelar e, em seguida, executar ações privilegiadas complexas ou em vários estágios.</p>
+
+<p class = "p1">4. Se o aplicativo executa qualquer lógica crítica ou eventos que o componente cliente não deve ser confiável para realizar (como tirar uma carta ou lançar dados em um aplicativo de jogo), procure qualquer correlação entre a execução da lógica crítica e a comunicação com o servidor. Se o cliente não se comunicar com o servidor para determinar o resultado do evento, o aplicativo estará definitivamente vulnerável.</p>
+
+<p class = "p1">De longe, o método mais completo de atacar um componente de extensão do navegador é descompilar o objeto, realizar uma revisão completa do código-fonte e, se necessário, modificar o código para alterar o comportamento do objeto e recompilá-lo.  Conforme já discutido, as extensões do navegador são compiladas em bytecode.</p>
+
+<p class = "p1">Bytecode é uma representação binária independente de plataforma de alto nível que pode ser executada pelo interpretador relevante (como a Java Virtual Machine ou Flash Player), e cada tecnologia de extensão de navegador usa seu próprio formato de bytecode.  Como resultado, o aplicativo pode ser executado em qualquer plataforma em que o próprio intérprete possa ser executado.</p>
+
+<p class = "p1">A natureza de alto nível da representação de bytecode significa que é sempre teoricamente possível descompilar o bytecode em algo semelhante ao
+ código-fonte original.  No entanto, várias técnicas defensivas podem ser implantadas para fazer com que o descompilador falhe ou gerar código descompilado que é muito difícil de seguir e interpretar.</p>
+
+<p class = "p1">Sujeito a essas defesas de ofuscação, descompilar o bytecode normalmente é a rota preferível para compreender e atacar os componentes de extensão do navegador.</p>
+
+<p class = "p1">Isso permite que você revise a lógica de negócios, avalie a funcionalidade completa do aplicativo do lado do cliente e modifique seu comportamento de maneiras específicas.</p>
+
+<p class = "p1">O primeiro passo é baixar o bytecode executável para você começar a trabalhar.  Em geral, o bytecode é carregado em um único arquivo de um URL especificado no código-fonte HTML para páginas de aplicativos que executam a extensão do navegador.</p>
+
+<p class = "p1">Os miniaplicativos Java geralmente são carregados usando a tag <applet> e outros componentes geralmente são carregados usando a tag.</p>
+
+<p class = "p1">Em alguns casos, a URL que carrega o bytecode pode ser menos óbvia imediatamente, uma vez que o componente pode ser carregado usando vários scripts de wrapper fornecidos pelas diferentes estruturas de extensão do navegador.</p>
+
+<p class = "p1">Outra forma de identificar o URL do bytecode é consultar o histórico do proxy depois que o navegador carregar a extensão do navegador.  Se você adotar essa abordagem, precisa estar ciente de dois obstáculos potenciais:</p>
+
+<p class = "p1">Algumas ferramentas de proxy aplicam filtros ao histórico de proxy para ocultar itens de visualização, como imagens e arquivos de folha de estilo nos quais você geralmente está menos interessado. Se você não conseguir encontrar uma solicitação para o bytecode de extensão do navegador, deverá modificar o filtro de exibição do histórico de proxy  que todos os itens estão visíveis.</p>
+
+<p class = "p1">Os navegadores geralmente armazenam em cache o bytecode baixado para componentes de extensão de forma mais agressiva do que para outros recursos estáticos, como imagens.</p>
+
+<p class = "p1">Se o seu navegador já carregou o bytecode para um componente, mesmo fazer uma atualização completa para uma página que usa o componente pode não fazer com que o navegador solicite o componente novamente.  Nessa eventualidade, pode ser necessário limpar totalmente o cache do navegador, encerrar todas as instâncias do navegador e, em seguida, iniciar uma nova sessão do navegador para forçar o navegador a solicitar o bytecode novamente.</p>
+
+<p class = "p1">Depois de identificar o URL para o bytecode da extensão do navegador, geralmente você pode simplesmente colar esse URL na barra de endereço do navegador.  Seu navegador então solicita que você salve o arquivo bytecode em seu sistema de arquivos local.</p>
+
+<p class = "p1">Se você identificou a solicitação do bytecode no histórico do Burp Proxy e a resposta do servidor contém o bytecode completo (e não uma referência a uma cópia em cache anterior), você pode salvar o bytecode diretamente no arquivo de dentro do Burp.  A maneira mais confiável de fazer isso é selecionar a guia Cabeçalhos no visualizador de resposta, clicar com o botão direito do mouse no painel inferior que contém o corpo da resposta e selecionar Copiar para arquivo no menu de contexto.</p>
+
+<p class = "p1">Bytecode geralmente é distribuído em um pacote de arquivo único, que pode precisar ser descompactado para obter os arquivos de bytecode individuais para descompilação em código-fonte.</p>
+
+<p class = "p1">Os miniaplicativos Java normalmente são empacotados como arquivos .jar (arquivo Java) e os objetos Silverlight são empacotados como arquivos .xap.  Ambos os tipos de arquivo usam o formato de arquivo zip, então você pode descompactá-los facilmente renomeando os arquivos com a extensão .zip e, em seguida, usando qualquer leitor de zip para descompactá-los nos arquivos individuais.
+
+<p class = "p1">Eles contém. O bytecode Java está contido em arquivos .class e o bytecode Silverlight está contido em arquivos .dll.  Depois de descompactar o pacote de arquivos relevante, você precisa descompilar esses arquivos para obter o código-fonte.</p>
+
+<p class = "p1">Os objetos Flash são empacotados como arquivos .swf e não precisam ser descompactados antes de usar um descompilador.</p>
+
+<p class = "p1">Para realizar a descompilação do bytecode real, você precisa usar algumas ferramentas específicas, dependendo do tipo de tecnologia de extensão do navegador que está sendo usada, conforme descrito nas seções a seguir.</p>
+
+<p class = "p1">O bytecode Java pode ser descompilado no código-fonte Java usando uma ferramenta chamada Jad (o descompilador Java), que está disponível em:</p>
+
+<p class = "p1">O bytecode Flash pode ser descompilado no código-fonte do ActionScript.  Uma alternativa abordagem, que muitas vezes é mais eficaz, é desmontar o bytecode em um formato legível por humanos, sem realmente descompilar totalmente em código-fonte.</p>
+
+<p class = "p1">Para descompilar e desmontar o Flash, você pode usar as seguintes ferramentas:</p>
+
+<p class = "p1">O bytecode do Silverlight pode ser descompilado em código-fonte usando uma ferramenta chamada .NET Reflector, que está disponível em:</p>
+
+<p class = "p1">Tendo obtido o código-fonte do componente, ou algo semelhante, você pode adotar várias abordagens para atacá-lo.</p>
+
+<p class = "p1">A primeira etapa geralmente é revisar o código-fonte para entender como o componente funciona e que funcionalidade ele contém ou faz referência.  Aqui estão alguns itens a serem procurados:</p>
+
+<p class = "p1">Validação de entrada ou outra lógica e eventos relevantes para a segurança que ocorrem no lado do cliente</p>
+
+<p class = "p1">Rotinas de ofuscação ou criptografia usadas para agrupar os dados fornecidos pelo usuário antes de enviá-los ao servidor</p>
+
+<p class = "p1">Funcionalidade “oculta” do lado do cliente que não é visível na interface do usuário, mas que você pode desbloquear modificando o componente</p>
+
+<p class = "p1">Referências à funcionalidade do lado do servidor que você não identificou anteriormente por meio do mapeamento de seu aplicativo</p>
+
+<p class = "p1">Freqüentemente, a revisão do código-fonte revela algumas funções interessantes dentro do componente que você deseja modificar ou manipular para identificar vulnerabilidades de segurança em potencial.  Isso pode incluir a remoção da validação de entrada do lado do cliente, o envio de dados não padronizados ao servidor, a manipulação estado ou eventos do lado do cliente, ou chamar diretamente a funcionalidade que está presente no componente.</p>
+
+<p class = "p1">Você pode modificar o comportamento do componente de várias maneiras, conforme descrito nas seções a seguir.</p>
+
+<p class = "p1">Você pode modificar o código-fonte descompilado para alterar o comportamento do componente, recompilá-lo para bytecode e executar o componente modificado em seu navegador.</p>
+
+<p class = "p1">Essa abordagem geralmente é preferida quando você precisa manipular eventos-chave do lado do cliente, como o lançamento de dados em um aplicativo de jogo.</p>
+
+<p class = "p1">Para realizar a recompilação, você precisa usar as ferramentas de desenvolvedor relevantes para a tecnologia que está usando:</p>
+
+<p class = "p1">Para Java, use o programa javac no JDK para recompilar seu código-fonte modificado.</p>
+
+<p class = "p1">Para Flash, você pode usar o flasm para remontar seu bytecode modificado ou um dos estúdios de desenvolvimento Flash da Adobe para recompilar o código-fonte do ActionScript modificado.</p>
+
+<p class = "p1">Para Silverlight, use o Visual Studio para recompilar seu código-fonte modificado.</p>
+
+<p class = "p1">Tendo recompilado seu código-fonte em um ou mais arquivos bytecode, você pode precisar empacotar novamente o arquivo distribuível se necessário para a tecnologia que está sendo usada.  Para Java e Silverlight, substitua os arquivos bytecode modificados em seu arquivo descompactado, empacote novamente usando um utilitário zip e, em seguida, altere a extensão de volta para .jar ou .xap conforme apropriado.</p>
+
+<p class = "p1">A etapa final é carregar o componente modificado no navegador para que as alterações tenham efeito no aplicativo que você está testando.  Você pode conseguir isso de várias maneiras:</p>
+
+<p class = "p1">Se você encontrar o arquivo físico no cache em disco do navegador que contém o executável original, poderá substituí-lo pela versão modificada e reiniciar o navegador.  Essa abordagem pode ser difícil se seu navegador não usar um arquivo individual diferente para cada recurso armazenado em cache ou se o armazenamento em cache dos componentes de extensão do navegador for implementado apenas na memória.</p>
+
+<p class = "p1">Usando seu proxy de interceptação, você pode modificar o código-fonte da página que carrega o componente e especificar uma URL diferente, apontando para o sistema de arquivos local ou um servidor da web que você controla.  Esta abordagem normalmente é difícil porque alterar o domínio do qual o componente é carregado pode violar a política de mesma origem do navegador e pode exigir a reconfiguração do navegador ou outros métodos para enfraquecer esta política.</p>
+
+<p class = "p1">Você pode fazer com que seu navegador recarregue o componente do servidor original (conforme descrito na seção anterior "Baixando o Bytecode"), use seu proxy para interceptar a resposta que contém o executável e substitua o corpo da mensagem pela sua versão modificada.  No Burp Proxy, você pode usar a opção de menu de contexto Colar do arquivo para fazer isso.  Essa abordagem geralmente é a mais fácil e a menos provável de se deparar com os problemas descritos anteriormente.</p>
+
+<p class = "p1">Em alguns casos, não é necessário modificar o comportamento do componente enquanto ele está sendo executado.  Por exemplo, alguns componentes de extensão do navegador validam a entrada fornecida pelo usuário e, em seguida, ofuscam ou criptografam o resultado antes de enviá-lo ao servidor.</p>
+
+<p class = "p1">Nessa situação, você pode modificar o componente para realizar a ofuscação ou criptografia necessária em uma entrada arbitrária não validada e simplesmente gerar o resultado localmente.</p>
+
+<p class = "p1">Você pode então usar seu proxy para interceptar a solicitação relevante quando o componente original enviar a entrada validada e você pode substituir isso pelo valor que foi gerado por seu componente modificado.</p>
+
+<p class = "p1">Para realizar este ataque, você precisa alterar o executável original, que é projetado para ser executado na extensão do navegador relevante, em um programa autônomo que pode ser executado na linha de comando.  A maneira como isso é feito depende da linguagem de programação que está sendo usada.  Por exemplo, em Java, você simplesmente precisa implementar um método principal.  A seção “Applets Java: um exemplo trabalhado” dá um exemplo de como fazer isso.</p>
+</body>
+</html>
