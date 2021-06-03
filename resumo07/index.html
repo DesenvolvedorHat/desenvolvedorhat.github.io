@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <title>Resumo 01</title>
+    <meta charset="UTF-8">
+    <meta name="keywords" content="desenvolvedor hat, hacking, linux, comando ls">
+    <meta name="description" content="introducao ao linux. Resumo sobre diversas vulnerabilidades web.">
+    <meta name="robots" content="index">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link type="text/css" rel="stylesheet" href="style.css">
+    <script src='https://kit.fontawesome.com/a076d05399.js'></script>
+    <script data-ad-client="ca-pub-6493599991997784" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css">
+  </head>
+  <body>
+    <menu>
+      <nav class="n1">
+        <a href="/index.html" class="menu">HOME</a>
+      </nav>
+    </menu>
+
+<h1>Tokens criptografados</h1>
+
+<p class = "p1">Alguns aplicativos usam tokens que contêm informações significativas sobre o usuário e procuram evitar os problemas óbvios que isso acarreta criptografando os tokens antes de serem emitidos para os usuários.  Como os tokens são criptografados com uma chave secreta desconhecida dos usuários, essa parece ser uma abordagem robusta, porque os usuários não conseguirão descriptografar os tokens e adulterar seu conteúdo.</p>
+
+<p class = "p1">No entanto, em algumas situações, dependendo do algoritmo de criptografia usado e da maneira como o aplicativo processa os tokens, pode ser possível que os usuários adulterem o conteúdo significativo dos tokens sem realmente descriptografá-los.  Por mais bizarro que possa parecer, esses ataques são, na verdade, viáveis, às vezes fáceis de executar, e vários aplicativos do mundo real se mostraram vulneráveis ​​a eles.  Os tipos de ataques aplicáveis ​​dependem do algoritmo criptográfico exato que está sendo usado.</p>
+
+<h1>Cifras de BCE</h1>
+
+<p class = "p1">Os aplicativos que empregam tokens criptografados usam um algoritmo de criptografia simétrico para que os tokens recebidos dos usuários possam ser descriptografados para recuperar seu conteúdo significativo. Alguns algoritmos de criptografia simétrica usam uma cifra de “livro de código eletrônico” (ECB). Esse tipo de cifra divide o texto simples em blocos de tamanhos iguais (como 8 bytes cada) e criptografa cada bloco usando a chave secreta. Durante a descriptografia, cada bloco de texto cifrado é descriptografado usando a mesma chave para recuperar o bloco original de texto simples. Uma característica desse método é que os padrões dentro do texto simples podem resultar em padrões dentro do texto cifrado, porque blocos idênticos de texto simples serão criptografados em blocos idênticos de texto cifrado.</p>
+
+<p class = "p1">Para alguns tipos de dados, como imagens de bitmap, isso significa que informações significativas do texto simples podem ser discernidas dentro do texto cifrado, conforme ilustrado na Figura 7-4.</p>
+
+<p class = "p1">Figura 7-4: Padrões em texto simples criptografado usando uma cifra de ECB podem ser visível no texto cifrado resultante.</p>
+
+<p class = "p1">Apesar dessa lacuna com o ECB, essas cifras são frequentemente usadas para criptografar informações em aplicativos da web. Mesmo em situações em que o problema de padrões no texto simples não surge, ainda podem existir vulnerabilidades. Isso ocorre por causa do comportamento da cifra de criptografar blocos de texto simples idênticos em blocos de texto cifrado idênticos.</p>
+
+<p class = "p1">Considere um aplicativo cujos tokens contêm vários componentes significativos diferentes, incluindo um identificador numérico de usuário:</p>
+
+<p class = "p1">Quando esse token é criptografado, ele aparentemente não faz sentido e provavelmente passará em todos os testes estatísticos padrão de aleatoriedade:</p>
+
+<p class = "p1">A cifra ECB que está sendo empregada opera em blocos de dados de 8 bytes, e os blocos de texto simples são mapeados para os blocos correspondentes de texto cifrado da seguinte forma:</p>
+
+<p class = "p1">Agora, como cada bloco de texto cifrado sempre será descriptografado no mesmo bloco de texto simples, é possível para um invasor manipular a sequência de blocos de texto cifrado de modo a modificar o texto plano correspondente de maneiras significativas. Dependendo de como exatamente o aplicativo processa o resultado token descriptografado, isso pode permitir que o invasor mude para um usuário diferente ou aumente os privilégios.</p>
+
+<p class = "p1">Por exemplo, se o segundo bloco for duplicado após o quarto bloco, o a sequência de blocos será a seguinte:</p>
+
+<p class = "p1">O token descriptografado agora contém um valor uid modificado e também um valor de aplicativo duplicado.</p>
+
+<p class = "p1">O que acontece exatamente depende de como o aplicativo processa o token descriptografado.</p>
+
+<p class = "p1">Freqüentemente, os aplicativos que usam tokens dessa maneira inspecionam apenas certas partes do token descriptografado, como o identificador do usuário.  Se o aplicativo se comportar assim, ele processará a solicitação no contexto do usuário que tem um uid de 992, em vez do 218 original.</p>
+
+<p class = "p1">O ataque que acabamos de descrever dependeria de ser emitido com um valor rnd adequado que corresponde a um valor uid válido quando os blocos são manipulados.</p>
+
+<p class = "p1">Um ataque alternativo e mais confiável seria registrar um nome de usuário contendo um valor numérico no deslocamento apropriado e duplicar esse bloco para substituir o valor uid existente.  Suponha que você registre o nome de usuário daf1 e receba o seguinte token:</p>
+
+<p class = "p1">Os blocos de texto simples e texto cifrado para este token são os seguintes:</p>
+
+<p class = "p1">Se você duplicar o sétimo bloco após o quarto bloco, seu token descriptografado conterá um valor de uid de 1:</p>
+
+<p class = "p1">Ao registrar um intervalo adequado de nomes de usuário e re-formar esse ataque, você pode potencialmente percorrer todo o intervalo de valores uid válidos e, assim, se disfarçar como todos os usuários do aplicativo.</p>
+
+<h1>Cifras CBC</h1>
+
+<p class = "p1">As deficiências nas cifras de ECB levaram ao desenvolvimento de cifras de encadeamento de blocos de cifras (CBC).</p>
+
+<p class = "p1">Com uma cifra CBC, antes de cada bloco de texto simples ser criptografado, ele é submetido a um XOR em relação ao bloco anterior de texto cifrado, conforme mostrado na Figura 7-5.</p>
+
+<p class = "p1">Isso evita que blocos de texto simples idênticos sejam criptografados em blocos de texto cifrado idênticos. Durante a descriptografia, a operação XOR é aplicada ao contrário e cada bloco descriptografado é submetido a XOR contra o bloco anterior de texto cifrado para recuperar o texto simples original.</p>
+
+<p class = "p1">Figura 7-5: Em uma cifra CBC, cada bloco de texto simples é XORed em relação ao anterior bloco de texto cifrado antes de ser criptografado.</p>
+
+<div>
+ Cifra de Bloco
+ Encriptação
+ Cifra de Bloco
+ Encriptação
+ Cifra de Bloco
+ Encriptação
+ Texto cifrado Texto cifrado Texto cifrado
+ Chave
+ Vetor de inicialização (IV)
+ Texto simples Texto simples Texto simples
+ Chave Chave
+</div>
+
+<p class = "p1">Como as cifras CBC evitam alguns dos problemas com as cifras de ECB, os algoritmos de criptografia simétrica padrão, como DES e AES, são freqüentemente usados ​​no modo CBC. No entanto, a maneira como os tokens criptografados pelo CBC são frequentemente empregados em aplicativos da web significa que um invasor pode ser capaz de manipular partes dos tokens descriptografados sem conhecer a chave secreta.</p>
+
+<p class = "p1">Considere uma variação do aplicativo anterior cujos tokens contêm vários componentes significativos diferentes, incluindo um identificador numérico de usuário:</p>
+
+<p class = "p1">Como antes, quando essas informações são criptografadas, isso resulta em um token aparentemente sem sentido:</p>
+
+<p class = "p1">Como esse token é criptografado usando uma cifra CBC, quando o token é descriptografado, cada bloco de texto cifrado é XORed contra o seguinte bloco de texto descriptografado para obter o texto simples.  Agora, se um invasor modifica partes do texto cifrado (o token que ele recebeu), isso faz com que esse bloco específico seja descriptografado como lixo.</p>
+
+<p class = "p1">No entanto, isso também faz com que o seguinte bloco de texto descriptografado seja submetido a um XOR em relação a um valor diferente, resultando em texto simples modificado, mas ainda significativo. Em outras palavras, por manipulando um único bloco individual do token, o invasor pode modificar sistematicamente o conteúdo descriptografado do bloco que o segue.</p>
+
+<p class = "p1">Dependendo de como o aplicativo processa o token descriptografado resultante, isso pode permitir que o invasor mude para um usuário diferente ou aumente os privilégios.</p>
+
+<p class = "p1">Vamos ver como. No exemplo descrito, o invasor trabalha por meio do token criptografado, alterando um caractere por vez de maneiras arbitrárias e enviando cada token modificado para o aplicativo.  Isso envolve um grande número de solicitações de. A seguir está uma seleção dos valores que resultam quando o aplicativo descriptografa cada token modificado:</p>
+
+<p class = "p1">Em cada caso, o bloco que o invasor modificou é criptografado em lixo, conforme o esperado (indicado por ????????).  No entanto, o bloco a seguir é descriptografado em um texto significativo que difere ligeiramente do token original.</p>
+
+<p class = "p1">Conforme já descrito, essa diferença ocorre porque o texto descriptografado é XORed contra o bloco anterior de texto cifrado, que o invasor modificou ligeiramente.</p>
+
+<p class = "p1">Embora o invasor não veja os valores descriptografados, o aplicativo tenta processá-los e o invasor vê os resultados nas respostas do aplicativo. O que acontece exatamente depende de como o aplicativo lida com a parte do token descriptografado que foi corrompido. Se o aplicativo rejeitar tokens contendo dados inválidos, o ataque falhará. Freqüentemente, no entanto, os aplicativos que usam tokens dessa maneira inspecionam apenas certas partes do token descriptografado, como o identificador do usuário. Se o aplicativo se comportar assim, o oitavo exemplo mostrado na lista anterior será bem-sucedido e o aplicativo processará a solicitação no contexto do usuário que tem um uid de 226, em vez do 216 original.</p>
+
+<p class = "p1">Você pode facilmente testar aplicativos para esta vulnerabilidade usando o tipo de carga útil “bit flipper” no Burp Intruder. Primeiro, você precisa fazer login no aplicativo usando sua própria conta.</p>
+
+<p class = "p1">Então você encontra uma página do aplicativo que depende de uma sessão conectada e mostra a identidade do usuário conectado na resposta.</p>
+
+<p class = "p1">Normalmente, a página inicial do usuário ou a página de detalhes da conta atendem a esse propósito. A Figura 7-6 mostra o Burp Intruder configurado para direcionar a página inicial do usuário, com o token de sessão criptografado marcado como uma posição de carga útil.</p>
+
+<p class = "p1">A Figura 7-7 mostra a configuração de carga útil necessária.  Diz ao Burp para operar no valor original do token, tratando-o como hexadecimal codificado em ASCII, e para inverter cada bit em cada posição de caractere. Essa abordagem é ideal porque requer um número relativamente pequeno de solicitações (oito solicitações por byte de dados no token) e quase sempre identifica se o aplicativo está vulnerável. Isso permite que você use um ataque mais focado para realizar a exploração real.</p>
+
+<p class = "p1">Quando o ataque é executado, as solicitações iniciais não causam nenhuma mudança perceptível nas respostas do aplicativo e a sessão do usuário ainda está intacta.  Isso é interessante por si só, porque indica que a primeira parte do token não está sendo usada para identificar o usuário logado.</p>
+
+<p class = "p1">Muitas das solicitações posteriores no ataque causam um redirecionamento para a página de login, indicando que a modificação invalidou o token de alguma forma.</p>
+
+<p class = "p1">Crucialmente, há também uma série de solicitações em que a resposta parece fazer parte de uma sessão válida, mas não está associada à identidade original do usuário. Isso corresponde ao bloco do token que contém o valor uid. Em alguns casos, o aplicativo simplesmente exibe “usuário desconhecido”, indicando que o uid modificado não correspondia a um usuário real e, portanto, o ataque falhou. Em outros casos, mostra o nome de outro usuário registrado do aplicativo, provando conclusivamente que o ataque foi bem-sucedido. A Figura 7-8 mostra os resultados do ataque. Aqui definimos uma coluna extrair grep para exibir a identidade do usuário conectado e configuramos um filtro para ocultar as respostas que são redirecionamentos para a página de login.</p>
+
+<p class = "p1">Tendo identificado a vulnerabilidade, você pode continuar a explorá-la com um ataque mais focado. Para fazer isso, você deve determinar a partir dos resultados exatamente qual bloco do token criptografado está sendo violado quando o contexto do usuário muda. Em seguida, você executaria um ataque que testa vários valores adicionais dentro deste bloco. Você pode usar o tipo de carga útil de números no Burp Intruder para fazer isso.</p>
+
+<p class = "p1">Alguns aplicativos usam a técnica de criptografar dados significativos dentro de parâmetros de solicitação de forma mais geral, em uma tentativa de evitar a violação de dados, como os preços de itens de compras. Em qualquer local onde você vê dados aparentemente criptografados que desempenham um papel fundamental na funcionalidade do aplicativo, você deve tentar a técnica de bit flipping para ver se você pode manipular as informações criptografadas de uma forma significativa para interferir na lógica do aplicativo.</p>
+
+<p class = "p1">Ao tentar explorar a vulnerabilidade descrita nesta seção, seu objetivo seria, obviamente, se passar por diferentes usuários de aplicativos - de preferência, um usuário administrativo com privilégios mais altos. Se você estiver restrito a manipular cegamente partes de um token criptografado, isso pode exigir um certo grau de sorte.</p>
+
+<p class = "p1">No entanto, em alguns casos, o aplicativo pode fornecer mais assistência. Quando um aplicativo emprega criptografia simétrica para proteger os dados contra violação pelos usuários, é comum que o mesmo algoritmo de criptografia e chave sejam usados ​​em todo o aplicativo. Nessa situação, se qualquer função de aplicativo revelar ao usuário o valor descriptografado de uma string criptografada arbitrária, isso pode ser aproveitado para descriptografar totalmente qualquer item de informação protegida.</p>
+
+<p class = "p1">Um aplicativo observado pelos autores continha uma função de upload / download de arquivo.</p>
+
+<p class = "p1">Depois de fazer upload de um arquivo, os usuários receberam um link para download contendo um parâmetro de nome de arquivo. Para evitar vários ataques que manipulam caminhos de arquivo, o aplicativo criptografou o nome do arquivo dentro deste parâmetro.</p>
+
+<p class = "p1">No entanto, se um usuário solicitou um arquivo que foi excluído, o aplicativo exibiu uma mensagem de erro mostrando o nome descriptografado do arquivo solicitado. Este comportamento pode ser aproveitado para encontrar o valor de texto simples de qualquer string criptografada usada no aplicativo, incluindo os valores de tokens de sessão. Os tokens de sessão foram encontrados para conter vários valores significativos em um formato estruturado que era vulnerável ao tipo de ataque descrito nesta seção. Como esses valores incluíam nomes de usuário textuais e funções de aplicativo, em vez de identificadores numéricos, teria sido extremamente difícil realizar uma exploração bem-sucedida usando apenas bit cego lançando. No entanto, usando a função de descriptografia de nome de arquivo, foi possível manipular sistematicamente bits de um token enquanto visualiza os resultados.</p>
+
+<p class = "p1">Isso permitiu a construção de um token que, ao ser descriptografado, especificava um usuário e uma função administrativa válidos, permitindo o controle total da aplicação.</p>
+
+<p class = "p1">Outras técnicas podem permitir que você descriptografe os dados criptografados usados ​​pelo aplicativo. Um oráculo de criptografia de “revelação” pode ser abusado para obter o valor de texto não criptografado de um token criptografado.</p>
+
+<p class = "p1">Embora isso possa ser um significativo vulnerabilidade ao descriptografar uma senha, descriptografar um token de sessão não fornece um meio imediato de comprometer as sessões de outros usuários.</p>
+
+<p class = "p1">No entanto, o token descriptografado fornece uma visão útil da estrutura de texto não criptografado, que é útil na condução de um ataque direcionado de inversão de bits. Consulte o Capítulo 11 para obter mais detalhes sobre "revelar" ataques de oráculo de criptografia.</p>
+
+<p class = "p1">Ataques de canal lateral contra oráculos de preenchimento podem ser usados ​​para comprometer tokens criptografados. Consulte o Capítulo 18 para obter mais detalhes.</p>
+
+<p class = "p1">Em muitas situações em que tokens criptografados são usados, a capacidade de exploração real pode depender de vários fatores, incluindo os deslocamentos dos limites do bloco em relação aos dados que você precisa para atacar e a tolerância do aplicativo às alterações que você causa na estrutura de texto simples circundante. Trabalhando completamente cego, pode parecer difícil construir um ataque eficaz, porém em muitas situações isso é de fato possível.</p>
+
+<p class = "p1">1. A menos que o token de sessão seja obviamente significativo ou sequencial em si mesmo, sempre considere a possibilidade de que ele possa ser criptografado. Freqüentemente, você pode identificar que uma cifra baseada em bloco está sendo usada registrando vários nomes de usuário diferentes e adicionando um caractere de comprimento a cada vez. Se você encontrar um ponto em que a adição de um caractere resulta em seu token de sessão pulando em comprimento em 8 ou 16 bytes, então uma cifra de bloco provavelmente está sendo usada. Você pode confirmar isso continuando a adicionar bytes ao seu nome de usuário, e procurando o mesmo salto ocorrendo 8 ou 16 bytes depois.</p>
+
+<p class = "p1">2. Vulnerabilidades de manipulação de cifras de ECB são normalmente difíceis de identificar e explorar em um contexto puramente de caixa preta.</p>
+
+<p class = "p1">Você pode tentar duplicar e mover cegamente os blocos de texto cifrado dentro do seu token e revisar se você permanece conectado ao aplicativo em seu próprio contexto de usuário, ou de outro usuário, ou mesmo nenhum.</p>
+
+<p class = "p1">3. Você pode testar vulnerabilidades de manipulação de criptografia CBC executando um ataque Burp Intruder em todo o token, usando a fonte de carga útil “bit flipping”. Se o ataque de inversão de bits identifica uma seção dentro do token, cuja manipulação faz com que você permaneça em uma sessão válida, mas como um usuário diferente ou inexistente, execute um ataque mais focado apenas nesta seção, tentando uma gama mais ampla de valores em  cada posição.</p>
+
+<p class = "p1">4. Durante os dois ataques, monitore as respostas do aplicativo para identificar o usuário associado à sua sessão após cada solicitação e tente explorar quaisquer oportunidades de escalonamento de privilégios que possam resultar.</p>
+
+<p class = "p1">5. Se seus ataques forem malsucedidos, mas parecer da etapa 1 que a entrada de comprimento variável que você controla está sendo incorporada ao token, você deve tentar gerar uma série de tokens adicionando um caractere por vez, pelo menos até o tamanho  de blocos sendo usados. Para cada token resultante, você deve executar novamente as etapas 2 e 3.</p>
+
+<p class = "p1">Isso aumentará a chance de que os dados que você precisa modificar estejam adequadamente alinhados com os limites do bloco para que seu ataque seja bem-sucedido.</p>
+
+<h1>Fraquezas no tratamento do token de sessão</h1>
+
+<p class = "p1">Não importa o quão eficaz um aplicativo seja em garantir que os tokens de sessão que ele gera não contenham nenhuma informação significativa e não sejam suscetíveis a análise ou previsão, seu mecanismo de sessão estará totalmente aberto a ataques se esses tokens não forem tratados com cuidado após a geração. Por exemplo, se os tokens forem divulgados a um invasor por meio de alguns meios, o invasor pode sequestrar as sessões do usuário, mesmo que seja impossível prever os tokens.</p>
+
+<p class = "p1">O manuseio inseguro de tokens de um aplicativo pode torná-lo vulnerável a ataques de várias maneiras.</p>
+
+<p class = "p1">“Nosso token é seguro contra divulgação a terceiros porque usamos SSL.”</p>
+
+<p class = "p1">O uso adequado de SSL certamente ajuda a proteger os tokens de sessão de serem capturados. Mas vários erros ainda podem resultar na transmissão de tokens em texto não criptografado, mesmo quando o SSL está em vigor. E vários ataques diretos contra usuários finais podem ser usados ​​para obter seus tokens.</p>
+
+<p class = "p1">“Nosso token é gerado pela plataforma usando tecnologias maduras e criptograficamente sólidas, portanto, não é vulnerável a comprometimento.”</p>
+
+<p class = "p1">O comportamento padrão de um servidor de aplicativos geralmente é criar um cookie de sessão quando o usuário visita o site pela primeira vez e mantê-lo disponível para toda a interação do usuário com o site.
+
+<p class = "p1">Conforme descrito nas seções a seguir, isso pode levar a várias vulnerabilidades de segurança na forma como o token é tratado.</p>
+</body>
+</html>
