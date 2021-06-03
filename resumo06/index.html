@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <title>Resumo 01</title>
+<meta charset="UTF-8">
+    <meta name="keywords" content="desenvolvedor hat, hacking, linux, comando ls">
+    <meta name="description" content="introducao ao linux. Resumo sobre diversas vulnerabilidades web.">
+    <meta name="robots" content="index">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link type="text/css" rel="stylesheet" href="style.css">
+    <script src='https://kit.fontawesome.com/a076d05399.js'></script>
+    <script data-ad-client="ca-pub-6493599991997784" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css">
+  </head>
+  <body>
+    <menu>
+      <nav class="n1">
+        <a href="/index.html" class="menu">HOME</a>
+      </nav>
+    </menu>
+
+<p class = "p1">É possível detectar a presença de cada mapeamento de extensão de arquivo por meio das diferentes mensagens de erro geradas quando essa extensão de arquivo é solicitada.  Em alguns casos, descobrir um mapeamento específico pode indicar a presença de uma vulnerabilidade de servidor da web.  Por exemplo, os manipuladores .printer e .ida / .idq no IIS foram anteriormente considerados vulneráveis ​​a vulnerabilidades de estouro de buffer.</p>
+
+<p class = "p1">Outra impressão digital comum a ter em conta são os URLs semelhantes a este:</p>
+
+<p class = "p1">Os números separados por vírgula no final da URL são geralmente gerados pela plataforma de gerenciamento de conteúdo Vignette.</p>
+
+ <h1>Nomes de Diretório</h1>
+
+<p class = "p1">É comum encontrar nomes de sub diretórios que indicam a presença de uma tecnologia associada.  Por exemplo:</p>
+
+<div>
+servlet - servlets Java
+
+pls - gateway Oracle Application Server PL / SQL
+
+ cfdocs ou cfide - Cold Fusion
+
+SilverStream - o servidor da web SilverStream
+
+WebObjects ou {function} .woa - Apple WebObjects
+
+ rails - Ruby on Rails
+</div>
+
+<h1>Tokens de sessão</h1>
+
+<p class = "p1">Muitos servidores da web e plataformas de aplicativos da web geram tokens de sessão por padrão com nomes que fornecem informações sobre a tecnologia em uso. Por exemplo:</p>
+
+<div>
+JSESSIONID - A plataforma Java
+
+ASP SESSIONID - servidor Microsoft IIS
+
+ASP.NET_SessionId - Microsoft ASP.NET
+
+CFID / CFTOKEN - Cold Fusion
+
+PHPSESSID - PHP
+</div>
+
+<h1>Componentes de código de terceiros</h1>
+
+<p class = "p1">Muitos aplicativos da web incorporam componentes de código de terceiros para implementar funcionalidades comuns, como carrinhos de compras, mecanismos de login e painéis de mensagens.  Eles podem ser de código aberto ou podem ter sido adquiridos de um desenvolvedor de software externo.  Quando for esse o caso, os mesmos componentes geralmente aparecem em vários outros aplicativos da web na Internet, que você pode inspecionar para entender como o componente funciona.  Freqüentemente, outros aplicativos usam recursos diferentes do mesmo componente, permitindo que você identifique comportamento e funcionalidade adicionais além do que está diretamente visível no aplicativo de destino.  Além disso, o software pode conter vulnerabilidades conhecidas que foram discutidas em outro lugar, ou você pode baixar e instalar o componente por conta própria e realizar uma revisão do código-fonte ou sondá-lo em busca de defeitos de maneira controlada.</p>
+
+<p class = "p1">1. Identifique todos os pontos de entrada para entrada do usuário, incluindo URLs, parâmetros de string de consulta, dados POST, cookies e outros cabeçalhos HTTP processados ​​pelo aplicativo.</p>
+
+<p class = "p1">2. Examine o formato da string de consulta usado pelo aplicativo.  Se não utilizar o formato padrão descrito no Capítulo 3, tente entender como os parâmetros estão sendo transmitidos por meio do URL.  Praticamente todos personalizados esquemas ainda empregam alguma variação no modelo de nome / valor, então tente entender como os pares nome / valor estão sendo encapsulados nos URLs não padrão que você identificou.</p>
+
+<p class = "p1">3. Identifique quaisquer canais fora do limite por meio dos quais dados controláveis ​​pelo usuário ou outros dados de terceiros estão sendo introduzidos no processamento do aplicativo.</p>
+
+<p class = "p1">4. Visualize o banner do servidor HTTP retornado pelo aplicativo.  Observe que, em alguns casos, diferentes áreas do aplicativo são tratadas por diferentes componentes de back-end, portanto, diferentes cabeçalhos de servidor podem ser recebidos.</p>
+
+<p class = "p1">6. Verifique se há outros identificadores de software contidos em quaisquer cabeçalhos HTTP personalizados ou comentários de código-fonte HTML.</p>
+
+<p class = "p1">7. Execute a ferramenta httprint para fazer a impressão digital do servidor da web.</p>
+
+<p class = "p1">8. Se informações refinadas forem obtidas sobre o servidor da web e outros componentes, pesquise as versões de software em uso para identificar quaisquer vulnerabilidades que possam ser exploradas para avançar um ataque (consulte o Capítulo 18).</p>
+
+<p class = "p1">9. Revise seu mapa de URLs de aplicativos para identificar quaisquer extensões de arquivo de aparência interessante, diretórios ou outras subseqüências que possam fornecer pistas
+ sobre as tecnologias em uso no servidor.</p>
+
+<p class = "p1">10. Revise os nomes de todos os tokens de sessão emitidos pelo aplicativo para identificar as tecnologias que estão sendo usadas.</p>
+
+<p class = "p1">11. Use listas de tecnologias comuns, ou Google, para estabelecer quais tecnologias podem estar em uso no servidor, ou descobrir outros sites e aplicativos que parecem empregar as mesmas tecnologias.</p>
+
+<p class = "p1">12. Faça pesquisas no Google em busca de nomes de cookies, scripts, cabeçalhos HTTP incomuns e semelhantes que possam pertencer a componentes de software de terceiros.  Se você localizar outros aplicativos nos quais os mesmos componentes estão sendo usados, revise-os para identificar qualquer funcionalidade e parâmetros adicionais que os componentes suportam e verifique se eles também estão presentes em seu aplicativo de destino.  Observe que os componentes de terceiros podem ter uma aparência e comportamento bastante diferentes em cada implementação, devido às personalizações de marca, mas a funcionalidade principal, incluindo nomes de script e parâmetro, geralmente é a mesma.  Se possível, baixe e instale o componente e analise-o para compreender totalmente seus recursos e, se possível, descobrir quaisquer vulnerabilidades.  Consulte repositórios de vulnerabilidades conhecidas para identificar quaisquer defeitos conhecidos com o componente em questão.</p>
+
+<h1>Identificação da funcionalidade do lado do servidor</h1>
+
+<p class = "p1">Freqüentemente, é possível inferir muito sobre a funcionalidade e a estrutura do lado do servidor, ou pelo menos fazer uma suposição fundamentada, observando as pistas que o aplicativo divulga ao cliente.</p>
+
+<h1>Dissecando Solicitações</h1>
+
+<p class = "p1">Considere o seguinte URL, que é usado para acessar uma função de pesquisa:</p>
+
+<p class = "p1">Como você viu, a extensão do arquivo .jsp indica que as páginas do servidor Java estão em uso.</p>
+
+<p class = "p1">Você pode supor que uma função de pesquisa recuperará suas informações de um sistema de indexação ou de um banco de dados.  A presença do parâmetro OrderBy sugere que um banco de dados back-end está sendo usado e que o valor enviado pode ser usado como a cláusula ORDER BY de uma consulta SQL.  Esse parâmetro pode ser vulnerável à injeção de SQL, assim como qualquer um dos outros parâmetros se forem usados ​​em consultas de banco de dados (consulte o Capítulo 9).</p>
+
+<p class = "p1">Entre os outros parâmetros, também é interessante o campo isExpired.  Parece ser um sinalizador booleano que especifica se a consulta de pesquisa deve incluir conteúdo expirado.  Se os designers do aplicativo não esperassem que os usuários comuns pudessem recuperar qualquer conteúdo expirado, alterar este parâmetro de 0 para 1 poderia identificar uma vulnerabilidade de controle de acesso (consulte o Capítulo 8).</p>
+
+<p class = "p1">O seguinte URL, que permite aos usuários acessar um sistema de gerenciamento de conteúdo, contém um conjunto diferente de pistas:</p>
+
+<p class = "p1">Aqui, a extensão de arquivo .aspx indica que este é um aplicativo ASP.NET. Também parece muito provável que o parâmetro de modelo seja usado para especificar um nome de arquivo e o parâmetro loc seja usado para especificar um diretório. A possível extensão de arquivo .tpl parece confirmar isso, assim como o local / padrão, que poderia muito bem ser um nome de diretório. É possível que o aplicativo recupere o arquivo de modelo especificado e inclua o conteúdo em sua resposta. Esses parâmetros podem ser vulneráveis ​​a ataques de travessia de caminho, permitindo que arquivos arbitrários sejam lidos do servidor (consulte o Capítulo 10).</p>
+
+<p class = "p1">Também é interessante o parâmetro de edição, que é definido como falso. Pode ser que a alteração desse valor para verdadeiro modifique a funcionalidade de registro, potencialmente permitindo que um invasor edite itens que o desenvolvedor do aplicativo não pretendia que fossem editáveis. O parâmetro ver não tem nenhuma finalidade facilmente adivinhada, mas pode ser que modificá-lo fará com que o aplicativo execute um conjunto diferente de funções que um invasor poderia explorar.</p>
+</body>
+</html>
