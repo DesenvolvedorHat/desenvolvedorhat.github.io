@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <title>Resumo 08</title>
+    <meta charset="UTF-8">
+    <meta name="keywords" content="desenvolvedor hat, hacking, linux, comando ls">
+    <meta name="description" content="introducao ao linux. Resumo sobre diversas vulnerabilidades web.">
+    <meta name="robots" content="index">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link type="text/css" rel="stylesheet" href="style.css">
+    <script src='https://kit.fontawesome.com/a076d05399.js'></script>
+    <script data-ad-client="ca-pub-6493599991997784" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css">
+  </head>
+  <body>
+    <menu>
+      <nav class="n1">
+        <a href="/index.html" class="menu">HOME</a>
+      </nav>
+    </menu>
+
+<h1>Divulgação de tokens na rede</h1>
+
+<p class = "p1">Essa área de vulnerabilidade surge quando o token de sessão é transmitido pela rede de forma não criptografada, permitindo que um bisbilhoteiro devidamente posicionado obtenha o token e, portanto, se faça passar por usuário legítimo. As posições adequadas para espionagem incluem a rede local do usuário, dentro do departamento de TI do usuário, dentro do ISP do usuário, no backbone da Internet, dentro do ISP do aplicativo e dentro do departamento de TI da organização que hospeda o aplicativo. Em cada caso, isso inclui o pessoal autorizado da organização relevante e quaisquer invasores externos que tenham comprometido a infraestrutura em questão.</p>
+
+<p class = "p1">No caso mais simples, onde um aplicativo usa uma conexão HTTP não criptografada para comunicações, um invasor pode capturar todos os dados transmitidos entre o cliente e o servidor, incluindo credenciais de login, informações pessoais, detalhes de pagamento e assim por diante. Nessa situação, um ataque contra a sessão do usuário costuma ser desnecessário porque o invasor já pode visualizar informações privilegiadas e pode fazer login usando credenciais capturadas para realizar outras ações maliciosas.</p>
+
+<p class = "p1">No entanto, ainda pode haver casos em que a sessão do usuário é o alvo principal. Por exemplo, se as credenciais capturadas forem insuficientes para realizar um segundo login (por exemplo, em um aplicativo bancário, elas podem incluir um número exibido em um token físico variável ou dígitos específicos do PIN do usuário), o invasor pode precisar sequestrar  a sessão interceptada para realizar ações arbitrárias. Ou se os logins forem auditados de perto, e o usuário for notificado de cada login bem-sucedido, um invasor pode querer evitar a realização de seu próprio login para ser tão o mais furtivo possível.</p>
+
+<p class = "p1">Em outros casos, um aplicativo pode usar HTTPS para proteger as principais comunicações cliente-servidor, mas ainda pode ser vulnerável à interceptação de tokens de sessão na rede.</p>
+
+<p class = "p1">Essa fraqueza pode ocorrer de várias maneiras, muitas das quais podem surgir especificamente quando os cookies HTTP são usados ​​como o mecanismo de transmissão para tokens de sessão:</p>
+
+<p class = "p1">Alguns aplicativos optam por usar HTTPS para proteger as credenciais do usuário durante o login, mas depois reverter para HTTP pelo restante da sessão do usuário. Muitos aplicativos de webmail se comportam dessa maneira.  Nesta situação, um intruso não pode interceptar as credenciais do usuário, mas ainda pode capturar o token de sessão. A ferramenta Firesheep, lançada como um plug-in para o Firefox, torna esse processo fácil.</p>
+
+<p class = "p1">Alguns aplicativos usam HTTP para áreas pré-autenticadas do site, como a página inicial do site, mas mudam para HTTPS a partir da página de login.</p>
+
+<p class = "p1">No entanto, em muitos casos, o usuário recebe um token de sessão na primeira página visitada, e esse token não é modificado quando o usuário faz login. A sessão do usuário, que originalmente não está autenticada, é atualizada para uma sessão autenticada após o login. Nesta situação, um bisbilhoteiro pode interceptar um token do usuário antes do login, aguarde até que as comunicações do usuário mudem para HTTPS, indicando que o usuário está fazendo login, e tente acessar uma página protegida (como Minha conta) usando esse token.</p>
+
+<p class = "p1">Mesmo que o aplicativo emita um novo token após o login bem-sucedido e use HTTPS a partir da página de login, o token para a sessão autenticada do usuário ainda pode ser divulgado. Isso pode acontecer se o usuário visitar novamente uma página de pré-autenticação (como Ajuda ou Sobre), seja seguindo os links dentro da área autenticada, usando o botão Voltar ou digitando a URL diretamente.</p>
+
+<p class = "p1">Em uma variação do caso anterior, o aplicativo pode tentar mudar para HTTPS quando o usuário clica no link Login.</p>
+
+<p class = "p1">No entanto, ele ainda pode aceitar um login por HTTP se o usuário modificar o URL de acordo. Nessa situação, um invasor posicionado adequadamente pode modificar as páginas retornadas no áreas pré-autenticadas do site para que o link Login aponte para uma página HTTP.</p>
+
+<p class = "p1">Mesmo que o aplicativo emita um novo token de sessão após o login bem-sucedido, o invasor ainda pode interceptar esse token se ele tiver rebaixou a conexão do usuário para HTTP.</p>
+
+<p class = "p1">Alguns aplicativos usam HTTP para todo o conteúdo estático do aplicativo, como imagens, scripts, folhas de estilo e modelos de página. Esse comportamento é frequentemente indicado por um aviso no navegador do usuário, conforme mostrado na Figura 7-9. Quando um navegador mostra esse aviso, ele já recuperou o item relevante por meio de HTTP, portanto, o token de sessão já foi transmitido. O objetivo do aviso do navegador é permitir que o usuário se recuse a processar os dados de resposta que foram recebidos por HTTP e, portanto, pode ser contaminado. Conforme descrito anteriormente, um invasor pode interceptar o token de sessão do usuário quando o navegador do usuário acessa um recurso por HTTP e usar esse token para acessar áreas protegidas e não estáticas do site por HTTPS.</p>
+
+<p class = "p1">Figura 7-9: Os navegadores apresentam um aviso quando uma página acessada por HTTPS contém itens acessados ​​por HTTP.</p>
+
+<p class = "p1">Mesmo que um aplicativo use HTTPS para todas as páginas, incluindo áreas não autenticadas do site e conteúdo estático, ainda pode haver circunstâncias em que os tokens dos usuários são transmitidos por HTTP. Se um invasor puder de alguma forma induzir um usuário a fazer uma solicitação por HTTP (para o serviço HTTP no mesmo servidor, se algum estiver em execução, ou para http: // servidor: 443 / caso contrário), seu token pode ser enviado.</p>
+
+<p class = "p1">Meios pelos quais o atacante pode tentar isso incluir enviar ao usuário um URL em um e-mail ou mensagem instantânea, colocar links de carregamento automático em um site que o invasor controla ou usar banners clicáveis.</p>
+
+<p class = "p1">(Consulte os Capítulos 12 e 13 para obter mais detalhes sobre técnicas desse tipo para entregar ataques contra outros usuários.)</p>
+
+<p class = "p1">1. Percorra o aplicativo da maneira normal desde o primeiro acesso (a URL de "início"), pelo processo de login e, em seguida, por todas as funcionalidades do aplicativo. Mantenha um registro de cada URL visitado e anote cada instância em que um novo token de sessão é recebido. Preste atenção especial às funções de login e transições entre as comunicações HTTP e HTTPS. Isso pode ser feito manualmente usando um sniffer de rede como o Wireshark ou parcialmente automatizado usando as funções de registro do seu proxy de interceptação, conforme mostrado na Figura 7-10.</p>
+
+<p class = "p1">Figura 7-10: Percorrendo um aplicativo para identificar os locais onde novos tokens de sessão são recebidos.</p>
+
+<p class = "p1">2. Se os cookies HTTP estiverem sendo usados ​​como mecanismo de transmissão para tokens de sessão, verifique se o sinalizador seguro está definido, evitando que sejam transmitidos por conexões não criptografadas.</p>
+
+<p class = "p1">3. Determine se, no uso normal do aplicativo, os tokens de sessão são transmitidos por meio de uma conexão não criptografada.</p>
+
+<p class = "p1">Nesse caso, eles devem ser considerados vulneráveis ​​à interceptação.</p>
+
+<p class = "p1">4. Onde a página inicial usa HTTP e o aplicativo muda para HTTPS para o login e áreas autenticadas do site, verifique se um novo token é emitido após o login ou se um token transmitido durante o estágio HTTP ainda está sendo usado para rastrear  a sessão autenticada do usuário.</p>
+
+<p class = "p1">Verifique também se o aplicativo aceitará login por HTTP se o URL de login for modificado de acordo.</p>
+
+<p class = "p1">5. Mesmo que o aplicativo use HTTPS para todas as páginas, verifique se o servidor também está escutando na porta 80, executando algum serviço ou conteúdo. Em caso afirmativo, visite qualquer URL HTTP diretamente de uma sessão autenticada e verifique se o token de sessão é transmitido.</p>
+
+<p class = "p1">6. Nos casos em que um token para uma sessão autenticada é transmitido ao servidor sobre HTTP, verifique se esse token continua válido ou se é encerrado imediatamente pelo servidor.</p>
+
+<h1>Divulgação de tokens em logs</h1>
+
+<p class = "p1">Além da transmissão de texto não criptografado de tokens de sessão em comunicações de rede, o lugar mais comum onde os tokens são simplesmente divulgados para visualização não autorizada é em logs de sistema de vários tipos.</p>
+
+<p class = "p1">Embora seja uma ocorrência mais rara, as consequências desse tipo de divulgação costumam ser mais graves.</p>
+
+<p class = "p1">Esses logs podem ser visualizados por uma gama muito mais ampla de invasores em potencial, não apenas por alguém que esteja devidamente posicionado para espionar a rede.</p>
+
+<p class = "p1">Muitos aplicativos fornecem funcionalidade para administradores e outra equipe de suporte para monitorar e controlar aspectos do estado de tempo de execução do aplicativo, incluindo sessões de usuário.</p>
+
+<p class = "p1">Por exemplo, um funcionário de help desk auxiliando um usuário que está tendo problemas pode pedir seu nome de usuário, localizar sua sessão atual por meio de uma lista ou função de pesquisa e visualizar detalhes relevantes sobre a sessão. Ou um administrador pode consultar um registro de sessões recentes durante a investigação de uma violação de segurança.</p>
+
+<p class = "p1">Freqüentemente, esse tipo de funcionalidade de monitoramento e controle revela o token de sessão real associado a cada sessão.</p>
+
+<p class = "p1">E, muitas vezes, a funcionalidade é mal protegida, permitindo que usuários não autorizados acessem a lista de tokens de sessão atuais e, assim, sequestrem as sessões de todos os usuários do aplicativo.</p>
+
+<p class = "p1">A outra causa principal de tokens de sessão que aparecem nos logs do sistema é quando um aplicativo usa a string de consulta de URL como um mecanismo para transmitir tokens, em vez de usar cookies HTTP ou o corpo de solicitações POST. Por exemplo, pesquisando inurl: jsessionid identifica milhares de aplicativos que transmitem o token de sessão da plataforma Java (chamado jsessionid) dentro do URL:</p>
+
+<p class = "p1">Quando os aplicativos transmitem seus tokens de sessão dessa maneira, é provável que seus tokens de sessão apareçam em vários registros do sistema aos quais partes não autorizadas podem ter acesso:</p>
+
+<p class = "p1">Registros do navegador dos usuários</p>
+
+<p class = "p1">Registros do servidor web</p>
+
+<p class = "p1">Logs de servidores proxy corporativos ou ISP</p>
+
+<p class = "p1">Registros de quaisquer proxies reversos empregados no ambiente de hospedagem do aplicativo</p>
+
+<p class = "p1">Os logs do Referer de todos os servidores que os usuários do aplicativo visitam seguindo links externos, conforme mostrado na Figura 7-11</p>
+
+<p class = "p1">Algumas dessas vulnerabilidades surgem mesmo se HTTPS for usado em todo o aplicativo.</p>
+
+<p class = "p1">Figura 7-11: Quando os tokens de sessão aparecem em URLs, eles são transmitidos no cabeçalho Referer quando os usuários seguem um link externo ou seu navegador carrega um recurso externo.</p>
+
+<p class = "p1">O último caso descrito apresenta a um invasor um meio altamente eficaz de capturar tokens de sessão em alguns aplicativos. Por exemplo, se um aplicativo de correio da web transmite tokens de sessão dentro da URL, um invasor pode enviar e-mails aos usuários do aplicativo contendo um link para um servidor da web que ele controla. Se algum usuário acessar o link (porque ela clica nele ou porque seu navegador carrega imagens contidas em um e-mail formatado em HTML), o invasor recebe, em tempo real, o token de sessão do usuário. O invasor pode executar um script simples em seu servidor para sequestrar a sessão de cada token recebido e executar alguma ação mal-intencionada, como enviar e-mail de spam, colher informações pessoais ou alterar senhas.</p>
+
+<p class = "p1">As versões atuais do Internet Explorer não incluem um cabeçalho Referer ao seguir links externos contidos em uma página que foi acessada por HTTPS.</p>
+
+<p class = "p1">Nessa situação, o Firefox inclui o cabeçalho Referer, desde que o link externo também esteja sendo acessado por HTTPS, mesmo se pertencer a um domínio diferente. Conseqüentemente, dados confidenciais colocados em URLs são vulneráveis ​​a vazamentos nos logs do Referer, mesmo quando SSL está sendo usado.</p>
+
+<p class = "p1">1. Identifique todas as funcionalidades do aplicativo e localize quaisquer funções de registro ou monitoramento onde os tokens de sessão possam ser visualizados. Verifique quem pode acessar esta funcionalidade - por exemplo, administradores, qualquer usuário autenticado ou qualquer usuário anônimo.</p>
+
+<p class = "p1">Consulte o Capítulo 4 para obter técnicas para descobrir conteúdo oculto que não esteja diretamente vinculado ao aplicativo principal.</p>
+
+<p class = "p1">2. Identifique todas as instâncias dentro do aplicativo em que os tokens de sessão são transmitidos no URL.</p>
+
+<p class = "p1">Pode ser que os tokens sejam geralmente transmitidos de maneira mais segura, mas os desenvolvedores tenham usado a URL em casos específicos para contornar dificuldades específicas. Por exemplo, esse comportamento é frequentemente observado quando um aplicativo da web faz interface com um sistema externo.</p>
+
+<p class = "p1">3. Se os tokens de sessão estiverem sendo transmitidos em URLs, tente encontrar qualquer funcionalidade do aplicativo que permita inserir links externos arbitrários em páginas visualizadas por outros usuários. Os exemplos incluem a funcionalidade de implementação de um quadro de mensagens, feedback do site, perguntas e respostas e assim por diante. Se portanto, envie links para um servidor da web que você controla e espere para ver se os tokens de sessão de algum usuário são recebidos em seus registros de referenciador.</p>
+
+<p class = "p1">4. Se algum token de sessão for capturado, tente sequestrar as sessões do usuário usando o aplicativo normalmente, mas substituindo o seu próprio token capturado. Você pode fazer isso interceptando a próxima resposta do servidor e adicionando um cabeçalho Set-Cookie de sua preferência com o valor do cookie capturado. No Burp, você pode aplicar uma única configuração em todo o Suite que define um cookie específico em todas as solicitações para o aplicativo de destino para permitir a alternância fácil entre diferentes contextos de sessão durante o teste.</p>
+
+<p class = "p1">6. Se um grande número de tokens for capturado e o sequestro de sessão permitir que você acesse dados confidenciais, como detalhes pessoais, informações de pagamento ou senhas de usuário, você pode usar as técnicas automatizadas descritas no Capítulo 14 para coletar todos os dados desejados pertencentes a outros  usuários do aplicativo.</p>
+
+<h1>Mapeamento vulnerável de tokens para sessões</h1>
+
+<p class = "p1">Várias vulnerabilidades comuns nos mecanismos de gerenciamento de sessão surgem por causa das deficiências em como o aplicativo mapeia a criação e o processamento de tokens de sessão para as próprias sessões de usuários individuais.</p>
+
+<p class = "p1">A fraqueza mais simples é permitir que vários tokens válidos sejam atribuídos simultaneamente à mesma conta de usuário. Em praticamente todos os aplicativos, não há razão legítima para que um usuário tenha mais de uma sessão ativa ao mesmo tempo. Claro, é bastante comum para um usuário abandonar uma sessão ativa e iniciar uma nova - por exemplo, porque ele fecha uma janela do navegador ou muda para um computador diferente. Mas se um usuário parece estar usando duas sessões diferentes simultaneamente, isso geralmente indica que ocorreu um comprometimento da segurança: ou o usuário divulgou suas credenciais para outra parte ou um invasor obteve suas credenciais por algum outro meio. Em ambos os casos, permitir sessões simultâneas é indesejável, porque permite que os usuários persistam em práticas indesejáveis ​​sem inconvenientes e porque permite que um invasor use credenciais capturadas sem risco de detecção.</p>
+
+<p class = "p1">Um ponto fraco relacionado, mas distinto, é que os aplicativos usem tokens “estáticos”.</p>
+
+<p class = "p1">Eles se parecem com tokens de sessão e podem inicialmente parecer funcionar como eles, mas na verdade não são tal coisa. Nesses aplicativos, cada usuário recebe um token, e esse mesmo token é reemitido para o usuário sempre que ele efetua login. O aplicativo sempre aceita o token como válido, independentemente de o usuário ter efetuado login recentemente e emitido com ele. Aplicativos como este realmente envolvem um mal-entendido sobre todo o conceito do que é uma sessão, e os benefícios que oferece para gerenciar e controlar o acesso ao aplicativo.</p>
+
+<p class = "p1">Às vezes, os aplicativos operam assim como um meio de implementar a funcionalidade "lembre-se de mim" mal projetada, e o token estático é armazenado em um cookie persistente (consulte o Capítulo 6). Às vezes, os próprios tokens são vulneráveis ​​a ataques de previsão, tornando a vulnerabilidade muito mais séria.</p>
+
+<p class = "p1">Em vez de comprometer as sessões de usuários atualmente logados, um sucesso ataque compromete, para sempre, as contas de todos os usuários cadastrados.</p>
+
+<p class = "p1">Outros tipos de comportamento de aplicativo estranho também são ocasionalmente observados, demonstrando um defeito fundamental no relacionamento entre tokens e sessões.</p>
+
+<p class = "p1">Um exemplo é quando um token significativo é construído com base em um nome de usuário e um componente aleatório. Por exemplo, considere o token:</p>
+
+<p class = "p1">Após extensa análise do componente r1, podemos concluir que isso não pode ser previsto com base em uma amostra de valores.</p>
+
+<p class = "p1">No entanto, se a sessão do aplicativo a lógica de processamento é incorreta, pode ser que um invasor simplesmente precise enviar qualquer valor válido como r1 e qualquer valor válido como usuário para acessar uma sessão no contexto de segurança do usuário especificado. Esta é essencialmente uma vulnerabilidade de controle de acesso, porque as decisões sobre o acesso são feitas com base nos dados fornecidos pelo usuário fora da sessão (consulte o Capítulo 8). Ele surge porque o aplicativo usa tokens de sessão efetivamente para significar que o solicitante estabeleceu algum tipo de sessão válida com o aplicativo. No entanto, o contexto do usuário no qual a sessão é processada não é uma propriedade integrante da própria sessão, mas é determinado por solicitação por algum outro meio. Nesse caso, isso significa que pode ser controlado diretamente pelo solicitante.</p>
+
+<p class = "p1">1. Faça login no aplicativo duas vezes usando a mesma conta de usuário, em processos de navegador diferentes ou em computadores diferentes.</p>
+
+<p class = "p1">Determine se ambas as sessões permanecem ativas simultaneamente. Em caso afirmativo, o aplicativo oferece suporte a sessões simultâneas, permitindo que um invasor tenha comprometido as credenciais de outro usuário para fazer uso delas sem risco de detecção.</p>
+
+<p class = "p1">2. Faça login e logout várias vezes usando a mesma conta de usuário, em processos de navegador diferentes ou em computadores diferentes. Determine se um novo token de sessão é emitido a cada vez ou se o mesmo token é emitido toda vez que você efetuar login. Se o último ocorrer, o aplicativo é realmente não empregando sessões adequadas.</p>
+
+<p class = "p1">3. Se os tokens parecerem conter qualquer estrutura e significado, tente separar os componentes que podem identificar o usuário daqueles que parecem ser inescrutáveis. Tente modificar quaisquer componentes do token relacionados ao usuário para que se refiram a outros usuários conhecidos do aplicativo e verifique se o token resultante é aceito pelo aplicativo e permite que você se faça passar por esse usuário.</p>
+</body>
+</html>
