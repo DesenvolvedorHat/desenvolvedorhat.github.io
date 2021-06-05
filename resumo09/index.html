@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <title>Resumo 09</title>
+    <meta charset="UTF-8">
+    <meta name="keywords" content="desenvolvedor hat, hacking, linux, comando ls">
+    <meta name="description" content="introducao ao linux. Resumo sobre diversas vulnerabilidades web.">
+    <meta name="robots" content="index">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link type="text/css" rel="stylesheet" href="style.css">
+    <script src='https://kit.fontawesome.com/a076d05399.js'></script>
+    <script data-ad-client="ca-pub-6493599991997784" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css">
+  </head>
+  <body>
+    <menu>
+      <nav class="n1">
+        <a href="/index.html" class="menu">HOME</a>
+      </nav>
+    </menu>
+
+<h1>Término de sessão vulnerável</h1>
+
+<p class = "p1">O encerramento adequado das sessões é importante por dois motivos.</p>
+
+<p class = "p1">Em primeiro lugar, manter a vida útil de uma sessão tão curta quanto necessário reduz a janela de oportunidade dentro da qual um invasor pode capturar, adivinhar ou usar indevidamente um token de sessão válido.</p>
+
+<p class = "p1">Em segundo lugar, fornece aos usuários um meio de invalidar uma sessão existente quando eles não precisam mais dela. Isso permite que eles reduzam ainda mais essa janela e assumam alguma responsabilidade por proteger sua sessão em um ambiente de computação compartilhada. Os principais pontos fracos nas funções de encerramento de sessão envolvem falhas em atender a esses dois objetivos principais.</p>
+
+<p class = "p1">Alguns aplicativos não impõem a expiração efetiva da sessão.</p>
+
+<p class = "p1">Depois de criada, uma sessão pode permanecer válida por muitos dias após o recebimento da última solicitação, antes que o servidor eventualmente expire a sessão. Se os tokens são vulneráveis ​​a algum tipo de falha de sequenciamento que é particularmente difícil de explorar (por exemplo, 100.000 suposições para cada token válido identificado), um invasor ainda pode ser capaz de capturar os tokens de cada usuário que acessou o aplicativo no recente  passado.</p>
+
+<p class = "p1">Alguns aplicativos não oferecem funcionalidade de logout eficaz:</p>
+
+<p class = "p1">Em alguns casos, uma função de logout simplesmente não é implementada. Os usuários não têm como fazer com que o aplicativo invalide sua sessão.</p>
+
+<p class = "p1">Em alguns casos, a função de logout não faz com que o servidor invalide a sessão. O servidor remove o token do navegador do usuário (por exemplo, emitindo uma instrução Set-Cookie para limpar o token).</p>
+
+<p class = "p1">No entanto, se o usuário continuar a enviar o token, o servidor ainda o aceitará.</p>
+
+<p class = "p1">No pior dos casos, quando um usuário clica Logout, esse fato não é comunicado ao servidor, portanto, o servidor não executa nenhuma ação.</p>
+
+<p class = "p1">Em vez disso, um script do lado do cliente é executado, deixando o cookie do usuário em branco, o que significa que as solicitações subsequentes retornam o usuário à página de login. Um invasor que obtém acesso a esse cookie pode usar a sessão como se o usuário nunca tivesse se desconectado.</p>
+
+<p class = "p1">Alguns aplicativos que não usam autenticação ainda contêm funcionalidade que permite aos usuários criar dados confidenciais em sua sessão (por exemplo, um aplicativo de compras). No entanto, normalmente eles não fornecem nenhum equivalente a uma função de logout para os usuários encerrarem sua sessão.</p>
+
+<p class = "p1">1. Não caia na armadilha de examinar ações que o aplicativo executa no token do lado do cliente (como invalidação de cookie por meio de uma nova instrução Set-Cookie, script do lado do cliente ou um atributo de tempo de expiração).</p>
+
+<p class = "p1">Em termos de encerramento de sessão, nada depende muito do que acontece com o token no navegador do cliente. Em vez disso, investigue se a expiração da sessão é implementada no lado do servidor:</p>
+
+<p class = "p1">a. Faça login no aplicativo para obter um token de sessão válido.</p>
+
+<p class = "p1">b. Aguarde um período sem usar esse token e, em seguida, envie uma solicitação para uma página protegida (como “meus detalhes”) usando o token.</p>
+
+<p class = "p1">c. Se a página for exibida normalmente, o token ainda está ativo.</p>
+
+<p class = "p1">d. Use tentativa e erro para determinar quanto tempo é o tempo limite de expiração de qualquer sessão ou se um token ainda pode ser usado dias após a última solicitação que o usou. Burp Intruder pode ser configurado para incrementar o intervalo de tempo entre solicitações sucessivas para automatizar esta tarefa.</p>
+
+<p class = "p1">2. Determine se uma função de logout existe e é disponibilizada de forma destacada aos usuários. Do contrário, os usuários ficam mais vulneráveis, porque não têm como fazer com que o aplicativo invalide sua sessão.</p>
+
+<p class = "p1">3. Onde uma função de logout for fornecida, teste sua eficácia. Após efetuar logout, tente reutilizar o token antigo e determine se ele ainda é válido. Nesse caso, os usuários permanecem vulneráveis ​​a alguns ataques de sequestro de sessão, mesmo depois de terem “desconectado”.</p>
+
+<p class = "p1">Você pode usar Burp Suite para testar isso, selecionando um recente
+ solicitação dependente da sessão do histórico de proxy e enviá-la para o Burp Repeater para reemitir após você efetuar logout do aplicativo.</p>
+
+<h1>Exposição do cliente ao sequestro de token</h1>
+
+<p class = "p1">Um invasor pode visar outros usuários do aplicativo em uma tentativa de capturar ou usar indevidamente o token de sessão da vítima de várias maneiras:</p>
+
+<p class = "p1">Uma carga útil óbvia para ataques de script entre sites é consultar os cookies do usuário para obter seu token de sessão, que pode então ser transmitido para um servidor arbitrário controlado pelo invasor. Todas as várias permutações desse ataque são descritas em detalhes no Capítulo 12.</p>
+
+<p class = "p1">Vários outros ataques contra usuários podem ser usados ​​para sequestrar a sessão do usuário de diferentes maneiras.</p>
+
+<p class = "p1">Com as vulnerabilidades de fixação de sessão, um invasor fornece um token de sessão conhecido para um usuário, espera que ele faça login e, em seguida, sequestra sua sessão. Com ataques de falsificação de solicitação entre sites, um invasor faz uma solicitação elaborada a um aplicativo a partir de um site que ele controla e explora o fato de que o navegador do usuário envia automaticamente seu cookie com este pedido. Esses ataques também são descritos no Capítulo 12.</p>
+
+<p class = "p1">1. Identifique quaisquer vulnerabilidades de cross-site scripting dentro do aplicativo e determinar se eles podem ser explorados para capturar os tokens de sessão de outros usuários (consulte o Capítulo 12).</p>
+
+<p class = "p1">2. Se o aplicativo emitir tokens de sessão para usuários não autenticados, obtenha um token e execute um login. Se o aplicativo não emitir um novo token após um login bem-sucedido, ele estará vulnerável à fixação da sessão.</p>
+
+<p class = "p1">3. Mesmo que o aplicativo não emita tokens de sessão para usuários não autenticados, obtenha um token efetuando login e, em seguida, retorne à página de login. Se o aplicativo desejar retornar esta página mesmo que você já esteja autenticado, envie outro login como um usuário diferente usando o mesmo token.</p>
+
+<p class = "p1">Se o aplicativo não emitir um novo token após o segundo login, ele estará vulnerável à fixação da sessão.</p>
+
+<p class = "p1">4. Identifique o formato dos tokens de sessão usados ​​pelo aplicativo.</p>
+
+<p class = "p1">Modifique seu token para um valor inventado que seja formado de forma válida e tente fazer o login.</p>
+
+<p class = "p1">Se o aplicativo permitir que você crie uma sessão autenticada usando um token inventado, ele estará vulnerável à fixação da sessão.</p>
+
+<p class = "p1">5. Se o aplicativo não suportar login, mas processar informações confidenciais do usuário (como detalhes pessoais e de pagamento) e permitir que sejam exibidas após o envio (como em uma página "verificar meu pedido"), leve os três testes anteriores em relação às páginas que exibem dados confidenciais. Se um token definido durante o uso anônimo do aplicativo puder ser usado posteriormente para recuperar informações confidenciais do usuário, o aplicativo estará vulnerável à fixação da sessão.</p>
+
+<p class = "p1">6. Se o aplicativo usa cookies HTTP para transmitir tokens de sessão, ele pode estar vulnerável à falsificação de solicitação entre sites (XSRF).</p>
+
+<p class = "p1">Primeiro, faça login no aplicativo. Em seguida, confirme se uma solicitação feita ao aplicativo, mas originada de uma página de um aplicativo diferente, resulta no envio do token do usuário. (Este envio deve ser feito a partir de uma janela do mesmo processo do navegador que foi usado para fazer login no aplicativo de destino.)</p>
+
+<p class = "p1">Tente identificar quaisquer funções de aplicativo confidenciais cujos parâmetros um invasor possa determinar com antecedência e explore isso para realizar ações não autorizadas dentro do contexto de segurança de um usuário alvo.</p>
+
+<p class = "p1">Veja o Capítulo 13 para obter mais detalhes sobre como executar ataques XSRF.</p>
+
+<h1> mbito de Cookie Liberal</h1>
+
+<p class = "p1">O resumo simples e usual de como os cookies funcionam é que o servidor emite um cookie usando o cabeçalho de resposta HTTP Set-cookie, e o navegador reenvia esse cookie em solicitações subsequentes para o mesmo servidor usando o cabeçalho Cookie.</p>
+
+<p class = "p1">Na verdade, as coisas são bem mais sutis do que isso.</p>
+
+<p class = "p1">O mecanismo de cookie permite que um servidor especifique o domínio e o caminho da URL para o qual cada cookie será reenviado. Para fazer isso, ele usa os atributos de domínio e caminho que podem ser incluídos na instrução Set-cookie.</p>
+
+<h1>Restrições de domínio de cookie</h1>
+
+<p class = "p1">Quando o aplicativo residente em foo.wahh-app.com define um cookie, o navegador por padrão, reenvia o cookie em todas as solicitações subsequentes para foo.wahh-app.com e também para qualquer subdomínio, como admin.foo.wahh-app.com.</p>
+
+<p class = "p1">Ele não envia o cookie a nenhum outro domínio, incluindo o domínio pai wahh-app.com e quaisquer outros subdomínios do pai, como bar.wahh-app.com.</p>
+
+<p class = "p1">Um servidor pode substituir esse comportamento padrão incluindo um atributo de domínio na instrução Set-cookie.  Por exemplo, suponha que o aplicativo em foo.wahh-app.com retorne o seguinte cabeçalho HTTP:</p>
+
+<p class = "p1">O navegador então reenvia esse cookie para todos os subdomínios de wahh-app.com, incluindo bar.wahh-app.com.</p>
+
+<p class = "p1">Um servidor não pode especificar apenas qualquer domínio usando este atributo. Primeiro, o domínio especificado deve ser o mesmo domínio em que o aplicativo está sendo executado ou um domínio que é seu pai (imediatamente ou em alguma remoção).</p>
+
+<p class = "p1">Em segundo lugar, o domínio especificado não pode ser um domínio de nível superior, como .com ou .co.uk, porque isso permitiria a um servidor malicioso definir cookies arbitrários em qualquer outro domínio.</p>
+
+<p class = "p1">Se o servidor violar uma dessas regras, o navegador simplesmente ignora a instrução Set-cookie.</p>
+
+<p class = "p1">Se um aplicativo definir o escopo de domínio de um cookie como indevidamente liberal, isso pode expor o aplicativo a várias vulnerabilidades de segurança.</p>
+
+<p class = "p1">Por exemplo, considere um aplicativo de blog que permite que os usuários se cadastrem, façam login, escrevam postagens e leiam os blogs de outras pessoas. O aplicativo principal está localizado no domínio wahh-blogs.com.</p>
+
+<p class = "p1">Quando os usuários efetuam login no aplicativo, eles recebem um token de sessão em um cookie que tem como escopo este domínio. Cada usuário pode criar blogs que são acessados ​​por meio de um novo subdomínio prefixado por seu nome do usuário:</p>
+
+<p class = "p1">Como os cookies são reenviados automaticamente para cada subdomínio dentro de seu escopo, quando um usuário que está conectado navega nos blogs de outros usuários, seu token de sessão é enviado com suas solicitações. Se os autores de blog tiverem permissão para colocar JavaScript arbitrário em seus próprios blogs (como geralmente é o caso em aplicativos de blog do mundo real), um blogueiro mal-intencionado pode roubar os tokens de sessão de outros usuários da mesma forma que é feito em um cross ataque de script de site (consulte o Capítulo 12).</p>
+
+<p class = "p1">O problema surge porque os blogs de autoria do usuário são criados como subdomínios do aplicativo principal que lida com a autenticação e o gerenciamento de sessão.</p>
+
+<p class = "p1">Não há nenhum recurso dentro dos cookies HTTP para o aplicativo impedir que os cookies emitidos pelo domínio principal sejam reenviados aos seus subdomínios.</p>
+
+<p class = "p1">A solução é usar um nome de domínio diferente para o aplicativo principal (por exemplo, www.wahh-blogs.com) e definir o escopo do domínio de seus cookies de token de sessão para esse nome totalmente qualificado. O cookie de sessão não será enviado quando um usuário conectado navegar nos blogs de outros usuários.</p>
+
+<p class = "p1">Uma versão diferente dessa vulnerabilidade surge quando um aplicativo define explicitamente o escopo de domínio de seus cookies para um domínio pai.  Por exemplo, suponha que um aplicativo crítico de segurança esteja localizado no domínio sensitiveapp.wahh-organization.com.</p>
+
+<p class = "p1">Ao definir cookies, ele liberaliza explicitamente seu escopo de domínio, da seguinte maneira:</p>
+
+<p class = "p1">A consequência disso é que os cookies de token de sessão do aplicativo confidencial serão enviados quando um usuário visitar cada subdomínio usado por wahh-organization.com, incluindo:</p>
+
+<p class = "p1">Embora esses outros aplicativos possam pertencer à mesma organização do aplicativo confidencial, não é desejável que os cookies do aplicativo confidencial sejam enviados a outros aplicativos, por vários motivos:</p>
+
+<p class = "p1">O pessoal responsável por outros aplicativos pode ter um nível de confiança diferente daqueles responsáveis ​​por aplicativos confidenciais.</p>
+
+<p class = "p1">Os outros aplicativos podem conter funcionalidade que permite a terceiros obter o valor dos cookies enviados ao aplicativo, como no exemplo de blog anterior.</p>
+
+<p class = "p1">Os outros aplicativos podem não ter sido submetidos aos mesmos padrões de segurança ou testes que o aplicativo confidencial (porque são menos importantes, não manipulam dados confidenciais ou foram criados apenas para fins de teste). Muitos tipos de vulnerabilidade que podem existir nesses aplicativos (por exemplo, vulnerabilidades de cross-site scripting) podem ser irrelevantes para a postura de segurança desses aplicativos.</p>
+
+<p class = "p1">Mas eles poderiam permitir um invasor externo para aproveitar um aplicativo inseguro para capturar tokens de sessão criados pelo aplicativo confidencial.</p>
+
+<p class = "p1">A segregação de cookies baseada em domínio não é tão rígida quanto a política de mesma origem em geral (consulte o Capítulo 3). Além dos problemas já descritos no tratamento de nomes de host, os navegadores ignoram o protocolo e o número da porta ao determinar o escopo do cookie. Se um aplicativo compartilha um nome do host com um aplicativo não confiável e depende de uma diferença no protocolo ou número de porta para se separar, o manuseio mais relaxado de cookies pode prejudicar essa segregação.</p>
+
+<p class = "p1">Todos os cookies emitidos pelo aplicativo poderão ser acessados ​​pelo aplicativo não confiável que compartilha seu nome de host.</p>
+
+<p class = "p1">Revise todos os cookies emitidos pelo aplicativo e verifique se há algum domínio atributos usados ​​para controlar o escopo dos cookies.</p>
+
+<p class = "p1">1. Se um aplicativo liberalizar explicitamente o escopo de seus cookies para um domínio pai, ele pode estar se deixando vulnerável a ataques por meio de outros aplicativos da web.</p>
+
+<p class = "p1">2. Se um aplicativo definir o escopo de domínio de seus cookies para seu próprio nome de domínio (ou não especificar um atributo de domínio), ele ainda pode ser exposto a aplicativos ou funcionalidades acessíveis por meio de subdomínios.</p>
+
+<p class = "p1">Identifique todos os nomes de domínio possíveis que receberão os cookies emitidos pelo aplicativo. Estabeleça se qualquer outro aplicativo ou funcionalidade da web pode ser acessado por meio desses nomes de domínio que você possa utilizar para obter os cookies emitidos para os usuários do aplicativo de destino.</p>
+</body>
+</html>
