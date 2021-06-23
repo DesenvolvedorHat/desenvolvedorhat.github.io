@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <title>Resumo 11</title>
+    <meta charset="UTF-8">
+    <meta name="keywords" content="desenvolvedor hat, hacking, linux">
+    <meta name="description" content="introducao a várias vulnerabilidades web, resumo 11">
+    <meta name="robots" content="index">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link type="text/css" rel="stylesheet" href="style.css">
+    <script src='https://kit.fontawesome.com/a076d05399.js'></script>
+    <script data-ad-client="ca-pub-6493599991997784" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css">
+  </head>
+  <body>
+    <menu>
+      <nav class="n1">
+        <a href="/index.html" class="menu">HOME</a>
+      </nav>
+    </menu>
+
+<h1>Introdução</h1>
+
+<p class = "p1">Obrigado por adquirir este livro, espero que você se divirta tanto lendo como eu me diverti pesquisando e escrevendo-o.</p>
+
+<p class = "p1">Web Hacking 101 é meu primeiro livro, destinado a ajudá-lo a começar a hackear.  Comecei a escrever isso como uma explicação autopublicada de 30 vulnerabilidades, um subproduto de meu próprio aprendizado.  Rapidamente se transformou em muito mais.</p>
+
+<p class = "p1">Minha esperança para o livro, no mínimo, é abrir seus olhos para o vasto mundo do hacking.</p>
+
+<p class = "p1">Na melhor das hipóteses, espero que este seja seu primeiro passo para tornar a web um lugar mais seguro enquanto ganhando algum dinheiro fazendo isso.</p>
+
+<h1>Como tudo começou</h1>
+
+<p class = "p1">No final de 2015, encontrei o livro We Are Anonymous: Inside the Hacker World do LulzSec, Anonymous and the Global Cyber ​​Insurgency de Parmy Olson e acabei lendo em uma semana. Tendo terminado, porém, fiquei me perguntando como esses hackers começaram.</p>
+
+<p class = "p1">Eu estava com sede de mais, mas não queria apenas saber O QUE os hackers faziam, queria saber COMO os hackers faziam.  Então continuei lendo.  Mas cada vez que eu terminava um novo livro, ainda ficava com as mesmas perguntas:</p>
+
+<p class = "p1">Como outros hackers aprendem sobre as vulnerabilidades que encontram?</p>
+
+<p class = "p1">Onde as pessoas estão encontrando vulnerabilidades?</p>
+
+<p class = "p1">Como os hackers iniciam o processo de hackear um site de destino?</p>
+
+<p class = "p1">Hackear envolve apenas o uso de ferramentas automatizadas?</p>
+
+<p class = "p1">Como posso começar a encontrar vulnerabilidades?</p>
+
+<p class = "p1">Mas em busca de mais respostas, foi abrindo cada vez mais portas.</p>
+
+<p class = "p1">Na mesma época, eu estava fazendo cursos de desenvolvimento do Coursera Android e ficando de olho em outros cursos interessantes.  A especialização Coursera Cybersecurity chamou minha atenção, principalmente o Curso 2, Segurança de Software. Felizmente para mim, estava apenas começando (em fevereiro de 2016, está listado como Em breve) e me inscrevi.</p>
+
+<p class = "p1">Depois de algumas palestras, eu finalmente entendi o que era um estouro de buffer e como ele foi explorado.</p>
+
+<p class = "p1">Eu entendi completamente como as injeções de SQL eram obtidas, enquanto antes, eu só conhecia o perigo.</p>
+
+<p class = "p1">Resumindo, fui fisgado.  Até este ponto, sempre abordei a segurança da web da perspectiva do desenvolvedor, reconhecendo a necessidade de higienizar os valores e evitar o uso direto da entrada do usuário. Agora eu estava começando a entender como tudo parecia do ponto de vista de um hacker.</p>
+
+<p class = "p1">Continuei procurando por mais informações sobre como hackear e me deparei com os fóruns do Bugcrowd.</p>
+
+<p class = "p1">Infelizmente, eles não estavam muito ativos na época, mas alguém mencionou a atividade hackeada do HackerOne e vinculou a um relatório.</p>
+
+<p class = "p1">Seguindo o link, fiquei surpreso. Eu estava lendo a descrição de uma vulnerabilidade, escrita para uma empresa, que então a divulgou para o mundo. Talvez mais importante, a empresa realmente pagou ao hacker para encontrar e relatar isso!</p>
+
+
+<p class = "p1">Foi um momento decisivo, fiquei obcecado. Especialmente quando uma empresa canadense local, a Shopify, parecia liderar o grupo em divulgações na época.</p>
+
+<p class = "p1">Verificando o perfil do Shopify, sua lista de divulgação estava repleta de relatórios abertos.  Eu não conseguia ler o suficiente deles.  As vulnerabilidades incluíam Cross-Site Scripting, Autenticação e Cross-Site Request Forgery, apenas para citar alguns.</p>
+
+<p class = "p1">É certo que, neste estágio, eu estava lutando para entender o que os relatórios estavam detalhando.</p>
+
+<p class = "p1">Algumas das vulnerabilidades e métodos de exploração eram difíceis de entender.</p>
+
+<p class = "p1">Pesquisando no Google para tentar entender um determinado relatório, terminei com um problema do GitHub thread para uma vulnerabilidade de parâmetro fraco padrão do Ruby on Rails antigo (isso é detalhado no capítulo Application Logic) relatado por Egor Homakov.  Acompanhar Egor me levou a seu blog, que inclui divulgações de algumas vulnerabilidades seriamente complexas.</p>
+
+<p class = "p1">Lendo sobre suas experiências, percebi, o mundo do hacking pode se beneficiar do simples explicações em linguagem de vulnerabilidades do mundo real.  E aconteceu que eu aprendo melhor ao ensinar outras pessoas.</p>
+
+<p class = "p1">E assim nasceu o Web Hacking 101.</p>
+
+<p class = "p1">Apenas 30 exemplos e minha primeira venda</p>
+
+<p class = "p1">Decidi começar com um objetivo simples, encontrar e explicar 30 vulnerabilidades da web em uma linguagem simples e fácil de entender.</p>
+
+<p class = "p1">Achei que, na pior das hipóteses, pesquisar e escrever sobre vulnerabilidades me ajudaria a aprender sobre hacking.  Na melhor das hipóteses, eu venderia um milhão de cópias, me tornaria um guru da autopublicação e me aposentaria mais cedo. O último ainda não aconteceu e, às vezes, o primeiro parece interminável.</p>
+
+<p class = "p1">Por volta da marca de 15 vulnerabilidades explicadas, decidi publicar meu rascunho para que pudesse ser comprado - a plataforma que escolhi, LeanPub (que a maioria provavelmente comprou), permite que você publique iterativamente, fornecendo aos clientes acesso a todas as atualizações. Enviei um tweet agradecendo ao HackerOne e ao Shopify por suas divulgações e para contar ao mundo sobre meu livro. Eu não esperava muito.</p>
+
+<p class = "p1">Mas em poucas horas, fiz minha primeira venda.</p>
+
+<p class = "p1">Exultante com a ideia de alguém realmente pagar pelo meu livro (algo que eu criei e estava investindo muito esforço!), Entrei no LeanPub para ver o que poderia descobrir sobre o comprador misterioso.  Acontece nada.</p>
+
+<p class = "p1">Mas então meu telefone vibrou, recebi um tweet de Michiel Prins dizendo que gostou do livro e pediu para ficar por dentro.</p>
+
+<p class = "p1">Quem diabos é Michiel Prins?  Verifiquei seu perfil no Twitter e descobri que ele é um dos cofundadores do HackerOne.  Merda.  Parte de mim achava que o HackerOne não ficaria impressionado com a minha dependência de seu site para conteúdo.  Tentei ser positivo, Michiel parecia apoiar e pediu para ser mantido por dentro, então provavelmente inofensivo.</p>
+
+<p class = "p1">Pouco depois da minha primeira venda, recebi uma segunda venda e percebi que estava no caminho certo.</p>
+
+<p class = "p1">Coincidentemente, mais ou menos na mesma época, recebi uma notificação do Quora sobre uma pergunta na qual provavelmente estaria interessado, Como posso me tornar um caçador de recompensas de insetos de sucesso?</p>
+
+<p class = "p1">Dada minha experiência no início, sabendo como era estar no mesmo lugar e com o objetivo egoísta de querer promover meu livro, decidi escrever uma resposta.</p>
+
+<p class = "p1">Na metade do caminho, percebi que a única outra resposta foi escrita por Jobert Abma, um dos outros co-fundadores do HackerOne. Uma voz bastante autorizada em hackear.  Merda.</p>
+
+<p class = "p1">Pensei em abandonar minha resposta, mas depois optei por reescrevê-la para desenvolver a sua contribuição
+ já que eu não poderia competir com seu conselho.  Eu cliquei em enviar e não pensei nada sobre isso.  Mas então recebi um e-mail interessante:</p>
+
+<p class = "p1">Olá, Peter, vi sua resposta do Quora e então vi que você está escrevendo um livro sobre hackeamento de chapéu branco.  Adoraria saber mais.</p>
+
+<p class = "p1">Atenciosamente, Marten CEO, HackerOne Merda tripla.  Muitas coisas passaram pela minha cabeça neste momento, nenhuma das quais era positiva e quase todas irracionais.  Em suma, imaginei que o único motivo pelo qual Marten me enviaria um e-mail era para largar o martelo no meu livro.  Felizmente, isso não poderia ter sido mais longe da verdade.</p>
+
+<p class = "p1">Eu respondi a ele explicando quem eu era e o que estava fazendo - que estava tentando aprender como hackear e ajudar outros a aprenderem comigo.</p>
+
+<p class = "p1">Acontece que ele era um grande fã da ideia.</p>
+
+<p class = "p1">Ele explicou que o HackerOne está interessado em aumentar a comunidade e apoiar os hackers à medida que aprendem, pois é mutuamente benéfico para todos os envolvidos.  Resumindo, ele se ofereceu para ajudar.  E cara, ele sempre fez.  Este livro provavelmente não estaria onde está hoje ou incluiria metade do conteúdo sem o apoio e a motivação constantes dele e do HackerOne.</p>
+
+<p class = "p1">Desde aquele e-mail inicial, continuei escrevendo e Marten continuou checando. Michiel e Jobert revisou rascunhos, forneceu sugestões e até contribuiu com algumas seções.  Marten foi além para cobrir os custos de uma capa desenhada profissionalmente (adeus capa amarela lisa com um chapéu de bruxa branco, que parecia ter sido desenhado por uma criança de quatro anos).  Em maio de 2016, Adam Bacchus se juntou à HackerOne e em seu 5º dia de trabalho lá, ele leu o livro, fez edições e explicou como era receber relatórios de vulnerabilidade - algo que agora incluí na redação do relatório  capítulo.</p>
+
+<p class = "p1">Menciono tudo isso porque, ao longo desta jornada, o HackerOne nunca pediu nada em troca.  Eles só queriam apoiar a comunidade e viram que este livro era uma boa maneira de fazer isso.  Como alguém novo na comunidade de hackers, isso ressoou em mim e espero que você também.  Eu pessoalmente prefiro fazer parte de uma organização solidária e comunidade inclusiva.</p>
+
+<p class = "p1">Portanto, desde então, este livro se expandiu dramaticamente, muito além do que eu inicialmente imaginei.  E com isso, o público-alvo também mudou.</p>
+
+<p class = "p1">Para quem este livro foi escrito Este livro foi escrito com novos hackers em mente.  Não importa se você é um desenvolvedor web, web designer, dona de casa, uma criança de 10 ou 75 anos.</p>
+
+<p class = "p1">Quero que este livro seja uma referência confiável para compreender os diferentes tipos de vulnerabilidades, como encontrá-las, como relatá-las, como receber pagamentos e até mesmo como escrever código defensivo.</p>
+
+<p class = "p1">Dito isso, não escrevi este livro para pregar às massas.  Este é realmente um livro sobre como aprender juntos.  Como tal, compartilho sucessos E alguns de meus fracassos notáveis ​​(e embaraçosos).</p>
+
+<p class = "p1">O livro também não deve ser lido de capa a capa, se houver uma seção específica que você está interessado, vá ler primeiro.  Em alguns casos, faço referência às seções discutidas anteriormente, mas, ao fazer isso, tento conectar as seções para que você possa alternar.  Eu quero que este livro seja algo que você mantenha aberto enquanto você hackear.</p>
+
+<p class = "p1">Nessa nota, cada capítulo de tipo de vulnerabilidade é estruturado da mesma maneira:</p>
+
+<p class = "p1">Comece com uma descrição do tipo de vulnerabilidade;</p>
+
+<p class = "p1">Reveja exemplos de vulnerabilidade;  e,</p>
+
+<p class = "p1">Conclua com um resumo.</p>
+
+<p class = "p1">Da mesma forma, cada exemplo dentro desses capítulos é estruturado da mesma maneira e inclui:</p>
+
+<p class = "p1">Minha estimativa da dificuldade de encontrar a vulnerabilidade</p>
+
+<p class = "p1">O url associado ao local onde a vulnerabilidade foi encontrada</p>
+
+<p class = "p1">Um link para o relatório ou redação</p>
+
+<p class = "p1">A data em que a vulnerabilidade foi relatada</p>
+
+<p class = "p1">O valor pago pelo relatório</p>
+
+<p class = "p1">Uma descrição fácil de entender da vulnerabilidade</p>
+
+<p class = "p1">Escolha métodos que você possa aplicar aos seus próprios esforços Por último, embora não seja um pré-requisito para hackear, é provavelmente uma boa ideia ter alguma familiaridade com HTML, CSS, Javascript e talvez alguma programação. Isso não quer dizer que você precisa ser capaz de montar páginas da web do zero, de cabeça para baixo mas compreender a estrutura básica de uma página da web, como CSS define uma aparência e o que pode ser feito com Javascript o ajudará a descobrir vulnerabilidades e entender a gravidade de fazer isso. Conhecimento de programação é útil quando você está procurando vulnerabilidades de lógica de aplicativo.  Se você puder se colocar no lugar do programador para adivinhar como eles podem ter implementado algo ou ler o código, se estiver disponível, você estará na frente no jogo.</p>
+
+<p class = "p1">Para fazer isso, recomendo verificar os cursos online gratuitos da Udacity de Introdução a HTML e CSS e Fundamentos de Javascript, links que incluí no capítulo Recursos.</p>
+
+<p class = "p1">Se você não está familiarizado com a Udacity, sua missão é levar educação superior acessível, acessível, envolvente e altamente eficaz para o mundo.</p>
+
+<p class = "p1">Eles fizeram parceria com empresas como Google, AT&T, Facebook, Salesforce, etc. para criar programas e oferecer cursos online.</p>
+
+<h1>Visão geral do capítulo</h1>
+
+<p class = "p1">O Capítulo 2 é um histórico introdutório de como a Internet funciona, incluindo solicitações e respostas HTTP e métodos HTTP.</p>
+
+<p class = "p1">O Capítulo 3 cobre Redirecionamentos abertos, uma vulnerabilidade interessante que envolve a exploração de um site para direcionar os usuários a visitar outro site, o que permite que um invasor explore a confiança de um usuário no site vulnerável.</p>
+
+<p class = "p1">O Capítulo 4 cobre a poluição do parâmetro HTTP e nele você aprenderá como encontrar sistemas que podem ser vulneráveis ​​a transmitir informações não seguras para sites de terceiros.</p>
+
+<p class = "p1">O Capítulo 5 cobre vulnerabilidades de Cross-Site Request Forgery, percorrendo exemplos que mostram como os usuários podem ser induzidos a enviar informações a um site no qual estão logados sem saber.</p>
+
+<p class = "p1">O Capítulo 6 cobre as injeções de HTML e, nele, você aprenderá como ser capaz de injetar HTML em uma página da web pode ser usado de forma maliciosa.</p>
+
+<p class = "p1">Uma das conclusões mais interessantes é como você pode usar valores codificados para induzir os sites a aceitar e renderizar o HTML que você enviar, ignorando os filtros.</p>
+
+<p class = "p1">O Capítulo 7 cobre as injeções de alimentação de linha de retorno de carro e, nele, examinando exemplos de
+ envio de retorno de carro, quebras de linha para sites e o impacto que isso tem no conteúdo renderizado.</p>
+
+<p class = "p1">O Capítulo 8 cobre Cross-Site Scripting, um tópico enorme com uma grande variedade de maneiras de alcançar exploits.  Cross-Site Scripting representa grandes oportunidades e um livro inteiro poderia e provavelmente deveria ser escrito exclusivamente sobre ele.  Há uma tonelada de exemplos que eu poderia ter incluído aqui, então tento me concentrar nos mais interessantes e úteis para o aprendizado.</p>
+
+<p class = "p1">O Capítulo 9 cobre a injeção de modelo do lado do servidor, bem como as injeções do lado do cliente.</p>
+
+<p class = "p1">Esses tipos de vulnerabilidades aproveitam as vantagens dos desenvolvedores injetando a entrada do usuário diretamente no modelos quando enviados usando a sintaxe de modelo.  O impacto dessas vulnerabilidades depende de onde eles ocorrem, mas muitas vezes podem levar a execuções remotas de código.</p>
+
+<p class = "p1">O Capítulo 10 cobre as injeções de linguagem de consulta estruturada (SQL), que envolvem a manipulação de consultas de banco de dados para extrair, atualizar ou excluir informações de um site.</p>
+
+<p class = "p1">O Capítulo 11 cobre a falsificação de solicitações do lado do servidor, que permite a um invasor usar um servidor remoto para fazer solicitações HTTP subsequentes em nome do invasor.</p>
+
+<p class = "p1">O Capítulo 12 cobre vulnerabilidades de Entidade Externa de XML resultantes da análise de sites de linguagem de marcação extensível (XML).  Esses tipos de vulnerabilidades podem incluir coisas como leitura de arquivos privados, execução remota de código, etc.</p>
+
+<p class = "p1">O Capítulo 13 cobre a Execução Remota de Código, ou a capacidade de um invasor de executar código arbitrário no servidor vítima. Este tipo de vulnerabilidade está entre as mais perigosas já que um invasor pode controlar qual código é executado e geralmente é recompensado como tal.</p>
+
+<p class = "p1">O Capítulo 14 cobre vulnerabilidades relacionadas à memória, um tipo de vulnerabilidade que pode ser difícil de encontrar e está tipicamente relacionada a linguagens de programação de baixo nível.</p>
+
+<p class = "p1">No entanto, descobrir esses tipos de bugs pode levar a algumas vulnerabilidades bastante sérias.</p>
+
+<p class = "p1">O Capítulo 15 cobre os takeovers de subdomínio, algo que aprendi muito sobre como pesquisar este livro e deve ser creditado em grande parte a Mathias, Frans e a equipe Dectectify.</p>
+
+<p class = "p1">Essencialmente aqui, um site se refere a um subdomínio que hospeda com um serviço de terceiros, mas nunca realmente reivindica o endereço apropriado desse serviço.  Isso permitiria que um invasor registrasse o endereço do terceiro para que todo o tráfego, que acredita estar no domínio da vítima, está na verdade no de um invasor.</p>
+
+<p class = "p1">O Capítulo 16 cobre as Condições de Corrida, uma vulnerabilidade que envolve dois ou mais processos realizando ações com base em condições que deveriam permitir que apenas uma ação ocorresse.  Por exemplo, pense em transferências bancárias, você não deve ser capaz de realizar duas transferências de $ 500 quando seu saldo é de apenas $ 500.  No entanto, uma vulnerabilidade de condição de corrida pode permitir isso.</p>
+
+<p class = "p1">O Capítulo 17 cobre vulnerabilidades Insegure Direct Object Reference por meio das quais um invasor pode ler ou atualizar objeções (registros de banco de dados, arquivos, etc.) para as quais ele não deveria ter permissão.</p>
+
+<p class = "p1">O Capítulo 18 cobre as vulnerabilidades baseadas na lógica do aplicativo.  Este capítulo cresceu e se tornou um captura todas as vulnerabilidades que considero vinculadas a falhas de lógica de programação.  Eu encontrei estes tipos de vulnerabilidades podem ser mais fáceis para um iniciante encontrar em vez de procurar por estranhas e maneiras criativas de enviar informações maliciosas a um site.</p>
+
+<p class = "p1">O Capítulo 19 cobre o tópico de como começar.  Este capítulo pretende ajudá-lo considere onde e como procurar vulnerabilidades, em vez de um guia passo a passo para hackear um site.  Baseia-se na minha experiência e na forma como abordo os sites.</p>
+
+<p class = "p1">O Capítulo 20 é indiscutivelmente um dos capítulos mais importantes do livro, pois fornece conselhos sobre como escrever um relatório eficaz.</p>
+
+<p class = "p1">Todo o hacking do mundo não significa nada se você não pode relatar o problema adequadamente à empresa necessária.  Como tal, vasculhei algumas grandes empresas pagadoras de recompensas por seus conselhos sobre a melhor forma de relatar e recebi conselhos do HackerOne.  Certifique-se de prestar muita atenção aqui.</p>
+
+<p class = "p1">O Capítulo 21 muda de marcha.  Aqui, mergulhamos nas ferramentas de hacking recomendadas.  O rascunho inicial deste capítulo foi doado por Michiel Prins do HackerOne.  Desde então, cresceu para uma lista viva de ferramentas úteis que encontrei e usei.</p>
+
+<p class = "p1">O Capítulo 22 é dedicado a ajudá-lo a levar seu hacking para o próximo nível.  Aqui eu caminho através de alguns recursos incríveis para continuar a aprender.</p>
+
+<p class = "p1">Mais uma vez, correndo o risco de soar como um disco quebrado, muito obrigado a Michiel Prins por contribuir com o original lista que iniciou este capítulo.</p>
+
+<p class = "p1">O Capítulo 23 conclui o livro e cobre alguns termos-chave que você deve saber enquanto hacking.  Embora a maioria seja discutida em outros capítulos, alguns não são, então eu recomendo dando uma leitura aqui.</p>
+
+<p class = "p1">Palavra de advertência e um favor Antes de você partir para o incrível mundo do hacking, quero esclarecer algo.</p>
+
+<p class = "p1">Conforme eu estava aprendendo, lendo sobre divulgações públicas, vendo todo o dinheiro que as pessoas estavam (e ainda estão) ganhando, tornou-se fácil glamourizar o processo e pensar nele como uma maneira fácil de fique rico rapidamente.  Não é.  Hackear pode ser extremamente gratificante, mas é difícil encontrar e ler sobre as falhas ao longo do caminho (exceto aqui, onde compartilho algumas histórias muito embaraçosas).</p>
+
+<p class = "p1">Como resultado, como você ouvirá principalmente sobre o sucesso das pessoas, você pode desenvolver expectativas irrealistas de sucesso. E talvez você tenha sucesso rapidamente.  Mas se você não estiver, continue trabalhando!  Vai ficar mais fácil e é uma ótima sensação ter um relatório resolvido.</p>
+
+<p class = "p1">Com isso, tenho um favor a pedir.  Enquanto lê, por favor, me envie uma mensagem no Twitter @yaworsk e me diga como está indo.</p>
+
+<p class = "p1">Bem ou malsucedido, gostaria de ouvir de você.  Caçar insetos pode ser um trabalho solitário se você estiver lutando, mas também é incrível comemorar um com o outro. E talvez sua descoberta seja algo que possamos incluir no próxima edição.</p>
+
+<p class = "p1">Boa sorte!!</p>
+</body>
+</html>
