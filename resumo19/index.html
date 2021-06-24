@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <title>Resumo 11</title>
+    <meta charset="UTF-8">
+    <meta name="keywords" content="desenvolvedor hat, hacking, linux">
+    <meta name="description" content="introducao a várias vulnerabilidades web, resumo 18">
+    <meta name="robots" content="index">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link type="text/css" rel="stylesheet" href="style.css">
+    <script src='https://kit.fontawesome.com/a076d05399.js'></script>
+    <script data-ad-client="ca-pub-6493599991997784" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css">
+  </head>
+  <body>
+    <menu>
+      <nav class="n1">
+        <a href="/index.html" class="menu">HOME</a>
+      </nav>
+    </menu>
+
+<section>
+
+<h1>Restrições de teste em métodos HTTP</h1>
+
+<p class = "p1">Embora possa não haver um meio pronto de detectar se os controles de acesso de um aplicativo fazem uso de controles em nível de plataforma sobre métodos HTTP, você pode seguir alguns passos simples para identificar quaisquer vulnerabilidades.</p>
+
+<p class = "p1">1. Usando uma conta de alto privilégio, identifique algumas solicitações privilegiadas que realizam ações confidenciais, como adicionar um novo usuário ou alterar a função de segurança de um usuário.</p>
+
+<p class = "p1">2. Se essas solicitações não estiverem protegidas por nenhum tokens anti-CSRF ou recursos semelhantes (consulte o Capítulo 13), use a conta de alto privilégio para determinar se o aplicativo ainda executa a ação solicitada se o HTTP método é modificado.  Teste os seguintes métodos HTTP:</p>
+
+<h2>Um método HTTP inválido arbitrário</h2>
+
+<p class = "p1">3. Se o aplicativo aceitar quaisquer solicitações usando métodos HTTP diferentes do método original, teste os controles de acesso sobre essas solicitações usando a metodologia padrão já descrita, usando contas com privilégios mais baixos.</p>
+
+<h2>Protegendo os controles de acesso</h2>
+
+<p class = "p1">Os controles de acesso são uma das áreas de segurança de aplicativos da Web mais fáceis de entender, embora você deva aplicar cuidadosamente uma metodologia completa e bem informada ao implementá-los.</p>
+
+<p class = "p1">Primeiro, você deve evitar várias armadilhas óbvias. Isso geralmente surge da ignorância sobre os requisitos essenciais de um controle de acesso eficaz ou suposições errôneas sobre os tipos de solicitações que os usuários farão e contra as quais o aplicativo precisa se defender:</p>
+
+<p class = "p1">Não confie na ignorância dos usuários sobre os URLs do aplicativo ou os identificadores usados ​​para especificar os recursos do aplicativo, como números de conta e IDs de documentos. Suponha que os usuários conheçam cada URL e identificador do aplicativo e assegure-se de que os controles de acesso do aplicativo por si só sejam suficientes para evitar o acesso não autorizado.</p>
+
+<p class = "p1">Não confie em nenhum parâmetro enviado pelo usuário para significar direitos de acesso (como admin = true).</p>
+
+<p class = "p1">Não presuma que os usuários acessarão as páginas do aplicativo na sequência pretendida.</p>
+
+<p class = "p1">Não presuma que, como os usuários não podem acessar a página Editar usuários, eles não podem acessar a página Editar usuário X que está vinculada a ela.</p>
+
+<p class = "p1">Não confie no usuário para não alterar nenhum dado transmitido pelo cliente. Se alguns dados enviados pelo usuário foram validados e, em seguida, são transmitidos através do cliente, não confie no valor transmitido sem revalidação.</p>
+
+<p class = "p1">O seguinte representa uma abordagem de prática recomendada para implementar controles de acesso eficazes em aplicativos da web:</p>
+
+<p class = "p1">Avalie e documente explicitamente os requisitos de controle de acesso para cada unidade de funcionalidade do aplicativo. Isso precisa incluir quem pode usar legitimamente a função e quais recursos os usuários individuais pode acessar através da função.</p>
+
+<p class = "p1">Direcione todas as decisões de controle de acesso da sessão do usuário.</p>
+
+<p class = "p1">Use um componente de aplicativo central para verificar os controles de acesso.</p>
+
+<p class = "p1">Processe cada solicitação do cliente por meio deste componente para validar se o usuário que fez a solicitação tem permissão para acessar a funcionalidade e os recursos solicitados.</p>
+
+<p class = "p1">Use técnicas programáticas para garantir que não haja exceções ao ponto anterior.</p>
+
+<p class = "p1">Uma abordagem eficaz é determinar que cada página do aplicativo deve implementar uma interface que é consultada pelo acesso central mecanismo de controle. Se você forçar os desenvolvedores a codificar explicitamente a lógica de controle de acesso em todas as páginas, não haverá desculpa para omissões.</p>
+
+<p class = "p1">Para funcionalidades particularmente sensíveis, como páginas administrativas, você pode restringir ainda mais o acesso por endereço IP para garantir que apenas usuários de um intervalo de rede específico possam acessar a funcionalidade, independentemente de seus status de login.</p>
+
+<p class = "p1">Se o conteúdo estático precisa ser protegido, existem dois métodos de fornecer controle de acesso.</p>
+
+<p class = "p1">Primeiro, os arquivos estáticos podem ser acessados ​​indiretamente, passando um nome de arquivo para uma página dinâmica do lado do servidor que implementa a lógica de controle de acesso relevante. Em segundo lugar, o acesso direto a arquivos estáticos pode ser controlado usando HTTP autenticação ou outros recursos do servidor de aplicativos para quebrar a solicitação de entrada e verificar as permissões do recurso antes de o acesso ser concedido.</p>
+
+<p class = "p1">Os identificadores que especificam qual recurso um usuário deseja acessar são vulneráveis ​​a adulteração sempre que são transmitidos por meio do cliente.</p>
+
+<p class = "p1">O servidor deve confiar apenas na integridade dos dados do lado do servidor. Sempre que esses identificadores são transmitidos por meio do cliente, eles precisam ser revalidados para garantir que o usuário esteja autorizado a acessar o recurso solicitado.</p>
+
+<p class = "p1">Para funções de aplicativos de segurança crítica, como a criação de um novo beneficiário de contas em um aplicativo bancário, considere a implementação de reautenticação por transação e autorização dupla para fornecer garantia adicional se a função não está sendo usada por terceiros não autorizados. Isso também atenua as consequências de outros ataques possíveis, como sequestro de sessão.</p>
+
+<p class = "p1">Registre todos os eventos em que dados confidenciais são acessados ​​ou uma ação confidencial é executada.</p>
+
+<p class = "p1">Esses logs permitirão que possíveis violações de controle de acesso sejam detectadas e investigadas.</p>
+
+<p class = "p1">Os desenvolvedores de aplicativos da Web frequentemente implementam funções de controle de acesso em uma base fragmentada. Eles adicionam código a páginas individuais nos casos em que algum controle de acesso é necessário e, muitas vezes, recortam e colam o mesmo código entre as páginas para implementar requisitos semelhantes. Essa abordagem traz um risco inerente de defeitos no mecanismo de controle de acesso resultante.</p>
+
+<p class = "p1">Muitos casos são esquecidos onde os controles são necessários, os controles projetados para uma área podem não operar da maneira pretendida em outra área e as modificações feitas em outro lugar dentro da aplicação pode quebrar os controles existentes ao violar as suposições feitas por eles.</p>
+
+<p class = "p1">Em contraste com esta abordagem, o método descrito anteriormente de usar um componente de aplicativo central para impor controles de acesso tem muitos benefícios:</p>
+
+<p class = "p1">Ele aumenta a clareza dos controles de acesso dentro do aplicativo, permitindo que diferentes desenvolvedores entendam rapidamente os controles implementados por outros.</p>
+
+<p class = "p1">Isso torna a manutenção mais eficiente e confiável. A maioria das alterações precisa ser aplicada apenas uma vez, a um único componente compartilhado, e não precisa ser cortada e colada em vários locais.</p>
+
+<p class = "p1">Além disso, melhora a adaptabilidade. Quando surgem novos requisitos de controle de acesso, eles podem ser facilmente refletidos em uma API existente implementada por cada página do aplicativo.</p>
+
+<p class = "p1">Isso resulta em menos erros e omissões do que se o código de controle de acesso fosse implementado aos poucos em todo o aplicativo.</p>
+
+<h1>Um modelo de privilégio multicamadas</h1>
+
+<p class = "p1">Os problemas relacionados ao acesso se aplicam não apenas ao próprio aplicativo da web, mas também às outras camadas de infraestrutura que estão abaixo dele - em particular, o servidor de aplicativos, o banco de dados e o sistema operacional.</p>
+
+<p class = "p1">Adotar uma abordagem de defesa em profundidade para a segurança envolve a implementação de controles de acesso em cada uma dessas camadas para criar várias camadas de proteção. Isso fornece maior segurança contra ameaças de acesso não autorizado, porque se um invasor conseguir comprometer as defesas em uma camada, o ataque ainda pode ser bloqueado por defesas em outra camada.</p>
+
+<p class = "p1">Além de implementar controles de acesso eficazes dentro do próprio aplicativo da web, conforme já descrito, uma abordagem em várias camadas pode ser aplicada de várias maneiras aos componentes que fundamentam o aplicativo:</p>
+
+<p class = "p1">O servidor de aplicativos pode ser usado para controlar o acesso a caminhos inteiros de URL com base nas funções de usuário definidas na camada do servidor de aplicativos.</p>
+
+<p class = "p1">O aplicativo pode empregar uma conta de banco de dados diferente ao realizar as ações de usuários diferentes.</p>
+
+<p class = "p1">Para usuários que devem apenas consultar dados (não atualizá-los), uma conta com privilégios somente leitura deve ser usado.</p>
+
+<p class = "p1">O controle refinado sobre o acesso a diferentes tabelas do banco de dados pode ser implementado no próprio banco de dados, usando uma tabela de privilégios.</p>
+
+<p class = "p1">As contas do sistema operacional usadas para executar cada componente na infraestrutura podem ser restritas aos privilégios menos poderosos que o componente realmente requer.</p>
+
+<p class = "p1">Em um aplicativo complexo e crítico para a segurança, defesas em camadas desse tipo podem ser criadas com a ajuda de uma matriz que define as diferentes funções do usuário dentro do aplicativo e os diferentes privilégios, em cada camada, que devem ser atribuídos a cada função. A Figura 8-6 é um exemplo parcial de uma matriz de privilégios para um aplicativo complexo.</p>
+
+<p class = "p1">Em um modelo de segurança desse tipo, você pode ver como vários conceitos úteis de controle de acesso podem ser aplicados:</p>
+
+<p class = "p1">Controle programático - A matriz de privilégios individuais do banco de dados é armazenada em uma tabela no banco de dados e é aplicada programaticamente para impor decisões de controle de acesso. A classificação das funções do usuário fornece um atalho para a aplicação de certas verificações de controle de acesso, e isso também é aplicado programaticamente. Os controles programáticos podem ser extremamente refinados e podem criar lógica arbitrariamente complexa no processo de execução de decisões de controle de acesso dentro do aplicativo.</p>
+
+<p class = "p1">Controle de acesso discricionário (DAC) - Os administradores podem delegar seus privilégios a outros usuários em relação a recursos específicos de sua propriedade, empregando o controle de acesso discricionário. Este é um modelo DAC fechado, no qual o acesso é negado, a menos que seja explicitamente concedido.</p>
+
+<p class = "p1">Os administradores também podem bloquear ou expirar contas de usuários individuais. Este é um modelo DAC aberto, no qual o acesso é permitido, a menos que seja explicitamente retirado.</p>
+
+<p class = "p1">Vários usuários de aplicativos têm privilégios para criar contas de usuário, novamente aplicando controle de acesso discricionário.</p>
+
+<p class = "p1">Controle de acesso baseado em função (RBAC) - As funções nomeadas contêm diferentes conjuntos de privilégios específicos e cada usuário é atribuído a uma dessas funções. Isso serve como um atalho para atribuir e impor diferentes privilégios e é necessário para ajudar a gerenciar o controle de acesso em aplicativos complexos. O uso de funções para realizar verificações de acesso antecipadas nas solicitações do usuário permite que muitas solicitações não autorizadas sejam rejeitadas rapidamente com um mínimo de processamento sendo executado. Um exemplo dessa abordagem é proteger os caminhos de URL que tipos específicos de usuários podem acessar.</p>
+
+<p class = "p1">Ao projetar mecanismos de controle de acesso baseados em funções, você deve equilibrar o número de funções para que permaneçam uma ferramenta útil para ajudar a gerenciar privilégios dentro do aplicativo.</p>
+
+<p class = "p1">Se muitas funções de baixa granularidade são criadas, o número de funções diferentes torna-se difícil de controlar e são difíceis de gerenciar com precisão. Se poucas funções forem criadas, as funções resultantes serão um instrumento básico para gerenciar o acesso. É provável que usuários individuais recebam privilégios que não são estritamente necessários para desempenhar suas funções.</p>
+
+<p class = "p1">Se os controles em nível de plataforma forem usados ​​para restringir o acesso a diferentes funções de aplicativo com base no método HTTP e URL, eles devem ser projetados usando um modelo de negação padrão, como é a prática recomendada para regras de firewall.  Isto deveria incluem várias regras específicas que atribuem determinados métodos HTTP e URLs a certas funções, e a regra final deve negar qualquer solicitação que não corresponda a uma regra anterior.</p>
+
+<p class = "p1">Controle declarativo - O aplicativo usa contas de banco de dados restritas ao acessar o banco de dados. Ele emprega contas diferentes para grupos de usuários diferentes, com cada conta tendo o menor nível de privilégio necessário para realizar as ações que o grupo tem permissão para realizar.</p>
+
+<p class = "p1">Os controles declarativos desse tipo são declarados de fora do aplicativo. Esta é uma aplicação útil dos princípios de defesa em profundidade, porque os privilégios são impostos à aplicação por um componente diferente.</p>
+
+<p class = "p1">Mesmo se um usuário encontrar uma maneira de violar os controles de acesso implementados na camada do aplicativo para realizar uma ação sensível, como adicionar um novo usuário, ele é impedido de fazê-lo. A conta do banco de dados que ele está usando não possui os privilégios necessários no banco de dados.</p>
+
+<p class = "p1">Existe um meio diferente de aplicar o controle de acesso declarativo no nível do servidor de aplicativos, por meio de arquivos do descritor de implementação, que são aplicados durante a implementação do aplicativo.</p>
+
+<p class = "p1">No entanto, eles podem ser relativamente contundentes instrumentos e nem sempre escalonam bem para gerenciar privilégios refinados em um grande aplicativo.</p>
+
+<p class = "p1">Se você estiver atacando um aplicativo que emprega um modelo de privilégio de várias camadas desse tipo, é provável que muitos dos erros mais óbvios que são comumente cometidos na aplicação de controles de acesso sejam protegidos.</p>
+
+<p class = "p1">Você pode descobrir que contornar os controles implementados no aplicativo não leva você muito longe, por causa da proteção em vigor em outras camadas. Com isso em mente, várias linhas de ataque em potencial ainda estão disponíveis para você.  Mais importante ainda, compreender as limitações de cada tipo de controle, em termos da proteção que não oferece, ajudará a identificar as vulnerabilidades que têm maior probabilidade de afetá-lo:</p>
+
+<p class = "p1">As verificações programáticas na camada de aplicativo podem ser suscetíveis a ataques baseados em injeção.</p>
+
+<p class = "p1">As funções definidas na camada do servidor de aplicativos geralmente são definidas de maneira grosseira e podem estar incompletas.</p>
+
+<p class = "p1">Quando os componentes do aplicativo são executados usando contas de sistema operacional com poucos privilégios, normalmente eles podem ler muitos tipos de dados potencialmente confidenciais dentro do sistema de arquivos do host. Qualquer vulnerabilidade que conceda acesso arbitrário a arquivos ainda pode ser explorada de forma útil, mesmo que apenas para ler dados confidenciais.</p>
+
+<p class = "p1">Vulnerabilidades dentro do próprio software de servidor de aplicativo normalmente permitem que você derrote todos os controles de acesso implementados na camada de aplicativo, mas você ainda pode ter acesso limitado ao banco de dados e ao sistema operacional.</p>
+
+<p class = "p1">Uma única vulnerabilidade de controle de acesso que pode ser explorada no local certo ainda pode fornecer um ponto de partida para um sério escalonamento de privilégios. Por exemplo, se você descobrir uma maneira de modificar a função associada à sua conta, poderá descobrir que fazer login novamente com essa conta oferece acesso aprimorado tanto às camadas do aplicativo quanto do banco de dados.</p>
+
+<p class = "p1">Os defeitos de controle de acesso podem se manifestar de várias maneiras. Em alguns casos, eles podem ser desinteressantes, permitindo acesso ilegítimo a uma função inofensiva que não pode ser aproveitada para escalar privilégios ainda mais. Em outros casos, encontrar uma falha nos controles de acesso pode levar rapidamente ao comprometimento total do aplicativo.</p>
+
+<p class = "p1">Falhas no controle de acesso podem surgir de várias fontes. Um design de aplicativo pobre pode dificultar ou impossibilitar a verificação de acesso não autorizado, um simples descuido pode deixar apenas uma ou duas funções desprotegidas ou suposições defeituosas sobre como os usuários se comportarão podem deixar o aplicativo sem defesa quando essas suposições forem violadas.</p>
+
+<p class = "p1">Em muitos casos, encontrar uma quebra nos controles de acesso é quase trivial. Você simplesmente solicita um URL administrativo comum e obtém acesso direto à funcionalidade. Em outros casos, pode ser muito difícil e defeitos sutis podem se esconder profundamente na lógica do aplicativo, especialmente em aplicativos complexos de alta segurança. A lição mais importante ao atacar os controles de acesso é olhar em todos os lugares. Se você está lutando para progredir, seja paciente e teste cada etapa de cada função do aplicativo.</p>
+
+<p class = "p1">Um bug que permite que você seja o proprietário de todo o aplicativo pode estar ao virar da esquina.</p>
+</section>
+</body>
+</html>
