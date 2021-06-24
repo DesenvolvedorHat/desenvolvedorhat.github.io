@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <title>Resumo 15</title>
+    <meta charset="UTF-8">
+    <meta name="keywords" content="desenvolvedor hat, hacking, linux, resumo 15">
+    <meta name="description" content="introducao ao linux. Resumo sobre diversas vulnerabilidades web.">
+    <meta name="robots" content="index">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link type="text/css" rel="stylesheet" href="style.css">
+    <script src='https://kit.fontawesome.com/a076d05399.js'></script>
+    <script data-ad-client="ca-pub-6493599991997784" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css">
+  </head>
+  <body>
+    <menu>
+      <nav class="n1">
+        <a href="/index.html" class="menu">HOME</a>
+      </nav>
+    </menu>
+
+<h1>Atacando controles de acesso</h1>
+
+<p class = "p1">Dentro dos principais mecanismos de segurança do aplicativo, os controles de acesso são construídos logicamente na autenticação e no gerenciamento de sessão. Até agora, você viu como um aplicativo pode primeiro verificar a identidade de um usuário e, em seguida, confirmar se uma sequência particular de solicitações que recebe foi originada do mesmo usuário. O principal motivo pelo qual o aplicativo precisa fazer essas coisas - em termos de segurança, pelo menos - é porque ele precisa de uma maneira de decidir se deve permitir que uma determinada solicitação execute sua tentativa de ação ou acesse os recursos que está solicitando.</p>
+
+<p class = "p1">Os controles de acesso são um mecanismo de defesa crítico dentro do aplicativo porque são responsáveis ​​por tomar essas decisões importantes.  Quando estão com defeito, um invasor pode muitas vezes comprometer todo o aplicativo, assumindo o controle da funcionalidade administrativa e acessando dados confidenciais pertencentes a todos os outros usuários.</p>
+
+<p class = "p1">Conforme observado no Capítulo 1, os controles de acesso interrompidos estão entre as categorias mais comumente encontradas de vulnerabilidade de aplicativos da web, afetando massivos 71 por cento dos aplicativos recentemente testados pelos autores.  É extremamente comum encontrar aplicativos que se dão ao trabalho de implementar mecanismos robustos de autenticação e gerenciamento de sessão, apenas para desperdiçar esse investimento ao negligenciar a construção de controles de acesso eficazes sobre eles.</p>
+
+<p class = "p1">Uma razão pela qual essas fraquezas são tão prevalentes é que as verificações de controle de acesso precisam ser executadas para cada solicitação e cada operação em um recurso que um determinado usuário tenta executar, em um momento específico.  E, ao contrário de muitas outras classes de controle, essa é uma decisão de design que precisa ser feita por um ser humano;  não pode ser resolvido com o emprego de tecnologia.</p>
+
+<p class = "p1">As vulnerabilidades de controle de acesso são conceitualmente simples: o aplicativo permite que você fazer algo que você não deveria ser capaz de fazer. As diferenças entre as falhas separadas realmente se resumem às diferentes maneiras em que esse defeito central se manifesta e às diferentes técnicas que você precisa empregar para detectá-lo.</p>
+
+<p class = "p1">Este capítulo descreve todas essas técnicas, mostrando como você pode explorar diferentes tipos de comportamento em um aplicativo para realizar ações não autorizadas e acessar dados protegidos.</p>
+
+<h1>Vulnerabilidades comuns</h1>
+
+<p class = "p1">Os controles de acesso podem ser divididos em três categorias amplas: vertical, horizontal e dependente do contexto.</p>
+
+<p class = "p1">Os controles de acesso vertical permitem que diferentes tipos de usuários acessem diferentes partes da funcionalidade do aplicativo. No caso mais simples, isso geralmente envolve uma divisão entre usuários comuns e administradores.</p>
+
+<p class = "p1">Em casos mais complexos, os controles de acesso vertical podem envolver funções de usuário refinadas, concedendo acesso a funções específicas, com cada usuário sendo alocado para uma única função ou uma combinação de funções diferentes.</p>
+
+<p class = "p1">Os controles de acesso horizontal permitem que os usuários acessem um determinado subconjunto de uma gama mais ampla de recursos do mesmo tipo. Por exemplo, um aplicativo de webmail pode permitir que você leia seu e-mail, mas não o de mais ninguém, um banco online pode permitir que você transfira dinheiro apenas de sua conta e um aplicativo de fluxo de trabalho pode permitir que você atualize tarefas atribuídas a você, mas apenas  ler tarefas atribuídas a outras pessoas.</p>
+
+<p class = "p1">Os controles de acesso dependentes do contexto garantem que o acesso dos usuários seja restrito ao que é permitido de acordo com o estado atual do aplicativo.</p>
+
+<p class = "p1">Por exemplo, se um usuário está seguindo vários estágios em um processo, os controles de acesso dependentes do contexto podem impedir que o usuário acesse os estágios fora da ordem prescrita.</p>
+
+<p class = "p1">Em muitos casos, os controles de acesso vertical e horizontal estão interligados.  Por exemplo, um aplicativo de planejamento de recursos empresariais pode permitir que cada funcionário de contas a pagar pague faturas de uma unidade organizacional específica e de nenhuma outra.  O gerente de contas a pagar, por outro lado, pode pagar faturas de qualquer unidade.  Da mesma forma, os funcionários podem pagar faturas de pequenas quantias, mas as faturas maiores devem ser pagas pelo gerente.</p>
+
+<p class = "p1">O diretor financeiro pode visualizar os pagamentos e recebimentos das faturas de todas as unidades organizacionais da empresa, mas pode não ter permissão para pagar as faturas.</p>
+
+<p class = "p1">Os controles de acesso são interrompidos se qualquer usuário puder acessar funcionalidades ou recursos para os quais não está autorizado. Existem três tipos principais de ataques contra controles de acesso, correspondendo às três categorias de controles:</p>
+
+<p class = "p1">O escalonamento de privilégios verticais ocorre quando um usuário pode executar funções que sua função atribuída não permite. Por exemplo, se um usuário comum pode executar funções administrativas, ou um balconista pode pagar faturas de qualquer tamanho, os controles de acesso são quebrados.</p>
+
+<p class = "p1">O escalonamento de privilégio horizontal ocorre quando um usuário pode visualizar ou modificar recursos aos quais ele não tem direito. Por exemplo, se você pode usar um aplicativo de webmail para ler o e-mail de outras pessoas, ou se um funcionário de pagamento pode processar faturas para uma unidade organizacional diferente da sua, os controles de acesso são quebrados.</p>
+
+<p class = "p1">A exploração da lógica de negócios ocorre quando um usuário pode explorar uma falha na máquina de estado do aplicativo para obter acesso a um recurso-chave. Por exemplo, um usuário pode ser capaz de ignorar a etapa de pagamento em uma sequência de pagamento de compra.</p>
+
+<p class = "p1">É comum encontrar casos em que a vulnerabilidade na separação horizontal de privilégios do aplicativo pode levar imediatamente a um ataque de escalonamento vertical. Por exemplo, se um usuário encontrar uma maneira de definir a senha de um usuário diferente, o usuário pode atacar uma conta administrativa e assumir o controle do aplicativo.</p>
+
+<p class = "p1">Nos casos descritos até agora, os controles de acesso interrompidos permitem que os usuários que se autenticaram no aplicativo em um contexto de usuário específico executem ações ou acessem dados para os quais esse contexto não os autoriza.</p>
+
+<p class = "p1">No entanto, nos casos mais graves de controle de acesso interrompido, pode ser possível que usuários totalmente não autorizados obtenham acesso à funcionalidade ou aos dados que devem ser acessados ​​apenas por usuários autenticados com privilégios.</p>
+
+<h1>Funcionalidade completamente desprotegida</h1>
+
+<p class = "p1">Em muitos casos de controles de acesso quebrados, recursos e funcionalidades confidenciais podem ser acessados ​​por qualquer pessoa que conheça a URL relevante. Por exemplo, com muitos aplicativos, qualquer pessoa que visite um URL específico pode fazer uso completo de suas funções administrativas:</p>
+
+<p class = "p1">Nessa situação, o aplicativo normalmente aplica o controle de acesso apenas na seguinte extensão: os usuários que efetuaram login como administradores veem um link para este URL em sua interface de usuário, e outros usuários não.</p>
+
+<p class = "p1">Essa diferença estética é o único mecanismo para “proteger” a funcionalidade sensível do uso não autorizado.</p>
+
+<p class = "p1">Às vezes, o URL que concede acesso a funções poderosas pode ser menos fácil de adivinhar e pode até ser bastante enigmático:</p>
+
+<p class = "p1">Aqui, o acesso às funções administrativas é protegido pela suposição de que um invasor não saberá ou descobrirá essa URL. O aplicativo é mais difícil de ser comprometido por alguém de fora, porque é menos provável que ele adivinhe a URL pela qual pode fazê-lo.</p>
+
+
+<p class = "p1">“Nenhum usuário com poucos privilégios saberá dessa URL.</p>
+
+<p class = "p1">Não fazemos referência a isso em nenhum lugar do aplicativo. ”</p>
+
+<p class = "p1">A ausência de qualquer controle de acesso genuíno ainda constitui uma vulnerabilidade séria, independentemente de quão fácil seja adivinhar a URL. Os URLs não têm o status de segredos, nem no próprio aplicativo nem nas mãos de seus usuários. Eles são exibidos na tela e aparecem nos históricos do navegador e nos logs de servidores da web e servidores proxy. Os usuários podem anotá-los, adicione-os aos favoritos ou envie-os por e-mail.  Normalmente, elas não são alteradas periodicamente, como deveriam ser as senhas.  Quando os usuários mudam de função e seu acesso à funcionalidade administrativa precisa ser retirado, não há como excluir seu conhecimento de um URL específico.</p>
+
+<p class = "p1">Em alguns aplicativos onde funcionalidades confidenciais estão escondidas atrás de URLs que não são fáceis de adivinhar, um invasor pode frequentemente ser capaz de identificá-los por meio de uma inspeção cuidadosa do código do lado do cliente. Muitos aplicativos usam JavaScript para construir a interface do usuário dinamicamente no cliente.  Isso normalmente funciona definindo vários sinais em relação ao status do usuário e, em seguida, adicionando elementos individuais à IU com base no seguinte:</p>
+
+<p class = "p1">Aqui, um invasor pode simplesmente revisar o JavaScript para identificar URLs para funcionalidade administrativa e tentar acessá-los.  Em outros casos, os comentários HTML podem conter referências ou dicas sobre URLs que não estão vinculados ao conteúdo da tela.</p>
+
+<p class = "p1">Capítulo 4 discute as várias técnicas pelas quais um invasor pode reunir informações sobre conteúdo oculto no aplicativo.</p>
+
+<h1>Acesso direto a métodos</h1>
+
+<p class = "p1">Um caso específico de funcionalidade desprotegida pode surgir quando os aplicativos expõem URLs ou parâmetros que são, na verdade, chamadas remotas de métodos de API, normalmente aqueles expostos por uma interface Java.
+
+<p class = "p1">Isso geralmente ocorre quando o código do lado do servidor é movido para um componente de extensão do navegador e stubs de método são criados para que o código ainda possa chamar os métodos do lado do servidor necessários para funcionar.</p>
+
+<p class = "p1">Fora dessa situação, algumas instâncias de acesso direto a métodos podem ser identificadas onde URLs ou parâmetros usam as convenções de nomenclatura Java padrão, como getBalance e isExpired.</p>
+
+<p class = "p1">Em princípio, as solicitações que especificam uma API do lado do servidor a ser executada não precisam ser menos seguras do que aquelas que especificam um script do lado do servidor ou outro recurso.</p>
+
+<p class = "p1">Na prática, entretanto, esse tipo de mecanismo frequentemente contém vulnerabilidades.</p>
+
+<p class = "p1">Frequentemente, o cliente interage diretamente com métodos de API do lado do servidor e ignora os controles normais do aplicativo sobre o acesso ou vetores de entrada inesperados. Também existe uma chance de que exista outra funcionalidade que possa ser chamada dessa maneira e não seja protegida por nenhum controle, na suposição de que nunca poderia ser chamada diretamente por clientes de aplicativos da web.</p>
+
+<p class = "p1">Frequentemente, é necessário fornecer aos usuários acesso a certos métodos específicos, mas, em vez disso, eles recebem acesso a todos os métodos. Isso ocorre porque o desenvolvedor não está totalmente ciente de qual subconjunto de métodos usar como proxy e fornece acesso a todos os métodos ou porque a API usada para mapeá-los para o servidor HTTP fornece acesso a todos os métodos por padrão.</p>
+
+<p class = "p1">O exemplo a seguir mostra o método getCurrentUserRoles sendo chamado de dentro da interface de segurança Verifique:</p>
+
+<p class = "p1">Neste exemplo, além de testar os controles de acesso sobre o método getCurrentUserRoles, você deve verificar a existência de outros métodos com nomes semelhantes, como getAllUserRoles, getAllRoles, getAllUsers e getCurrentUserPermissions. Outras considerações específicas para o teste de acesso direto a métodos são descritas posteriormente neste capítulo.</p>
+</body>
+</html>
