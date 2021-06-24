@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <title>Resumo 11</title>
+    <meta charset="UTF-8">
+    <meta name="keywords" content="desenvolvedor hat, hacking, linux">
+    <meta name="description" content="introducao a várias vulnerabilidades web, resumo 18">
+    <meta name="robots" content="index">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link type="text/css" rel="stylesheet" href="style.css">
+    <script src='https://kit.fontawesome.com/a076d05399.js'></script>
+    <script data-ad-client="ca-pub-6493599991997784" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css">
+  </head>
+  <body>
+    <menu>
+      <nav class="n1">
+        <a href="/index.html" class="menu">HOME</a>
+      </nav>
+    </menu>
+
+<section>
+
+<h1>Ataque de armazenamento de dados</h1>
+
+<p class = "p1">Quase todos os aplicativos dependem de um armazenamento de dados para gerenciar os dados que são processados ​​no aplicativo. Em muitos casos, esses dados direcionam a lógica do aplicativo central, mantendo contas de usuário, permissões, definições de configuração do aplicativo e muito mais.</p>
+
+<p class = "p1">Os armazenamentos de dados evoluíram para se tornarem significativamente mais do que contêineres passivos de dados. A maioria mantém os dados em um formato estruturado, acessado usando um formato de consulta ou linguagem predefinida, e contém lógica interna para ajudar a gerenciar esses dados.</p>
+
+<p class = "p1">Normalmente, os aplicativos usam um nível de privilégio comum para todos os tipos de acesso ao armazenamento de dados e ao processar dados pertencentes a diferentes usuários do aplicativo. Se um invasor pode interferir na interação do aplicativo com o armazenamento de dados, para fazê-lo recuperar ou modificar dados diferentes, ele geralmente pode ignorar quaisquer controles sobre o acesso aos dados que são impostos na camada do aplicativo.</p>
+
+<p class = "p1">O princípio descrito pode ser aplicado a qualquer tipo de tecnologia de armazenamento de dados. Como este é um manual prático, enfocaremos o conhecimento e as técnicas de que você precisa para explorar as vulnerabilidades que existem nos aplicativos do mundo real.</p>
+
+<p class = "p1">De longe, os armazenamentos de dados mais comuns são bancos de dados SQL, repositórios baseados em XML e diretórios LDAP.</p>
+
+<p class = "p1">Exemplos práticos vistos em outros lugares também são incluídos.</p>
+
+<p class = "p1">Ao cobrir esses exemplos-chave, descreveremos as etapas práticas que você pode seguir para identificar e explorar esses defeitos. Existe uma sinergia conceitual no processo de compreensão de cada novo tipo de injeção.</p>
+
+<p class = "p1">Tendo compreendido os fundamentos da exploração dessas manifestações da falha, você deve estar confiante de que poderá recorrer a esse entendimento quando encontrar uma nova categoria de injeção. Na verdade, você deve ser capaz de conceber meios adicionais de atacar aqueles que outros já estudaram.</p>
+
+<h2>Injetando em contextos interpretados</h2>
+
+<p class = "p1">Uma linguagem interpretada é aquela cuja execução envolve um componente de tempo de execução que interpreta o código da linguagem e executa as instruções que ele contém.</p>
+
+<p class = "p1">Em contraste, uma linguagem compilada é aquela cujo código é convertido em instruções de máquina no momento da geração. Em tempo de execução, essas instruções são executadas diretamente pelo processador do computador que o está executando.</p>
+
+<p class = "p1">Em princípio, qualquer linguagem pode ser implementada usando um interpretador ou um compilador, e a distinção não é uma propriedade inerente da própria linguagem.</p>
+
+<p class = "p1">No entanto, a maioria das linguagens normalmente é implementada em apenas uma dessas duas maneiras, e muitas das linguagens principais usadas para desenvolver aplicativos da web são implementadas usando um interpretador, incluindo SQL, LDAP, Perl e PHP.</p>
+
+<p class = "p1">Por causa da forma como as linguagens interpretadas são executadas, surge uma família de vulnerabilidades conhecidas como injeção de código. Em qualquer aplicativo útil, os dados fornecidos pelo usuário são recebidos, manipulados e acionados. Portanto, o código que o interpretador processa é uma mistura das instruções escritas pelo programador e os dados fornecidos pelo usuário. Em algumas situações, um invasor pode fornecer uma entrada criada que foge do contexto de dados, geralmente fornecendo alguma sintaxe que tenha um significado especial dentro da gramática da linguagem interpretada que está sendo usada.  O resultado é que parte dessa entrada é interpretada como instruções do programa, que são executadas da mesma forma como se tivessem sido escritas pelo programador original. Freqüentemente, portanto, um ataque bem-sucedido compromete totalmente o componente do aplicativo que está sendo visado.</p>
+
+<p class = "p1">Em linguagens compiladas nativas, por outro lado, os ataques projetados para executar comandos arbitrários geralmente são muito diferentes.</p>
+
+<p class = "p1">O método de injeção de código normalmente não aproveita nenhum recurso sintático da linguagem usada para desenvolver o programa de destino, e a carga útil injetada geralmente contém código de máquina em vez de instruções escritas nessa linguagem. Consulte o Capítulo 16 para obter detalhes sobre ataques comuns contra software compilado nativo.</p>
+
+<h2>Ignorando um login</h2>
+
+<p class = "p1">O processo pelo qual um aplicativo acessa um armazenamento de dados geralmente é o mesmo, independentemente de esse acesso ter sido acionado pelas ações de um usuário sem privilégios ou de um administrador de aplicativo. O aplicativo da web funciona como um controle de acesso discricionário ao armazenamento de dados, construindo consultas para recuperar, adicionar ou modificar dados no armazenamento de dados com base na conta e tipo do usuário.</p>
+
+<p class = "p1">Um ataque de injeção bem-sucedido que modifica uma consulta (e não apenas os dados dentro da consulta) pode ignorar os controles de acesso discricionário do aplicativo e obter acesso não autorizado.</p>
+
+<p class = "p1">Se a lógica do aplicativo sensível à segurança for controlada pelos resultados de uma consulta, um invasor pode potencialmente modificar a consulta para alterar a lógica do aplicativo.  Vejamos um exemplo típico em que um armazenamento de dados de back-end é consultado em busca de registros em uma tabela de usuário que corresponda às credenciais fornecidas por um usuário.</p>
+
+<p class = "p1">Muitos aplicativos que implementam uma função de login baseada em formulários usam um banco de dados para armazenar as credenciais do usuário e realizar uma consulta SQL simples para validar cada tentativa de login.</p>
+
+<p class = "p1">Essa consulta faz com que o banco de dados verifique cada linha na tabela de usuários e extraia cada registro em que a coluna de nome de usuário tem o valor marcus e a coluna de senha tem o valor secreto. Se os detalhes de um usuário forem retornados ao aplicativo, a tentativa de login será bem-sucedida e o aplicativo criará um sessão autenticada para esse usuário.</p>
+
+<p class = "p1">Nessa situação, um invasor pode injetar no campo de usuário ou senha para modificar a consulta realizada pelo aplicativo e, assim, subverter sua lógica.</p>
+
+<p class = "p1">Por exemplo, se um invasor souber que o nome de usuário do administrador do aplicativo é admin, ele pode fazer login como esse usuário fornecendo qualquer senha e o seguinte nome de usuário:</p>
+
+<p class = "p1">Isso faz com que o aplicativo execute a seguinte consulta:</p>
+
+<p class = "p1">Observe que a sequência de comentários (-) faz com que o restante da consulta seja ignorado e, portanto, a consulta executada é equivalente a:</p>
+
+<p class = "p1">Suponha que o invasor não saiba o nome de usuário do administrador.</p>
+
+<p class = "p1">Na maioria dos aplicativos, a primeira conta no banco de dados é um usuário administrativo, porque essa conta normalmente é criada manualmente e, em seguida, é usada para gerar todas as outras contas por meio do aplicativo. Além disso, se a consulta retornar os detalhes de mais de um usuário, a maioria dos aplicativos irá simplesmente processar o primeiro usuário cujos detalhes são retornados. Um invasor pode frequentemente explorar esse comportamento para fazer login como o primeiro usuário no banco de dados, fornecendo o nome de usuário:</p>
+
+<p class = "p1">Isso faz com que o aplicativo execute a consulta:</p>
+
+<p class = "p1">Por causa do símbolo de comentário, isso é equivalente a:</p>
+
+<p class = "p1">Injetar em um contexto interpretado para alterar a lógica do aplicativo é uma técnica de ataque genérica.</p>
+
+<p class = "p1">Uma vulnerabilidade correspondente pode surgir em consultas LDAP, consultas XPath, implementações de fila de mensagens ou mesmo em qualquer linguagem de consulta customizada.</p>
+
+<p class = "p1">A injeção em linguagens interpretadas é um tópico amplo, abrangendo muitos tipos diferentes de vulnerabilidades e potencialmente afetando todos os componentes da infraestrutura de suporte de um aplicativo da web. As etapas detalhadas para detectar e explorar falhas de injeção de código dependem da linguagem que está sendo direcionada e das técnicas de programação empregadas pelo aplicativo desenvolvedores. Em todos os casos, no entanto, a abordagem genérica é a seguinte:</p>
+
+<p class = "p1">1. Forneça sintaxe inesperada que pode causar problemas no contexto da linguagem interpretada específica.</p>
+
+<p class = "p1">2. Identifique quaisquer anomalias na resposta do aplicativo que possam indicar a presença de uma vulnerabilidade de injeção de código.</p>
+
+<p class = "p1">3. Se alguma mensagem de erro for recebida, examine-a para obter evidências sobre o problema que ocorreu no servidor.</p>
+
+<p class = "p1">4. Se necessário, modifique sistematicamente sua entrada inicial de maneiras relevantes na tentativa de confirmar ou refutar seu diagnóstico provisório de uma vulnerabilidade.</p>
+
+<p class = "p1">5. Construir um teste de prova de conceito que faça com que um comando seguro seja executado de forma verificável, para provar conclusivamente que existe uma falha de injeção de código explorável.</p>
+
+<p class = "p1">6. Explore a vulnerabilidade, aproveitando a funcionalidade do idioma de destino e do componente para atingir seus objetivos.</p>
+
+<h2>Injetando em SQL</h2>
+
+<p class = "p1">Quase todo aplicativo da web emprega um banco de dados para armazenar os vários tipos de informações de que precisa para operar. Por exemplo, um aplicativo da web implantado por um varejista online pode usar um banco de dados para armazenar as seguintes informações:</p>
+
+<p class = "p1">Contas de usuário, credenciais e informações pessoais</p>
+
+<p class = "p1">Descrições e preços dos produtos à venda</p>
+
+<p class = "p1">Pedidos, extratos de conta e detalhes de pagamento</p>
+
+<p class = "p1">Os privilégios de cada usuário no aplicativo</p>
+
+<p class = "p1">O meio de acesso às informações no banco de dados é a Structured Query Language (SQL). O SQL pode ser usado para ler, atualizar, adicionar e excluir informações mantidas no banco de dados.</p>
+
+<p class = "p1">SQL é uma linguagem interpretada e os aplicativos da web geralmente constroem instruções SQL que incorporam dados fornecidos pelo usuário.</p>
+
+<p class = "p1">Se isso for feito de maneira insegura, o aplicativo pode ficar vulnerável à injeção de SQL. Essa falha é uma das vulnerabilidades mais notórias de ter afetado aplicativos da web. Nos casos mais graves, a injeção de SQL pode permitir que um invasor anônimo leia e modifique todos os dados armazenados no banco de dados e até mesmo assumir o controle total do servidor no qual o banco de dados está sendo executado.</p>
+
+<p class = "p1">À medida que a consciência da segurança de aplicativos da web evoluiu, as vulnerabilidades de injeção de SQL tornaram-se gradualmente menos disseminadas e mais difíceis de detectar e explorar. Muitos aplicativos modernos evitam a injeção de SQL empregando APIs que, se usadas corretamente, são inerentemente seguras contra ataques de injeção de SQL.</p>
+
+<p class = "p1">Nessas circunstâncias, a injeção de SQL normalmente ocorre nos casos ocasionais em que esses mecanismos de defesa não podem ser aplicados.</p>
+
+<p class = "p1">Encontrar a injeção de SQL às vezes é uma tarefa difícil, exigindo perseverança para localizar uma ou duas instâncias em um aplicativo onde os controles usuais não foram aplicados.</p>
+
+<p class = "p1">Conforme essa tendência se desenvolveu, os métodos para localizar e explorar falhas de injeção de SQL evoluíram, usando indicadores mais sutis de vulnerabilidades e técnicas de exploração mais refinadas e poderosas. Começaremos examinando os casos mais básicos e, em seguida, descreveremos as técnicas mais recentes de detecção e exploração cegas.</p>
+
+<p class = "p1">Uma ampla variedade de bancos de dados é empregada para dar suporte a aplicativos da web. Embora os fundamentos da injeção de SQL sejam comuns à grande maioria deles, há muitas diferenças. Eles variam de pequenas variações na sintaxe a divergências significativas no comportamento e na funcionalidade que podem afetar os tipos de ataques que você pode realizar. Por razões de espaço e sanidade, restringimos nossos exemplos aos três bancos de dados mais comuns que você provavelmente encontrará - Oracle, MS-SQL e MySQL. Sempre que aplicável, chamaremos a atenção para as diferenças entre essas três plataformas.</p>
+
+<p class = "p1">Equipado com as técnicas que descrevemos aqui, você deve ser capaz de identificar e explorar as falhas de injeção de SQL contra qualquer outra banco de dados realizando algumas pesquisas adicionais rápidas.</p>
+
+<p class = "p1">Em muitas situações, você achará extremamente útil ter acesso a uma instalação local do mesmo banco de dados que está sendo usado pelo aplicativo de destino. Frequentemente, você descobrirá que precisa ajustar uma parte da sintaxe ou consultar uma tabela ou função incorporada para atingir seus objetivos.</p>
+
+<p class = "p1">As respostas que você recebe do aplicativo de destino costumam ser incompletas ou enigmáticas, exigindo algum trabalho de detetive para serem compreendidas.</p>
+
+<p class = "p1">Tudo isso é muito mais fácil se você puder fazer uma referência cruzada com uma versão de trabalho totalmente transparente do banco de dados em questão.</p>
+
+<p class = "p1">Se isso não for viável, uma boa alternativa é encontrar um ambiente on-line interativo adequado para fazer experiências, como os tutoriais interativos em SQLzoo.net.</p>
+</section>
+</body>
+</html>
