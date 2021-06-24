@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <title>Resumo 11</title>
+    <meta charset="UTF-8">
+    <meta name="keywords" content="desenvolvedor hat, hacking, linux">
+    <meta name="description" content="introducao a várias vulnerabilidades web, resumo 13">
+    <meta name="robots" content="index">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link type="text/css" rel="stylesheet" href="style.css">
+    <script src='https://kit.fontawesome.com/a076d05399.js'></script>
+    <script data-ad-client="ca-pub-6493599991997784" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css">
+  </head>
+  <body>
+    <menu>
+      <nav class="n1">
+        <a href="/index.html" class="menu">HOME</a>
+      </nav>
+    </menu>
+
+<h1>Restrições de caminho de cookie</h1>
+
+<p class = "p1">Quando o aplicativo residente em /apps/secure/foo-app/index.jsp define um cookie, o navegador envia o cookie em todas as solicitações subsequentes para o caminho / apps / secure / foo-app / e também para quaisquer subdiretórios. Ele não envia o cookie para o diretório pai ou qualquer outro caminho de diretório existente no servidor.</p>
+
+<p class = "p1">Assim como acontece com as restrições baseadas em domínio no escopo do cookie, um servidor pode substituir esse comportamento padrão incluindo um atributo de caminho na instrução Set-cookie.</p>
+
+<p class = "p1">Por exemplo, se o aplicativo retornar o seguinte cabeçalho HTTP:</p>
+
+<p class = "p1">Em contraste com o escopo de cookies baseado em domínio, essa restrição baseada em caminho é muito mais rígida do que a imposta pela política de mesma origem. Como tal, é quase totalmente ineficaz se usado como um mecanismo de segurança para se defender contra aplicativos não confiáveis ​​hospedados no mesmo domínio.</p>
+
+<p class = "p1">O código do lado do cliente executado em um caminho pode abrir uma janela ou iframe visando um caminho diferente no mesmo domínio e pode ler e gravar nessa janela sem quaisquer restrições. Portanto, obter um cookie cujo escopo é um caminho diferente no mesmo domínio é relativamente simples. Veja o seguinte artigo de Amit Klein para mais detalhes:</p>
+
+<h1>Protegendo o gerenciamento de sessão</h1>
+
+<p class = "p1">As medidas defensivas que os aplicativos da web devem tomar para evitar ataques a seus mecanismos de gerenciamento de sessão correspondem às duas categorias amplas de vulnerabilidade que afetam esses mecanismos. Para executar o gerenciamento de sessão de maneira segura, um aplicativo deve gerar seus tokens de maneira robusta e deve proteger esses tokens em todo o seu ciclo de vida, desde a criação até o descarte.</p>
+
+<h1>Gerar Tokens Fortes</h1>
+
+<p class = "p1">Os tokens usados ​​para reidentificar um usuário entre solicitações sucessivas devem ser gerados de uma maneira que não forneça nenhum escopo para um invasor que obtém uma grande amostra de tokens do aplicativo da maneira usual para prever ou extrapolar os tokens emitidos para outros usuários.</p>
+
+<p class = "p1">Os mecanismos de geração de tokens mais eficazes são aqueles que:</p>
+
+<p class = "p1">Use um conjunto extremamente grande de valores possíveis</p>
+
+<p class = "p1">Contêm uma forte fonte de pseudo-aleatoriedade, garantindo um equilíbrio e propagação imprevisível de tokens em toda a gama de valores possíveis</p>
+
+<p class = "p1">Em princípio, qualquer item de comprimento e complexidade arbitrários pode ser adivinhado usando a força bruta com tempo e recursos suficientes. O objetivo de projetar um mecanismo para gerar tokens fortes é que deve ser extremamente improvável que um determinado invasor com grandes quantidades de largura de banda e recursos de processamento seja bem-sucedido em adivinhar um único token válido dentro da vida período de validade.</p>
+
+<p class = "p1">Os tokens devem consistir em nada mais do que um identificador usado pelo servidor para localizar o objeto de sessão relevante a ser usado para processar a solicitação do usuário.</p>
+
+<p class = "p1">O token não deve conter nenhum significado ou estrutura, seja abertamente ou envolto em camadas de codificação ou ofuscação. Todos os dados sobre o proprietário e o status da sessão devem ser armazenados no servidor no objeto de sessão ao qual o token de sessão corresponde.</p>
+
+<p class = "p1">Tenha cuidado ao selecionar uma fonte de aleatoriedade. Os desenvolvedores devem estar cientes de que as várias fontes disponíveis podem apresentar diferenças significativas em termos de potência.</p>
+
+<p class = "p1">Alguns, como java.util.Random, são perfeitamente úteis para muitos propósitos onde uma fonte de mudança de entrada é necessária. Mas eles podem ser extrapolados nas direções direta e reversa com perfeita certeza com base em um único item de saída. Os desenvolvedores devem investigar as propriedades matemáticas dos algoritmos reais usados ​​em diferentes fontes de aleatoriedade disponíveis e devem ler a documentação relevante sobre os usos recomendados de diferentes APIs. Em geral, se um algoritmo não é explicitamente descrito como sendo criptograficamente seguro, ele deve ser considerado previsível.</p>
+
+<p class = "p1">Algumas fontes de aleatoriedade de alta intensidade levam algum tempo para retornar o próximo valor em sua sequência de saída por causa das etapas que executam para obter entropia suficiente (como de eventos do sistema).</p>
+
+<p class = "p1">Portanto, eles podem não entregar valores rápido o suficiente para gerar tokens para alguns aplicativos de alto volume.</p>
+
+<p class = "p1">Além de selecionar a fonte de aleatoriedade mais robusta que seja viável, uma boa prática é apresentar como fonte de entropia algumas informações sobre a solicitação individual para a qual o token está sendo gerado. Essas informações podem não ser exclusivas para essa solicitação, mas podem ser eficazes na mitigação de quaisquer fraquezas no gerador de número pseudo-aleatório central que está sendo usado. Aqui estão alguns exemplos de informações que podem ser incorporadas:</p>
+
+<p class = "p1">O endereço IP de origem e o número da porta de onde a solicitação foi recebida</p>
+
+<p class = "p1">O cabeçalho User-Agent na solicitação</p>
+
+<p class = "p1">O tempo da solicitação em milissegundos</p>
+
+<p class = "p1">Uma fórmula altamente eficaz para incorporar essa entropia é construir uma string que concatene um número pseudo-aleatório, uma variedade de dados específicos da solicitação conforme listado e uma string secreta conhecida apenas pelo servidor e gerada novamente a cada reinicialização. Um hash adequado é então obtido dessa string (usando, por exemplo, SHA-256 no momento em que este texto foi escrito) para produzir uma string gerenciável de comprimento fixo que pode ser usado como um token. (Colocar os itens mais variáveis ​​no início da entrada do hash maximiza o efeito de “avalanche” dentro do algoritmo de hash.)</p>
+
+<p class = "p1">Tendo escolhido um algoritmo para gerar tokens de sessão, um “experimento de pensamento” útil é imaginar que sua fonte de pseudo-aleatoriedade é quebrada e sempre retorna o mesmo valor.</p>
+
+<p class = "p1">Nessa eventualidade, um invasor que obtiver uma grande amostra de tokens do aplicativo seria capaz de extrapolar tokens emitidos para outros usuários?</p>
+
+<p class = "p1">Usando a fórmula descrita aqui, em geral isso é altamente improvável, mesmo com total conhecimento do algoritmo usado.</p>
+
+<p class = "p1">O IP de origem, o número da porta, o cabeçalho do Agente do Usuário e o tempo da solicitação juntos geram uma grande quantidade de entropia. E mesmo com pleno conhecimento deles, o invasor não será capaz de produzir o token correspondente sem saber a string secreta usada pelo servidor.</p>
+
+<p class = "p1">Proteja os tokens ao longo de seu ciclo de vida</p>
+
+<p class = "p1">Agora que você criou um token robusto cujo valor não pode ser previsto, esse token precisa ser protegido durante todo o seu ciclo de vida, desde a criação até o descarte, para garantir que não seja divulgado a ninguém além do usuário a quem foi emitido:</p>
+
+<p class = "p1">O token deve ser transmitido apenas por HTTPS. Qualquer token transmitido em texto não criptografado deve ser considerado contaminado - isto é, como não fornecendo garantia da identidade do usuário.</p>
+
+<p class = "p1">Se cookies HTTP estão sendo usados ​​para transmitir tokens, eles devem ser sinalizados como seguros para evitar que o navegador do usuário os transmita por HTTP. Se possível, HTTPS deve ser usado para todas as páginas do aplicativo, incluindo conteúdo estático, como páginas de ajuda, imagens e assim por diante.  Se isso não for desejado e um serviço HTTP ainda estiver implementado, o aplicativo deve redirecionar todas as solicitações de conteúdo confidencial (incluindo a página de login) para o serviço HTTPS.  Recursos estáticos, como páginas de ajuda, geralmente não são confidenciais e podem ser acessados ​​sem qualquer sessão autenticada. Portanto, o uso de cookies seguros pode ser feito com o uso de instruções de escopo de cookie para evitar que tokens sejam enviados em solicitações para esses recursos.</p>
+
+<p class = "p1">Os tokens de sessão nunca devem ser transmitidos na URL, porque isso fornece um veículo simples para ataques de fixação de sessão e resulta em tokens que aparecem em vários mecanismos de registro. Em alguns casos, os desenvolvedores usam esta técnica para implementar sessões em navegadores que possuem cookies desativadas. No entanto, um meio melhor de conseguir isso é usar solicitações POST para todos os tokens de navegação e armazenamento em um campo oculto de um formulário HTML.</p>
+
+<p class = "p1">A funcionalidade de logout deve ser implementada</p>
+
+<p class = "p1">Isso deve descartar todos os recursos de sessão mantidos no servidor e invalidar o token de sessão.</p>
+
+<p class = "p1">A expiração da sessão deve ser implementada após um período adequado de inatividade (como 10 minutos).</p>
+
+<p class = "p1">Isso deve resultar no mesmo comportamento como se o usuário tivesse feito logout explicitamente.</p>
+
+<p class = "p1">Logins simultâneos devem ser evitados. Cada vez que um usuário efetua login, um token de sessão diferente deve ser emitido e qualquer sessão existente pertencente ao usuário deve ser descartada como se ele tivesse efetuado logout. Quando isso ocorrer, o token antigo pode ser armazenado por um período de tempo.</p>
+
+<p class = "p1">Quaisquer solicitações subsequentes recebidas usando o token deve retornar um alerta de segurança para o usuário, informando que a sessão foi encerrada porque ela se conectou de um local diferente.</p>
+
+<p class = "p1">Se o aplicativo contiver qualquer funcionalidade administrativa ou de diagnóstico que permita a visualização de tokens de sessão, essa funcionalidade deve ser fortemente protegida contra acesso não autorizado. Na maioria dos casos, não há necessidade dessa funcionalidade para exibir o token de sessão real. Em vez disso, deve conter detalhes suficientes sobre o proprietário da sessão para que quaisquer tarefas de suporte e diagnóstico sejam realizadas, sem divulgar o token de sessão que está sendo enviado pelo usuário para identificar sua sessão.</p>
+
+<p class = "p1">O domínio e o escopo do caminho dos cookies de sessão de um aplicativo devem ser definidos da forma mais restritiva possível. Os cookies com escopo excessivamente liberal geralmente são gerados por plataformas de aplicativos da Web ou servidores da Web mal configurados, e não pelos próprios desenvolvedores de aplicativos. Nenhuma outra teia aplicativos ou funcionalidades não confiáveis ​​devem ser acessíveis por meio de nomes de domínio ou caminhos de URL incluídos no escopo dos cookies do aplicativo. Deve ser dada atenção especial a quaisquer subdomínios existentes ao nome de domínio usado para acessar o aplicativo.</p>
+
+<p class = "p1">Em alguns casos, para garantir que essa vulnerabilidade não surja, pode ser necessário modificar o esquema de nomenclatura de domínio e caminho empregado pelos vários aplicativos em uso na organização.</p>
+
+<p class = "p1">Medidas específicas devem ser tomadas para defender o mecanismo de gerenciamento de sessão contra a variedade de ataques dos quais os usuários do aplicativo podem se tornar alvos:</p>
+
+<p class = "p1">A base de código do aplicativo deve ser rigorosamente auditada para identificar e remover quaisquer vulnerabilidades de cross-site scripting (consulte o Capítulo 12). A maioria dessas vulnerabilidades pode ser explorada para atacar os mecanismos de gerenciamento de sessão.</p>
+
+ Em particular, ataques XSS armazenados (ou de segunda ordem) geralmente podem ser explorados para derrotar todas as defesas concebíveis contra o uso indevido e sequestro de sessão.</p>
+
+<p class = "p1">Tokens arbitrários enviados por usuários que o servidor não reconhece não devem ser aceitos. O token deve ser cancelado imediatamente no navegador e o usuário deve retornar à página inicial do aplicativo.</p>
+
+<p class = "p1">A falsificação de solicitação entre sites e outros ataques de sessão podem ser dificultados pela necessidade de confirmação e / ou reautenticação em duas etapas antes que ações críticas, como transferências de fundos, sejam realizadas.</p>
+
+<p class = "p1">Ataques de falsificação de solicitação entre sites podem ser evitados não dependendo apenas de cookies HTTP para transmitir tokens de sessão.</p>
+
+<p class = "p1">O uso do mecanismo de cookie introduz a vulnerabilidade porque os cookies são enviados automaticamente pelo navegador, independentemente do que causou a solicitação. Se os tokens são sempre transmitidos em um campo oculto de um formulário HTML, um invasor não pode criar um formulário cujo envio causará uma ação não autorizada, a menos que ele já saiba o valor do token. Nesse caso, ele pode simplesmente executar um ataque de sequestro fácil. Os tokens por página também podem ajudar a prevenir esses ataques (consulte a seção a seguir).</p>
+
+<p class = "p1">Uma nova sessão deve sempre ser criada após a autenticação bem-sucedida, para mitigar os efeitos dos ataques de fixação de sessão. Quando um aplicativo não usa autenticação, mas permite que dados confidenciais sejam enviados, a ameaça representada por ataques de fixação é mais difícil de abordar. Uma abordagem possível é manter a sequência de páginas onde os dados confidenciais são enviados o mais curto que possível. Em seguida, você pode criar uma nova sessão na primeira página desta sequência (quando necessário, copiando da sessão existente quaisquer dados necessários, como o conteúdo de um carrinho de compras). Ou você pode usar tokens por página (descritos na seção a seguir) para evitar que um invasor que conhece o token usado na primeira página ao acessar as páginas subsequentes.</p>
+
+<p class = "p1">Exceto quando estritamente necessário, os dados pessoais não devem ser exibidos de volta para o usuário. Mesmo quando isso for necessário (como uma página de "confirmar pedido" mostrando endereços), itens confidenciais, como números de cartão de crédito e senhas nunca devem ser exibidos de volta para o usuário e devem sempre ser mascarados na origem da resposta do aplicativo.</p>
+
+<h1>Tokens por página</h1>
+
+<p class = "p1">Controle mais refinado sobre as sessões pode ser alcançado, e muitos tipos de sessão os ataques podem se tornar mais difíceis ou impossíveis, usando tokens por página, além de tokens de sessão. Aqui, um novo token de página é criado toda vez que um usuário solicita uma página do aplicativo (em oposição a uma imagem, por exemplo) e é passado ao cliente em um cookie ou um campo oculto de um formulário HTML. Cada vez que o usuário faz uma solicitação, o token de página é validado em relação ao último valor emitido, além da validação normal do token de sessão principal.</p>
+
+<p class = "p1">Em caso de não correspondência, toda a sessão é encerrada.</p>
+
+<p class = "p1">Muitos dos aplicativos da web mais críticos para a segurança na Internet, como bancos online, empregam tokens por página para fornecer maior proteção para seu mecanismo de gerenciamento de sessão, conforme mostrado na Figura 7-12.</p>
+
+<p class = "p1">Figura 7-12: tokens por página usados ​​em um aplicativo bancário</p>
+
+<p class = "p1">O uso de tokens por página impõe algumas restrições à navegação (por exemplo, ao uso dos botões voltar e avançar e navegação em várias janelas).</p>
+
+<p class = "p1">No entanto, evita eficazmente os ataques de fixação de sessão e garante que o uso simultâneo de uma sessão sequestrada por um usuário legítimo e um invasor será rapidamente bloqueado depois que ambos fizerem uma única solicitação. Os tokens por página também podem ser aproveitados para rastrear a localização e o movimento do usuário no aplicativo. Eles também podem ser usados ​​para detectar tentativas de acessar funções fora de uma sequência definida, ajudando a proteger contra certos defeitos de controle de acesso (consulte o Capítulo 8).</p>
+</body>
+</html>
