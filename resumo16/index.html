@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <title>Resumo 11</title>
+    <meta charset="UTF-8">
+    <meta name="keywords" content="desenvolvedor hat, hacking, linux">
+    <meta name="description" content="introducao a várias vulnerabilidades web, resumo 16">
+    <meta name="robots" content="index">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link type="text/css" rel="stylesheet" href="style.css">
+    <script src='https://kit.fontawesome.com/a076d05399.js'></script>
+    <script data-ad-client="ca-pub-6493599991997784" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css">
+  </head>
+  <body>
+    <menu>
+      <nav class="n1">
+        <a href="/index.html" class="menu">HOME</a>
+      </nav>
+    </menu>
+
+<h1>Funções baseadas em identificador</h1>
+
+<p class = "p1">Quando uma função de um aplicativo é usada para obter acesso a um recurso específico, é comum ver um identificador para o recurso solicitado sendo passado para o servidor em um parâmetro de solicitação, seja na string de consulta de URL ou no corpo de uma solicitação POST.</p>
+
+<p class = "p1">Por exemplo, um aplicativo pode usar o seguinte URL para exibir um documento específico pertencente a um determinado usuário:</p>
+
+<p class = "p1">Quando o usuário proprietário do documento está conectado, um link para este URL é exibido na página Meus Documentos do usuário. Outros usuários não veem o link.</p>
+
+<p class = "p1">No entanto, se os controles de acesso forem quebrados, qualquer usuário que solicitar o URL relevante poderá visualizar o documento exatamente da mesma maneira que o usuário autorizado.</p>
+
+<p class = "p1">Esse tipo de vulnerabilidade geralmente surge quando o aplicativo principal faz interface com um sistema externo ou componente de back-end. Pode ser difícil compartilhar um modelo de segurança baseado em sessão entre diferentes sistemas que podem ser baseados em diversas tecnologias.</p>
+
+<p class = "p1">Diante desse problema, os desenvolvedores frequentemente pegam um atalho e se afastam desse modelo, usando
+ parâmetros para tomar decisões de controle de acesso.</p>
+
+<p class = "p1">Neste exemplo, um invasor que deseja obter acesso não autorizado precisa saber não apenas o nome da página do aplicativo (ViewDocument.php), mas também o identificador do documento que deseja visualizar. Às vezes, os identificadores de recursos são gerados de maneira altamente imprevisível; por exemplo, eles podem ser GUIDs escolhidos aleatoriamente. Em outros casos, eles podem ser facilmente adivinhados;  por exemplo, eles podem ser números gerados sequencialmente. No entanto, o aplicativo é vulnerável em ambos os casos. Conforme descrito anteriormente, os URLs não têm o status de segredos e o mesmo se aplica aos identificadores de recursos. Freqüentemente, um invasor que deseja descobrir os identificadores dos recursos de outros usuários pode encontrar algum local dentro do aplicativo que os divulgue, como logs de acesso. Mesmo quando os identificadores de recursos de um aplicativo não podem ser facilmente adivinhados, o aplicativo ainda estará vulnerável se não conseguir controlar adequadamente o acesso a esses recursos.</p>
+
+<p class = "p1">Nos casos em que os identificadores são facilmente previstos, o problema é ainda mais sério e mais facilmente explorado.</p>
+
+<p class = "p1">Os logs de aplicativos geralmente são uma mina de ouro de informações. Eles podem conter vários itens de dados que podem ser usados ​​como identificadores para sondar a funcionalidade que é acessada dessa maneira. Os identificadores comumente encontrados nos logs do aplicativo incluem nomes de usuário, números de ID de usuário, números de conta, IDs de documentos, grupos e funções de usuários e endereços de e-mail.</p>
+
+<p class = "p1">Além de ser usado como referências a recursos baseados em dados dentro do aplicativo, esse tipo de identificador é frequentemente usado para se referir a funções do próprio aplicativo.  Como você viu no Capítulo 4, um aplicativo pode fornecer funções diferentes por meio de uma única página, que aceita um nome de função ou identificador como parâmetro. Novamente nesta situação, os controles de acesso não podem ser executados mais profundamente do que a presença ou ausência de URLs específicos nas interfaces de diferentes tipos de usuários. Se um invasor puder determinar o identificador de uma função confidencial, ele poderá acessá-la da mesma forma que um usuário mais privilegiado.</p>
+
+<h1>Funções de vários estágios</h1>
+
+<p class = "p1">Muitos tipos de funções em um aplicativo são implementados em vários estágios, envolvendo várias solicitações enviadas do cliente para o servidor. Por exemplo, uma função para adicionar um novo usuário pode envolver a escolha dessa opção em um menu de manutenção do usuário, selecionando o departamento e a função do usuário nas listas suspensas e, em seguida, inserindo o novo nome de usuário, senha inicial e outras informações.</p>
+
+<p class = "p1">É comum encontrar aplicativos nos quais esforços foram feitos para proteger esse tipo de funcionalidade confidencial de acesso não autorizado, mas onde os controles de acesso empregados são quebrados devido a suposições errôneas sobre como a funcionalidade será usada.</p>
+
+<p class = "p1">No exemplo anterior, quando um usuário tenta carregar o menu de manutenção do usuário e escolhe a opção de adicionar um novo usuário, o aplicativo pode verificar se o usuário possui os privilégios necessários e bloquear o acesso, caso não tenha.</p>
+
+<p class = "p1">No entanto, se um invasor prosseguir diretamente para o estágio de especificação do departamento do usuário e outros detalhes, pode não haver controle de acesso efetivo. Os desenvolvedores inconscientemente presumiram que qualquer usuário que atingir os estágios posteriores do processo deve ter os privilégios relevantes porque isso foi verificado nos estágios anteriores. O resultado é que qualquer usuário do aplicativo pode adicionar uma nova conta de usuário administrativo e, assim, assumir o controle total do aplicativo, obtendo acesso a muitas outras funções cujo controle de acesso é intrinsecamente robusto.</p>
+
+<p class = "p1">Os autores encontraram esse tipo de vulnerabilidade mesmo nos aplicativos da Web mais críticos para a segurança - aqueles implantados por bancos online. Fazer uma transferência de fundos em um aplicativo bancário geralmente envolve vários estágios, em parte para evitar que os usuários cometam erros acidentalmente ao solicitar uma transferência.</p>
+
+<p class = "p1">Esse processo de vários estágios envolve a captura de diferentes itens de dados do usuário em cada estágio.</p>
+
+<p class = "p1">Esses dados são verificados minuciosamente quando enviados pela primeira vez e, em seguida, geralmente são passados ​​para cada estágio subsequente, usando campos ocultos no formulário HTML.</p>
+
+<p class = "p1">No entanto, se o aplicativo não revalidar todos esses dados no estágio final, um invasor pode potencialmente ignorar as verificações do servidor.  Por exemplo, o aplicativo pode verificar se a conta de origem selecionada para a transferência pertence ao usuário atual e, em seguida, solicitar detalhes sobre a conta de destino e o valor da transferência.  Se um usuário interceptar a solicitação POST final desse processo e modificar o número da conta de origem, ele pode executar um escalonamento horizontal de privilégios e transferir fundos de uma conta pertencente a um usuário diferente.</p>
+
+<h2>Arquivos estáticos</h2>
+
+<p class = "p1">Na maioria dos casos, os usuários obtêm acesso a funcionalidades e recursos protegidos, emitindo solicitações para páginas dinâmicas que são executadas no servidor. É responsabilidade de cada uma dessas páginas realizar verificações de controle de acesso adequadas e confirmar se o usuário possui os privilégios relevantes para realizar a ação que está tentando.</p>
+
+<p class = "p1">No entanto, em alguns casos, as solicitações de recursos protegidos são feitas diretamente para os próprios recursos estáticos, que estão localizados na raiz da web do servidor.</p>
+
+<p class = "p1">Por exemplo, uma editora online pode permitir que os usuários naveguem em seu catálogo de livros e comprem e-books para download. Assim que o pagamento for feito, o usuário é direcionado a um URL de download como o seguinte:</p>
+
+<p class = "p1">Como esse é um recurso totalmente estático, se estiver hospedado em um servidor web tradicional, seu conteúdo é simplesmente retornado diretamente pelo servidor e nenhum código de nível de aplicativo é executado. Portanto, o recurso não pode implementar nenhuma lógica para verificar se o usuário solicitante possui os privilégios necessários.</p>
+
+<p class = "p1">Quando recursos estáticos são acessados ​​dessa forma, é altamente provável que nenhum controle de acesso efetivo os esteja protegendo e que qualquer pessoa que conheça o esquema de nomenclatura de URL possa explorar isso para acessar quaisquer recursos que desejar.  No caso presente, o nome do documento se parece com um ISBN, o que permitiria a um invasor rapidamente baixe todos os e-books produzidos pela editora!</p>
+
+<p class = "p1">Certos tipos de funcionalidade são particularmente propensos a esse tipo de problema, incluindo sites financeiros que fornecem acesso a documentos estáticos sobre empresas, como relatórios anuais, fornecedores de software que fornecem binários para download e funcionalidade administrativa que fornece acesso a arquivos de log estáticos e outros dados confidenciais coletados  dentro do aplicativo.</p>
+
+<h2>Configuração incorreta da plataforma</h2>
+
+<p class = "p1">Alguns aplicativos usam controles no servidor da web ou na camada da plataforma de aplicativos para controlar o acesso. Normalmente, o acesso a caminhos de URL especificados é restrito com base na função do usuário no aplicativo. Por exemplo, o acesso ao caminho / admin pode ser negado a usuários que não estão no grupo Administradores. Em princípio, este é um meio inteiramente legítimo de controlar o acesso. No entanto, erros cometidos na configuração dos controles em nível de plataforma podem muitas vezes permitir a ocorrência de acesso não autorizado.</p>
+
+<p class = "p1">A configuração no nível da plataforma normalmente assume a forma de regras semelhantes às regras de política de firewall, que permitem ou negam o acesso com base no seguinte:</p>
+
+<h2>Método de solicitação HTTP</h2>
+
+<p class = "p1">Conforme descrito no Capítulo 3, o objetivo original do método GET é recuperar informações, e o objetivo do método POST é executar ações que alteram os dados ou o estado do aplicativo.</p>
+
+<p class = "p1">Se não houver cuidado ao criar regras que permitam o acesso com precisão com base nos métodos HTTP e caminhos de URL corretos, isso pode levar a um acesso não autorizado.</p>
+
+<p class = "p1">Por exemplo, se uma função administrativa para criar um novo usuário usa o método POST, a plataforma pode ter uma regra de negação que desabilita o método POST e permite todos os outros métodos. No entanto, se o código no nível do aplicativo não verificar se todas as solicitações para essa função estão de fato usando o método POST, um invasor pode contornar o controle enviando a mesma solicitação usando o método GET.  Como a maioria das APIs de nível de aplicativo para recuperar parâmetros de solicitação são independentes quanto ao método de solicitação, o invasor pode simplesmente fornecer os parâmetros necessários na string de consulta de URL da solicitação GET para fazer uso não autorizado da função.</p>
+
+<p class = "p1">O que é mais surpreendente, aparentemente, é que os aplicativos ainda podem ser vulneráveis, mesmo se a regra de nível de plataforma negar acesso aos métodos GET e POST.  Isso acontece porque as solicitações que usam outros métodos HTTP podem, em última análise, ser tratadas pelo mesmo código de aplicativo que trata as solicitações GET e POST.  Um exemplo disso é o método HEAD.  De acordo com as especificações, os servidores devem responder a uma solicitação HEAD com os mesmos cabeçalhos que usariam para responder à solicitação GET correspondente, mas sem corpo de mensagem.  Portanto, a maioria das plataformas atende corretamente às solicitações HEAD executando o manipulador GET correspondente e apenas retorna os cabeçalhos HTTP que são gerados. As solicitações GET geralmente podem ser usadas para executar ações confidenciais, seja porque o próprio aplicativo usa solicitações GET para esse propósito (ao contrário das especificações) ou porque não verifica se o método POST está sendo usado.  Se um invasor pode usar uma solicitação HEAD para adicionar uma conta de usuário administrativo, ele ou ela pode viver sem receber o corpo da mensagem na resposta.</p>
+
+<p class = "p1">Em alguns casos, as plataformas lidam com solicitações que usam métodos HTTP não reconhecidos simplesmente passando-os para o manipulador de solicitações GET.  Nessa situação, os controles de nível de plataforma que apenas negam certos métodos HTTP especificados podem ser contornados especificando um método HTTP inválido arbitrário na solicitação.</p>
+
+<p class = "p1">O Capítulo 18 contém um exemplo específico desse tipo de vulnerabilidade que surge em um produto de plataforma de aplicativo da web.</p>
+</body>
+</html>
