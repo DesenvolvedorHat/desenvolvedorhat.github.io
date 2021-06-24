@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <title>Resumo 11</title>
+    <meta charset="UTF-8">
+    <meta name="keywords" content="desenvolvedor hat, hacking, linux">
+    <meta name="description" content="introducao a várias vulnerabilidades web, resumo 17">
+    <meta name="robots" content="index">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link type="text/css" rel="stylesheet" href="style.css">
+    <script src='https://kit.fontawesome.com/a076d05399.js'></script>
+    <script data-ad-client="ca-pub-6493599991997784" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css">
+  </head>
+  <body>
+    <menu>
+      <nav class="n1">
+        <a href="/index.html" class="menu">HOME</a>
+      </nav>
+    </menu>
+
+<h1>Métodos de controle de acesso inseguros</h1>
+
+<p class = "p1">Alguns aplicativos empregam fundamentalmente um modelo de controle de acesso inseguro no qual as decisões de controle de acesso são feitas com base em parâmetros de solicitação enviados pelo cliente ou outras condições que estão sob o controle de um invasor.</p>
+
+<h2>Controle de acesso baseado em parâmetros</h2>
+
+<p class = "p1">Em algumas versões deste modelo, o aplicativo determina a função de um usuário ou nível de acesso no momento do login e, a partir desse ponto, transmite essas informações por meio do cliente em um campo de formulário oculto, cookie ou parâmetro de string de consulta predefinido (consulte o Capítulo 5). Quando cada solicitação subsequente é processada, o aplicativo lê esse parâmetro de solicitação e decide qual acesso conceder ao usuário de acordo.</p>
+
+<p class = "p1">Por exemplo, um administrador que usa o aplicativo pode ver URLs como os seguintes:</p>
+
+<p class = "p1">Os URLs vistos por usuários comuns contêm um parâmetro diferente ou nenhum.</p>
+
+<p class = "p1">Qualquer usuário que esteja ciente do parâmetro atribuído aos administradores pode simplesmente configurá-lo em suas próprias solicitações e, assim, obter acesso às funções administrativas.</p>
+
+<p class = "p1">Esse tipo de controle de acesso às vezes pode ser difícil de detectar sem realmente usar o aplicativo como um usuário com altos privilégios e identificar quais solicitações são feitas. As técnicas descritas no Capítulo 4 para descobrir parâmetros de solicitação ocultos podem ser bem-sucedidas na descoberta do mecanismo ao trabalhar apenas como um usuário comum.</p>
+
+<h2>Controle de acesso baseado em referência</h2>
+
+<p class = "p1">Em outros modelos de controle de acesso não seguros, o aplicativo usa o cabeçalho HTTP Referer como base para tomar decisões de controle de acesso.</p>
+
+<p class = "p1">Por exemplo, um aplicativo pode controlar estritamente o acesso ao menu administrativo principal com base nos privilégios de um usuário. Mas quando um usuário faz uma solicitação para uma função administrativa individual, o aplicativo pode simplesmente verificar se essa solicitação foi encaminhada a partir da página do menu administrativo. Ele pode assumir que o usuário deve ter acessado essa página e, portanto, possui os privilégios necessários.</p>
+
+<p class = "p1">Este modelo está fundamentalmente quebrado, é claro, porque o cabeçalho Referer está completamente sob o controle do usuário e pode ser definido com qualquer valor.</p>
+
+<h2>Controle de acesso com base na localização</h2>
+
+<p class = "p1">Muitas empresas têm um requisito regulamentar ou comercial para restringir o acesso a recursos dependendo da localização geográfica do usuário. Não se limitam ao setor financeiro, mas incluem serviços de notícias e outros. Nessas situações, uma empresa pode empregar vários métodos para localizar o usuário, o mais comum dos quais é a localização do endereço IP atual do usuário.</p>
+
+<p class = "p1">Os controles de acesso baseados em localização são relativamente fáceis de serem contornados por um invasor.</p>
+
+<p class = "p1">Aqui estão alguns métodos comuns de contorná-los:</p>
+
+<p class = "p1">Usando um proxy da web baseado no local necessário</p>
+
+<p class = "p1">Usando uma VPN que termina no local necessário</p>
+
+<p class = "p1">Usando um dispositivo móvel compatível com roaming de dados</p>
+
+<p class = "p1">Manipulação direta de mecanismos do lado do cliente para geolocalização</p>
+
+<h2>Atacando controles de acesso</h2>
+
+<p class = "p1">Antes de começar a sondar o aplicativo para detectar quaisquer vulnerabilidades reais de controle de acesso, você deve reservar um momento para revisar os resultados dos exercícios de mapeamento de seu aplicativo (consulte o Capítulo 4). Você precisa entender quais são os requisitos reais do aplicativo em termos de controle de acesso e, portanto, onde provavelmente será mais proveitoso concentrar sua atenção.</p>
+
+<p class = "p1">Aqui estão algumas questões a serem consideradas ao examinar os controles de acesso de um aplicativo:</p>
+
+<p class = "p1">1. As funções do aplicativo fornecem aos usuários individuais acesso a um subconjunto específico de dados que lhes pertence?</p>
+
+<p class = "p1">2. Existem diferentes níveis de usuário, como gerentes, supervisores, convidados e assim por diante, que têm acesso a diferentes funções?</p>
+
+<p class = "p1">3. Os administradores usam a funcionalidade integrada no mesmo aplicativo para configurá-lo e monitorá-lo?</p>
+
+<p class = "p1">4. Quais funções ou recursos de dados no aplicativo você identificou que provavelmente permitiriam que você escalasse seus privilégios atuais?</p>
+
+<p class = "p1">5. Existem identificadores (por meio de parâmetros de URL do corpo da mensagem POST) que indicam que um parâmetro está sendo usado para rastrear os níveis de acesso?</p>
+
+<h2>Teste com contas de usuário diferentes</h2>
+
+<p class = "p1">A maneira mais fácil e eficaz de testar a eficácia dos controles de acesso de um aplicativo é acessá-lo usando contas diferentes. Dessa forma, você pode determinar se os recursos e funcionalidades que podem ser acessados ​​legitimamente por uma conta podem ser acessados ​​ilegitimamente por outra.</p>
+
+<p class = "p1">1. Se o aplicativo separa o acesso do usuário a diferentes níveis de funcionalidade, primeiro use uma conta poderosa para localizar todas as funcionalidades disponíveis.</p>
+
+<p class = "p1">Em seguida, tente acessá-lo usando uma conta com privilégios inferiores para testar o escalonamento de privilégio vertical.</p>
+
+<p class = "p1">2. Se o aplicativo separar o acesso do usuário a recursos diferentes (como documentos), use duas contas de nível de usuário diferentes para testar se os controles de acesso são eficazes ou se o escalonamento horizontal de privilégios é possível. Por exemplo, encontre um documento que possa ser acessado legitimamente por um usuário, mas não por outro, e tente acessá-lo usando a conta do segundo usuário - solicitando o URL relevante ou enviando os mesmos parâmetros POST de dentro da segunda sessão do usuário.</p>
+
+<p class = "p1">Testar completamente os controles de acesso de um aplicativo é um processo demorado.</p>
+
+<p class = "p1">Felizmente, algumas ferramentas podem ajudá-lo a automatizar parte do trabalho envolvido, para tornar seus testes mais rápidos e confiáveis. Isso permitirá que você se concentre nas partes da tarefa que requerem inteligência humana para serem executadas com eficácia.</p>
+
+<p class = "p1">O Burp Suite permite mapear o conteúdo de um aplicativo usando dois contextos de usuário diferentes.</p>
+
+<p class = "p1">Em seguida, você pode comparar os resultados para ver exatamente onde o conteúdo acessado por cada usuário é o mesmo ou diferente.</p>
+
+<p class = "p1">1. Com o Burp configurado como seu proxy e interceptação desabilitada, navegue por todo o conteúdo do aplicativo dentro de um contexto de usuário.  Se você estiver testando controles de acesso vertical, use a conta de privilégio mais alta para isso.</p>
+
+<p class = "p1">2. Revise o conteúdo do mapa do site do Burp para garantir que identificou todas as funcionalidades que deseja testar. Em seguida, use o menu de contexto para selecionar o recurso “comparar mapas do site”.</p>
+
+<p class = "p1">3. Para selecionar o segundo mapa do site a ser comparado, você pode carregá-lo de um arquivo de estado Burp ou fazer o Burp solicitar dinamicamente o primeiro mapa do site em um novo contexto de sessão. Para testar os controles de acesso horizontal entre usuários do mesmo tipo, você pode simplesmente carregar um arquivo de estado que você salvou anteriormente, tendo mapeado o aplicativo como um usuário diferente. Para testar os controles de acesso vertical, é preferível solicitar novamente o mapa do site de alto privilégio como um usuário de baixo privilégio, porque isso garante a cobertura completa da funcionalidade relevante.</p>
+
+<p class = "p1">4. Para solicitar novamente o primeiro mapa do site em uma sessão diferente, você precisa configurar a funcionalidade de manipulação de sessão do Burp com os detalhes da sessão do usuário de baixo privilégio (por exemplo, gravando uma macro de login ou fornecendo um cookie específico para ser usado em  solicitações de). Este recurso é descrito em mais detalhes no Capítulo 14. Você também pode precisar definir regras de escopo adequadas para evitar que o Burp solicite qualquer função de logout.</p>
+</body>
+</html>
