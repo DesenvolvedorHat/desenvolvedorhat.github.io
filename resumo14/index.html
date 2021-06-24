@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <title>Resumo 11</title>
+    <meta charset="UTF-8">
+    <meta name="keywords" content="desenvolvedor hat, hacking, linux">
+    <meta name="description" content="introducao a várias vulnerabilidades web, resumo 14">
+    <meta name="robots" content="index">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link type="text/css" rel="stylesheet" href="style.css">
+    <script src='https://kit.fontawesome.com/a076d05399.js'></script>
+    <script data-ad-client="ca-pub-6493599991997784" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css">
+  </head>
+  <body>
+    <menu>
+      <nav class="n1">
+        <a href="/index.html" class="menu">HOME</a>
+      </nav>
+    </menu>
+
+<h1>Registrar, monitorar e alertar</h1>
+
+<p class = "p1">A funcionalidade de gerenciamento de sessão do aplicativo deve estar intimamente integrada com seus mecanismos de registro, monitoramento e alerta para fornecer registros adequados de atividades anômalas e para permitir que os administradores tomem ações defensivas quando necessário:</p>
+
+<p class = "p1">O aplicativo deve monitorar as solicitações que contêm tokens inválidos.</p>
+
+<p class = "p1">Exceto nos casos mais previsíveis, um ataque bem-sucedido que tenta adivinhar os tokens emitidos para outros usuários normalmente envolve a emissão de um grande número de solicitações contendo tokens inválidos, deixando uma marca perceptível nos logs do aplicativo.</p>
+
+<p class = "p1">Ataques de força bruta contra tokens de sessão são difíceis de bloquear completamente, porque nenhuma conta de usuário ou sessão em particular pode ser desativada para interromper o ataque. Uma ação possível é bloquear os endereços IP de origem por um período de tempo quando várias solicitações contendo tokens inválidos forem recebidas. No entanto, isso pode ser ineficaz quando as solicitações de um usuário se originam de vários endereços IP (como usuários AOL) ou quando as solicitações de vários usuários se originam do mesmo endereço IP (como usuários por trás um proxy ou firewall realizando tradução de endereços de rede).</p>
+
+<p class = "p1">Mesmo que os ataques de força bruta contra as sessões não possam ser evitados com eficácia em tempo real, manter registros detalhados e alertar os administradores permite que eles investiguem o ataque e tomem as medidas adequadas onde puderem.</p>
+
+<p class = "p1">Sempre que possível, os usuários devem ser alertados sobre eventos anômalos relacionados à sua sessão, como logins simultâneos ou sequestro aparente (detectado usando tokens por página).</p>
+
+<p class = "p1">Mesmo que um comprometimento já possa ter ocorrido, isso permite que o usuário verifique se alguma ação não autorizada, como transferência de fundos, ocorreu.</p>
+
+<h1>Término de sessão reativa</h1>
+
+<p class = "p1">O mecanismo de gerenciamento de sessão pode ser aproveitado como uma defesa altamente eficaz contra muitos tipos de outros ataques contra o aplicativo. Alguns aplicativos de segurança crítica, como o banco online, são extremamente agressivos ao encerrar a sessão de um usuário sempre que ele envia uma solicitação anômala.</p>
+
+<p class = "p1">Os exemplos são qualquer solicitação contendo um campo de formulário HTML oculto modificado ou parâmetro de string de consulta de URL, qualquer solicitação contendo strings associadas a injeção de SQL ou ataques de script entre sites e qualquer entrada do usuário que normalmente teria sido bloqueada por verificações do lado do cliente, como comprimento  restrições.</p>
+
+<p class = "p1">Obviamente, quaisquer vulnerabilidades reais que possam ser exploradas usando tais solicitações precisam ser tratadas na fonte. Mas forçar os usuários a se autenticar novamente sempre que enviarem uma solicitação inválida pode desacelerar o processo de sondagem do aplicativo em busca de vulnerabilidades em muitas ordens de magnitude, mesmo quando técnicas automatizadas são empregadas. Se vulnerabilidades residuais ainda existem, é muito menos provável que sejam descobertas por alguém no campo.</p>
+
+<p class = "p1">Onde esse tipo de defesa é implementado, também é recomendado que ela possa ser facilmente desligada para fins de teste. Se um teste de penetração legítimo do aplicativo ficar lento da mesma maneira que um invasor do mundo real, sua eficácia será drasticamente reduzida. Além disso, é muito provável que a presença do mecanismo resulte em mais vulnerabilidades remanescentes no código de produção do que se o mecanismo estivesse ausente.</p>
+
+<p class = "p1">Se o aplicativo que você está atacando usa esse tipo de medida defensiva, você pode descobrir que investigar o aplicativo em busca de muitos tipos de vulnerabilidades comuns consome muito tempo. A necessidade entorpecente de fazer login após cada teste com falha e navegar novamente até o ponto do aplicativo que você estava examinando faria com que você desistisse rapidamente.</p>
+
+<p class = "p1">Nessa situação, você geralmente pode usar a automação para resolver o problema.</p>
+
+<p class = "p1">Ao usar o Burp Intruder para executar um ataque, você pode usar o recurso Obter Cookie para executar um novo login antes de enviar cada caso de teste e usar o novo token de sessão (desde que o login seja de estágio único). Ao navegar e sondar o aplicativo manualmente, você pode usar os recursos de extensibilidade do Burp Proxy por meio da interface IBurpExtender.</p>
+
+<p class = "p1">Você pode criar uma extensão que detecta quando o aplicativo executou um logout forçado, faz o login automaticamente de volta no aplicativo e retorna a nova sessão e página ao navegador, opcionalmente com uma mensagem pop-up para informar o que ocorreu. Embora isso de forma alguma elimine o problema, em certos casos pode atenuá-lo substancialmente.</p>
+
+<p class = "p1">O mecanismo de gerenciamento de sessão fornece uma fonte rica de vulnerabilidades potenciais para você direcionar ao formular seu ataque contra um aplicativo.</p>
+
+<p class = "p1">Por causa de sua função fundamental em permitir que o aplicativo identifique o mesmo usuário em várias solicitações, uma função de gerenciamento de sessão interrompida geralmente fornece as chaves para o reino. Pular para as sessões de outros usuários é bom.</p>
+
+<p class = "p1">O sequestro de uma sessão de administrador é ainda melhor;  normalmente, isso permite que você comprometa todo o aplicativo.</p>
+
+<p class = "p1">Você pode esperar encontrar uma ampla gama de defeitos na funcionalidade de gerenciamento de sessão do mundo real. Quando mecanismos personalizados são empregados, as possíveis fraquezas e vias de ataque podem parecer infinitas.</p>
+
+<p class = "p1">A lição mais importante a tirar desse tópico é ser paciente e determinado. Muitos mecanismos de gerenciamento de sessão que parecem ser robustos na primeira inspeção podem ser considerados deficientes quando analisados ​​de perto.</p>
+
+<p class = "p1">Decifrar o método que um aplicativo usa para gerar sua sequência de tokens aparentemente aleatórios pode levar tempo e ser engenhoso.</p>
+
+<p class = "p1">Mas, dada a recompensa, geralmente vale a pena fazer um investimento.</p>
+</body>
+</html>
