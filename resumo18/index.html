@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <title>Resumo 11</title>
+    <meta charset="UTF-8">
+    <meta name="keywords" content="desenvolvedor hat, hacking, linux">
+    <meta name="description" content="introducao a várias vulnerabilidades web, resumo 18">
+    <meta name="robots" content="index">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link type="text/css" rel="stylesheet" href="style.css">
+    <script src='https://kit.fontawesome.com/a076d05399.js'></script>
+    <script data-ad-client="ca-pub-6493599991997784" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css">
+  </head>
+  <body>
+    <menu>
+      <nav class="n1">
+        <a href="/index.html" class="menu">HOME</a>
+      </nav>
+    </menu>
+
+<h1>Teste com acesso limitado</h1>
+
+<p class = "p1">Se você tiver apenas uma conta de nível de usuário com a qual acessar o aplicativo (ou nenhuma), será necessário realizar um trabalho adicional para testar a eficácia dos controles de acesso. Na verdade, para realizar um teste totalmente abrangente, mais trabalho precisa ser feito em qualquer caso. Pode haver funcionalidade mal protegida que não esteja explicitamente vinculada a partir da interface de nenhum usuário do aplicativo. Por exemplo, talvez antigo a funcionalidade ainda não foi removida ou uma nova funcionalidade foi implantada, mas ainda não foi publicada para os usuários.</p>
+
+<p class = "p1">1. Use as técnicas de descoberta de conteúdo descritas no Capítulo 4 para identificar o máximo possível da funcionalidade do aplicativo.</p>
+
+<p class = "p1">Realizar este exercício como um usuário de baixo privilégio é muitas vezes suficiente para enumerar e obter acesso direto a funcionalidades confidenciais.</p>
+
+<p class = "p1">2. Onde as páginas do aplicativo são identificadas com probabilidade de apresentar funcionalidades ou links diferentes para usuários comuns e administrativos (por exemplo, Painel de controle ou Minha página inicial), tente adicionar parâmetros como admin = true à string de consulta de URL e ao corpo das solicitações POST.</p>
+
+<p class = "p1">Isso o ajudará a determinar se isso revela ou dá acesso a qualquer funcionalidade adicional à qual seu contexto de usuário tem acesso normal.</p>
+
+<p class = "p1">3. Teste se o aplicativo usa o cabeçalho Referer como base para tomar decisões de controle de acesso. Para as principais funções do aplicativo que você está autorizado a acessar, tente remover ou modificar o cabeçalho Referer, e determinar se sua solicitação ainda foi bem-sucedida.</p>
+
+<p class = "p1">Caso contrário, o aplicativo pode estar confiando no cabeçalho Referer de uma forma insegura.</p>
+
+<p class = "p1">Se você escanear solicitações usando o scanner ativo do Burp, o Burp tenta remover o Referer cabeçalho de cada solicitação e informar se isso parece fazer uma diferença sistemática e relevante para a resposta do aplicativo.</p>
+
+<p class = "p1">4. Revise todos os scripts e HTML do lado do cliente para encontrar referências a funcionalidades ocultas ou funcionalidades que podem ser manipuladas no lado do cliente, como interfaces de usuário baseadas em script. Além disso, descompile todos os componentes de extensão do navegador, conforme descrito no Capítulo 5 para descobrir quaisquer referências a funcionalidade do lado do servidor.</p>
+
+<p class = "p1">Quando todas as funcionalidades acessíveis forem enumeradas, você precisará testar se a segregação por usuário de acesso aos recursos está sendo aplicada corretamente.</p>
+
+<p class = "p1">Em cada instância em que o aplicativo concede aos usuários acesso a um subconjunto de uma variedade de recursos do mesmo tipo (como documentos, pedidos, e-mails e detalhes pessoais), pode haver oportunidades para um usuário obter acesso não autorizado a outros recursos.</p>
+
+<p class = "p1">1. Quando o aplicativo usa identificadores de qualquer tipo (IDs de documentos, números de contas, referências de pedidos) para especificar qual recurso um usuário está solicitando, tente descobrir os identificadores de recursos aos quais você não tem acesso autorizado.</p>
+
+<p class = "p1">2. Se for possível gerar uma série de tais identificadores em rápida sucessão (por exemplo, criando vários novos documentos ou pedidos), use as técnicas descritas no Capítulo 7 para tokens de sessão para tentar descobrir quaisquer sequências previsíveis nos identificadores que  aplicação produz.</p>
+
+<p class = "p1">3. Se não for possível gerar novos identificadores, você está restrito a analisar os identificadores já descobertos ou até mesmo a adivinhar.  Se o identificador tiver a forma de um GUID, é improvável que qualquer das tentativas baseadas em suposições sejam bem-sucedidas. No entanto, se for um número relativamente pequeno, tente outros números próximos ou números aleatórios com o mesmo número de dígitos.</p>
+
+<p class = "p1">4. Se os controles de acesso forem quebrados e os identificadores de recursos forem previsíveis, você pode montar um ataque automatizado para coletar recursos e informações confidenciais do aplicativo. Use as técnicas descritas no Capítulo 14 para projetar um ataque automatizado sob medida para recuperar os dados de que você precisa.</p>
+
+<p class = "p1">Uma vulnerabilidade catastrófica desse tipo ocorre quando uma página de Informações da conta exibe os detalhes pessoais de um usuário junto com seu nome de usuário e senha. Embora a senha normalmente seja mascarada na tela, ela é transmitida por completo para o navegador. Aqui, você pode frequentemente iterar rapidamente em toda a gama de identificadores de conta para colher as credenciais de login de todos os usuários, incluindo administradores. A Figura 8-5 mostra o Burp Intruder sendo usado para realizar um ataque bem-sucedido desse tipo.</p>
+
+<p class = "p1">Figura 8-5: Um ataque bem-sucedido para coletar nomes de usuário e senhas por meio de uma vulnerabilidade de controle de acesso</p>
+
+<p class = "p1">Quando você detecta uma vulnerabilidade de controle de acesso, um ataque imediato para acompanhar é tentar escalar seus privilégios ainda mais, comprometendo uma conta de usuário que tem privilégios administrativos. Você pode usar vários truques para localizar uma conta administrativa. Usando uma falha de controle de acesso como a ilustrada, você pode colher centenas de credenciais de usuário e não se deliciar com a tarefa de fazer login manualmente como cada usuário até encontrar um administrador. No entanto, quando as contas são identificadas por um ID numérico sequencial, é comum descobrir que os números de conta mais baixos são atribuídos a administradores. Fazer login como os primeiros usuários registrados no aplicativo geralmente identifica um administrador. Se essa abordagem falhar, um método eficaz é encontrar uma função dentro do aplicativo em que o acesso seja devidamente segregado horizontalmente, como a página inicial principal apresentada ao usuário. Escreva um script para fazer login usando cada conjunto de credenciais capturadas e, em seguida, tente acessar sua própria página inicial. É provável que os usuários administrativos possam visualizar a página inicial de cada usuário, então você detectará imediatamente quando uma conta administrativa está sendo usada.</p>
+
+<h2>Teste de acesso direto a métodos</h2>
+
+<p class = "p1">Quando um aplicativo usa solicitações que fornecem acesso direto aos métodos de API do lado do servidor, quaisquer deficiências de controle de acesso nesses métodos normalmente são identificadas usando a metodologia já descrita. No entanto, você também deve testar a existência de APIs adicionais que podem não estar devidamente protegidas.</p>
+
+<p class = "p1">Por exemplo, um servlet pode ser chamado usando a seguinte solicitação:</p>
+
+<p class = "p1">Como este é um servidor conhecido, talvez você possa acessar outros servidores para executar ações não autorizadas.</p>
+
+<p class = "p1">1. Identifique quaisquer parâmetros que sigam as convenções de nomenclatura Java (por exemplo, get, set, add, update, is, ou foi seguido por uma palavra maiúscula) ou especifique explicitamente uma estrutura de pacote (por exemplo, com.companyname.xxx.yyy.Nome da classe).</p>
+
+<p class = "p1">Anote todos os métodos referenciados que encontrar.</p>
+
+<p class = "p1">2. Procure um método que liste as interfaces ou métodos disponíveis.</p>
+
+<p class = "p1">Verifique em seu histórico de proxy se ele foi chamado como parte da comunicação normal do aplicativo. Caso contrário, tente adivinhá-lo usando a convenção de nomenclatura observada.</p>
+
+<p class = "p1">3. Consulte recursos públicos, como mecanismos de pesquisa e sites de fóruns, para determinar quaisquer outros métodos que possam ser acessíveis.</p>
+
+<p class = "p1">4. Use as técnicas descritas no Capítulo 4 para adivinhar outros nomes de método.</p>
+
+<p class = "p1">5. Tente acessar todos os métodos reunidos usando uma variedade de tipos de contas de usuário, incluindo acesso não autenticado.</p>
+
+<p class = "p1">6. Se você não souber o número ou os tipos de argumentos esperados por alguns métodos, procure métodos com menor probabilidade de receber argumentos, como listInterfaces e getAllUsersInRoles.</p>
+
+<h2>Testando controles sobre recursos estáticos</h2>
+
+<p class = "p1">Nos casos em que os recursos estáticos que o aplicativo está protegendo são acessados ​​diretamente por meio de URLs para os próprios arquivos de recursos, você deve testar se é possível para usuários não autorizados simplesmente solicitar esses URLs diretamente.</p>
+
+<p class = "p1">1. Percorra o processo normal para obter acesso a um recurso estático protegido para obter um exemplo do URL pelo qual ele é finalmente recuperado.</p>
+
+<p class = "p1">2. Usando um contexto de usuário diferente (por exemplo, um usuário com menos privilégios ou uma conta que não fez uma compra obrigatória), tente acessar o recurso diretamente usando o URL que você identificou.</p>
+
+<p class = "p1">3. Se o ataque for bem-sucedido, tente entender o esquema de nomenclatura que está sendo usado para arquivos estáticos protegidos. Se possível, construa um ataque automatizado para pesquisar conteúdo que possa ser útil ou que possa conter dados confidenciais (consulte o Capítulo 14).</p>
+</body>
+</html>
