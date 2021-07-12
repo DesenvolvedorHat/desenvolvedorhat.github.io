@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <title>Resumo 11</title>
+    <meta charset="UTF-8">
+    <meta name="keywords" content="desenvolvedor hat, hacking, linux">
+    <meta name="description" content="introducao a várias vulnerabilidades web, resumo 26">
+    <meta name="robots" content="index">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link type="text/css" rel="stylesheet" href="style.css">
+    <script src='https://kit.fontawesome.com/a076d05399.js'></script>
+    <script data-ad-client="ca-pub-6493599991997784" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css">
+  </head>
+  <body>
+    <menu>
+      <nav class="n1">
+        <a href="/index.html" class="menu">HOME</a>
+      </nav>
+    </menu>
+
+<section>
+
+<h1>Encontrando e explorando a injeção SOAP</h1>
+
+<p class = "p1">A injeção SOAP pode ser difícil de detectar, porque o fornecimento de metacaracteres XML de uma maneira não elaborada quebra o formato da mensagem SOAP, geralmente resultando em uma mensagem de erro não informativa.  No entanto, as etapas a seguir podem ser usadas para detectar vulnerabilidades de injeção de SOAP com um grau de confiabilidade.</p>
+
+<p class = "p1">1. Envie uma tag de fechamento XML não autorizada, como em cada parâmetro sucessivamente.</p>
+
+<p class = "p1">Se nenhum erro ocorrer, sua entrada provavelmente não está sendo inserida em uma mensagem SOAP ou está sendo limpa de alguma forma.</p>
+
+<p class = "p1">2. Se um erro for recebido, envie em vez disso um par válido de tags de abertura e fechamento. Se isso fizer com que o erro desapareça, o aplicativo pode estar vulnerável.</p>
+
+<p class = "p1">3. Em algumas situações, os dados inseridos em uma mensagem formatada em XML são subsequentemente lidos de seu formulário XML e retornados ao usuário.  Se o item que você está modificando está sendo retornado nas respostas do aplicativo, veja se algum conteúdo XML enviado é retornado em seu forma idêntica ou foi normalizado de alguma forma.  Envie os dois valores a seguir por vez.</p>
+
+<p class = "p1">Se você achar que um dos itens é retornado como o outro ou simplesmente como teste, pode ter certeza de que sua entrada está sendo inserida em uma mensagem baseada em XML.</p>
+
+<p class = "p1">4. Se a solicitação HTTP contiver vários parâmetros que podem ser colocados em uma mensagem SOAP, tente inserir o caractere de comentário de abertura (<! - -) em um parâmetro e o caractere de comentário de fechamento (! ->) em
+ outro parâmetro.  Em seguida, mude-os (porque você não tem como saber em que ordem os parâmetros aparecem).  Isso pode ter o efeito de comentar uma parte da mensagem SOAP do servidor.  Isso pode causar uma mudança na lógica do aplicativo ou resultar em uma condição de erro diferente que pode divulgar informações.</p>
+
+<p class = "p1">Se a injeção de SOAP for difícil de detectar, pode ser ainda mais difícil de explorar.  Na maioria das situações, você precisa conhecer a estrutura do XML que envolve seus dados para fornecer uma entrada criada que modifique a mensagem sem invalidá-la.  Em todos os testes anteriores, procure mensagens de erro que revelem detalhes sobre a mensagem SOAP que está sendo processada.  Se você tiver sorte, uma mensagem detalhada revelará a mensagem inteira, permitindo que você construa valores criados para explorar a vulnerabilidade.  Se você não tiver sorte, pode ficar restrito a suposições puras, o que é muito improvável de ter sucesso.</p>
+
+<h2>Prevenindo a injeção de SOAP</h2>
+
+<p class = "p1">Você pode evitar a injeção de SOAP empregando filtros de validação de limite em qualquer ponto onde os dados fornecidos pelo usuário são inseridos em uma mensagem SOAP (consulte o Capítulo 2).  Isso deve ser executado em dados que foram imediatamente recebidos do usuário na solicitação atual e em quaisquer dados que foram persistidos de solicitações anteriores ou gerados a partir de outro processamento que usa dados do usuário como entrada.</p>
+
+<p class = "p1">Para evitar os ataques descritos, o aplicativo deve codificar em HTML quaisquer metacaracteres XML que apareçam na entrada do usuário.</p>
+
+<p class = "p1">A codificação HTML envolve a substituição de caracteres literais por suas entidades HTML correspondentes.  Isso garante que o interpretador XML os trate como parte do valor dos dados do elemento relevante e não como parte da estrutura da própria mensagem.  Aqui estão as codificações HTML de alguns caracteres problemáticos comuns.</p>
+
+<h2>Injetando em solicitações HTTP de back-end</h2>
+
+<p class = "p1">A seção anterior descreveu como alguns aplicativos incorporam dados fornecidos pelo usuário em solicitações SOAP de backend para serviços que não são diretamente acessíveis ao usuário.</p>
+
+<p class = "p1">De maneira mais geral, os aplicativos podem incorporar a entrada do usuário em qualquer tipo de solicitação HTTP de back-end, incluindo aquelas que transmitem parâmetros como pares regulares de nome / valor.  Esse tipo de comportamento geralmente é vulnerável a ataques, uma vez que o aplicativo frequentemente faz proxy da URL ou dos parâmetros fornecidos pelo usuário.</p>
+
+<p class = "p1">Os ataques contra essa funcionalidade podem ser divididos nas seguintes categorias.</p>
+
+<p class = "p1">Os ataques de redirecionamento HTTP do lado do servidor permitem que um invasor especifique um recurso arbitrário ou URL que é então solicitado pelo servidor de aplicativos front-end.</p>
+
+<p class = "p1">Os ataques de injeção de parâmetro HTTP (HPI) permitem que um invasor injete parâmetros arbitrários em uma solicitação HTTP de back-end feita pelo servidor de aplicativos.  Se um invasor injeta um parâmetro que já existe no back-end solicitação, ataques de poluição de parâmetro HTTP (HPP) podem ser usados ​​para substituir o valor do parâmetro original especificado pelo servidor.</p>
+
+<h2>Redirecionamento de HTTP do lado do servidor</h2>
+
+<p class = "p1">As vulnerabilidades de redirecionamento do lado do servidor surgem quando um aplicativo obtém uma entrada controlável pelo usuário e a incorpora em uma URL que ele recupera usando uma solicitação HTTP de back-end.</p>
+
+<p class = "p1">A entrada fornecida pelo usuário pode compreender a URL inteira que é recuperada, ou o aplicativo pode executar algum processamento nela, como adicionando um sufixo padrão.</p>
+
+<p class = "p1">A solicitação HTTP de back-end pode ser para um domínio na Internet pública ou pode ser para um servidor interno não acessível diretamente pelo usuário.  O conteúdo solicitado pode ser fundamental para a funcionalidade do aplicativo, como um interface para um gateway de pagamento.  Ou pode ser mais periférico, como conteúdo estático obtido de terceiros.  Esta técnica é freqüentemente usada para unir vários componentes de aplicativos internos e externos distintos em um único aplicativo frontal que lida com o controle de acesso e gerenciamento de sessão em nome desses outros sistemas. Se um invasor puder controlar o endereço IP ou o nome do host usado na solicitação HTTP de back-end, ele pode fazer com que o servidor de aplicativos se conecte a um recurso arbitrário e, às vezes, recupere o conteúdo da resposta de back-end.</p>
+
+<p class = "p1">Considere o seguinte exemplo de uma solicitação de front-end, em que o parâmetro loc é usado para especificar qual versão de um arquivo CSS o cliente deseja usar.</p>
+
+<p class = "p1">Se nenhuma validação do URL for especificada no parâmetro loc, um invasor pode especificar um nome de host arbitrário no lugar de online.wahh-blogs.net.</p>
+
+<p class = "p1">O aplicativo recupera o recurso especificado, permitindo que o invasor use o aplicativo como um proxy para serviços de back-end potencialmente confidenciais.  No exemplo a seguir, o invasor faz com que o aplicativo se conecte a um serviço SSH de back-end.</p>
+
+<p class = "p1">A resposta do aplicativo inclui o banner do serviço SSH solicitado.</p>
+
+<p class = "p1">Um invasor pode explorar bugs de redirecionamento HTTP do lado do servidor para usar efetivamente o aplicativo vulnerável como um proxy HTTP aberto para realizar vários outros ataques.</p>
+
+<p class = "p1">Um invasor pode usar o proxy para atacar sistemas de terceiros na Internet.</p>
+
+<p class = "p1">O tráfego malicioso parece para o alvo se originar do servidor no qual o aplicativo vulnerável está sendo executado.</p>
+
+<p class = "p1">Um invasor pode ser capaz de usar o proxy para se conectar a hosts arbitrários na rede interna da organização, atingindo assim alvos que não podem ser acessados ​​diretamente da Internet.</p>
+
+<p class = "p1">Um invasor pode ser capaz de usar o proxy para se conectar de volta a outros serviços em execução no próprio servidor de aplicativos, contornando as restrições do firewall e potencialmente explorando as relações de confiança para contornar a autenticação.</p>
+
+<p class = "p1">Finalmente, a funcionalidade de proxy pode ser usada para entregar ataques, como cross-site scripting, fazendo com que o aplicativo inclua conteúdo controlado pelo invasor em suas respostas (consulte o Capítulo 12 para obter mais detalhes).</p>
+
+<p class = "p1">1. Identifique quaisquer parâmetros de solicitação que pareçam conter nomes de host, endereços IP ou URLs completos.</p>
+
+<p class = "p1">2. Para cada parâmetro, modifique seu valor para especificar um recurso alternativo, semelhante ao que está sendo solicitado, e veja se esse recurso aparece na resposta do servidor.</p>
+
+<p class = "p1">3. Tente especificar uma URL destinada a um servidor na Internet que você controla e monitore esse servidor para conexões de entrada do aplicativo que você está testando.</p>
+
+<p class = "p1">4. Se nenhuma conexão de entrada for recebida, monitore o tempo que leva para o aplicativo responder.  Se houver um atraso, as solicitações de back-end do aplicativo podem estar expirando devido a restrições de rede em conexões de saída.</p>
+
+<p class = "p1">5. Se você tiver sucesso ao usar a funcionalidade para se conectar a URLs arbitrários, tente realizar os seguintes ataques.</p>
+
+<p class = "p1">a.  Determine se o número da porta pode ser especificado. Por exemplo, você pode fornecer.</p>
+
+<p class = "p1">b.  Se for bem-sucedido, tente fazer a varredura de portas na rede interna usando uma ferramenta como o Burp Intruder para se conectar a um intervalo de endereços IP e portas em sequência (consulte o Capítulo 14).</p>
+
+<p class = "p1">c.  Tente se conectar a outros serviços no endereço de loopback do servidor de aplicativos.</p>
+
+<p class = "p1">d.  Tente carregar uma página da web que você controla na resposta do aplicativo para entregar um ataque de script entre sites.</p>
+
+<p class = "p1">Algumas APIs de redirecionamento do lado do servidor, como Server.Transfer () e Server.Execute () no ASP.NET, permitem o redirecionamento apenas para URLs relativos no mesmo host.</p>
+
+<p class = "p1">A funcionalidade que passa a entrada fornecida pelo usuário para um desses métodos ainda pode ser potencialmente explorada para explorar relações de confiança e acessar recursos no servidor que são protegidos por autenticação em nível de plataforma.</p>
+</section>
+</body>
+</html>
