@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <title>Resumo 11</title>
+    <meta charset="UTF-8">
+    <meta name="keywords" content="desenvolvedor hat, hacking, linux">
+    <meta name="description" content="introducao a várias vulnerabilidades web, resumo 31">
+    <meta name="robots" content="index">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link type="text/css" rel="stylesheet" href="style.css">
+    <script src='https://kit.fontawesome.com/a076d05399.js'></script>
+    <script data-ad-client="ca-pub-6493599991997784" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css">
+  </head>
+  <body>
+    <menu>
+      <nav class="n1">
+        <a href="/index.html" class="menu">HOME</a>
+      </nav>
+    </menu>
+
+<section>
+
+<h1>Resumo 31</h1>
+
+<p class = "p1">Exemplo 7: trapaceando em descontos em massa</p>
+
+<p class = "p1">Os autores encontraram essa falha lógica no aplicativo de varejo de um fornecedor de software.</p>
+
+<p class = "p1">O aplicativo permitia que os usuários encomendassem produtos de software e se qualificassem para descontos por atacado se um pacote adequado de itens fosse comprado.  Por exemplo, os usuários que adquiriram uma solução antivírus, firewall pessoal e software antispam tiveram direito a um desconto de 25% sobre os preços individuais.</p>
+
+<p class = "p1">Quando um usuário adicionava um item de software à sua cesta de compras, o aplicativo usava várias regras para determinar se o pacote de compras que ele havia escolhido lhe dava direito a um desconto.  Nesse caso, os preços dos itens relevantes no carrinho de compras foram ajustados de acordo com o desconto.  Os desenvolvedores presumiram que o usuário iria comprar o pacote escolhido e, portanto, teria direito ao desconto.</p>
+
+<p class = "p1">A suposição dos desenvolvedores é obviamente falha porque ignora o fato de que os usuários podem remover itens de seus cestos de compras após terem sido adicionados.  Um usuário astuto poderia adicionar à sua cesta grandes quantidades de cada produto à venda do vendedor para atrair o máximo possível de descontos por atacado.  Após os descontos serem aplicados aos itens de sua cesta de compras, ele poderia retirar os itens que não desejava e ainda receber os descontos aplicados aos demais produtos.</p>
+
+<p class = "p1">1. Em qualquer situação onde os preços ou outros valores confidenciais são ajustados com base em critérios que são determinados por dados ou ações controláveis ​​pelo usuário, primeiro compreender os algoritmos que o aplicativo usa e o ponto dentro de sua lógica onde os ajustes são feitos.  Identifique se esses ajustes são feitos uma única vez ou se são revisados ​​em resposta a outras ações realizadas pelo usuário.</p>
+
+<p class = "p1">2. Pense com imaginação.</p>
+
+<p class = "p1">Tente encontrar uma maneira de manipular o comportamento do aplicativo para fazer com que ele entre em um estado em que os ajustes que aplicou não correspondam aos critérios originais pretendidos por seus designers.  No caso mais óbvio, como acabamos de descrever, isso pode envolver simplesmente a remoção de itens de um carrinho de compras após a aplicação de um desconto!</p>
+
+<p class = "p1">Exemplo 8: Escapando do Escaping</p>
+
+<p class = "p1">Os autores encontraram essa falha lógica em vários aplicativos da web, incluindo a interface de administração da web usada por um produto de detecção de intrusão de rede.</p>
+
+<p class = "p1">Os designers do aplicativo decidiram implementar alguma funcionalidade que envolvia passar uma entrada controlável pelo usuário como um argumento para um comando do sistema operacional.</p>
+
+<p class = "p1">Os desenvolvedores do aplicativo compreenderam os riscos inerentes envolvidos neste tipo de operação (consulte o Capítulo 9) e decidiram se defender contra esses riscos saneando quaisquer caracteres potencialmente maliciosos na entrada do usuário.</p>
+
+<p class = "p1">Quaisquer instâncias do seguinte seriam escapadas usando o caractere de barra invertida.</p>
+
+<p class = "p1">O escape de dados dessa maneira faz com que o interpretador de comandos do shell trate os caracteres relevantes como parte do argumento que está sendo passado para o comando invocado, em vez de como metacaracteres do shell.  Esses metacaracteres podem ser usados ​​para injetar comandos ou argumentos adicionais, redirecionar a saída e assim por diante.</p>
+
+<p class = "p1">Os desenvolvedores estavam certos de que haviam criado uma defesa robusta contra ataques de injeção de comando.  Eles haviam feito um brainstorming de todos os personagens possíveis que poderiam ajudar um invasor e garantiram que todos eles estivessem devidamente escapados e, portanto, protegidos.</p>
+
+<p class = "p1">Os desenvolvedores se esqueceram de escapar do próprio caractere de escape.</p>
+
+<p class = "p1">O caractere de barra invertida geralmente não é de uso direto para um invasor ao explorar uma falha de injeção de comando simples.  Portanto, os desenvolvedores não o identificaram como potencialmente malicioso.  No entanto, ao não conseguir escapar, eles forneceram um meio para o invasor derrotar seu mecanismo de higienização.</p>
+
+<p class = "p1">Suponha que um invasor forneça a seguinte entrada para a função vulnerável.</p>
+
+<p class = "p1">O aplicativo aplica o escape relevante, conforme descrito anteriormente, para que a entrada do invasor torna-se.</p>
+
+<p class = "p1">Quando esses dados são passados ​​como um argumento para o comando do sistema operacional, o interpretador do shell trata a primeira barra invertida como o caractere de escape.</p>
+
+<p class = "p1">Portanto, ele trata a segunda barra invertida como uma barra invertida literal - não como um caractere de escape, mas como parte do próprio argumento.  Em seguida, ele encontra um ponto-e-vírgula do qual aparentemente não há escape.  Ele trata isso como um separador de comando e, portanto, passa a executar o comando injetado fornecido pelo invasor.</p>
+
+<p class = "p1">Sempre que você testa um aplicativo para injeção de comando e outras falhas, depois de tentar inserir os metacaracteres relevantes nos dados que você controla, sempre tente colocar uma barra invertida imediatamente antes de cada um desses caracteres para testar a falha lógica que acabamos de descrever.</p>
+
+<p class = "p1">Essa mesma falha pode ser encontrada em algumas defesas contra ataques de script entre sites (consulte o Capítulo 12).  Quando a entrada fornecida pelo usuário é copiada diretamente para o valor de uma variável de string em um trecho de JavaScript, esse valor é encapsulado entre aspas.  Para se defenderem de scripts entre sites, muitos aplicativos usam barras invertidas para escapar das aspas que aparecem na entrada do usuário.  No entanto, se o caractere de barra invertida em si não for escapado, um invasor pode enviar para quebrar a string e, portanto, assumir o controle do script.</p>
+
+<p class = "p1">Este bug exato foi encontrado nas primeiras versões do a estrutura Ruby On Rails na função escape_javascript.</p>
+
+<h2>Exemplo 9: invalidando a validação de entrada</h2>
+
+<p class = "p1">Os autores encontraram essa falha lógica em um aplicativo da web usado em um site de e-commerce.</p>
+
+<p class = "p1">As variantes podem ser encontradas em muitas outras aplicações.</p>
+
+<p class = "p1">O aplicativo continha um conjunto de rotinas de validação de entrada para proteger contra vários tipos de ataques.</p>
+
+<p class = "p1">Dois desses mecanismos de defesa foram um filtro de injeção SQL e um limitador de comprimento.</p>
+
+<p class = "p1">É comum que os aplicativos tentem se defender contra a injeção de SQL escapando de qualquer aspa simples que apareça na entrada do usuário baseada em string (e rejeitando qualquer uma que apareça na entrada numérica).  Conforme descrito no Capítulo 9, duas aspas simples juntas são uma sequência de escape que representa uma aspa simples literal, que o banco de dados interpreta como dados dentro de uma string entre aspas, em vez do terminador da string de fechamento.  Muitos desenvolvedores argumentam, portanto, dobrando quaisquer aspas simples na entrada fornecida pelo usuário, elas impedirão a ocorrência de ataques de injeção de SQL.</p>
+
+<p class = "p1">O limitador de comprimento foi aplicado a todas as entradas, garantindo que nenhuma variável fornecida por um usuário tivesse mais de 128 caracteres.  Ele conseguiu isso truncando todas as variáveis ​​para 128 caracteres.</p>
+
+<p class = "p1">Foi assumido que o filtro de injeção de SQL e o truncamento de comprimento eram defesas desejáveis ​​do ponto de vista de segurança, portanto, ambos deveriam ser aplicados.</p>
+
+<p class = "p1">A defesa de injeção de SQL funciona dobrando todas as aspas que aparecem na entrada do usuário, de modo que dentro de cada par de aspas, a primeira aspas atue como um caractere de escape para a segunda.  No entanto, os desenvolvedores não consideraram o que aconteceria com a entrada sanitizada se ela fosse então transferida para a função de truncamento.</p>
+
+<p class = "p1">Lembre-se do exemplo de injeção de SQL em uma função de login no Capítulo 9. Suponha que o aplicativo duplique todas as aspas simples contidas na entrada do usuário e também imponha um limite de comprimento aos dados, truncando-os para 128 caracteres.</p>
+
+<p class = "p1">O aplicativo primeiro dobra as aspas simples e, em seguida, trunca a string para 128 caracteres, retornando sua entrada ao valor original.  Isso resulta em um erro de banco de dados, porque você injetou uma aspa simples adicional na consulta sem corrigir a sintaxe ao redor.  Se agora você também fornecer a senha.</p>
+
+<p class = "p1">As aspas duplas no final da string de a são interpretadas como aspas de escape e, portanto, como parte dos dados da consulta.  Essa string continua efetivamente até a próxima aspa simples, que na consulta original marcava o início do valor da senha fornecida pelo usuário.</p>
+
+<p class = "p1">Assim, o nome de usuário real que o banco de dados entende são os dados da string literal mostrados aqui.</p>
+
+<p class = "p1">Portanto, tudo o que vier a seguir é interpretado como parte da própria consulta e pode ser criado para interferir na lógica da consulta.</p>
+
+<p class = "p1">Você pode testar esse tipo de vulnerabilidade sem saber exatamente qual limite de comprimento está sendo imposto, enviando, por sua vez, duas sequências longas da seguinte forma.</p>
+
+<p class = "p1">Qualquer truncamento de entrada de escape ocorrerá após um número par ou ímpar de caracteres.  Seja qual for a possibilidade, uma das strings anteriores resultará em um número ímpar de aspas simples sendo inserido na consulta, resultando em sintaxe inválida.</p>
+
+<p class = "p1">Anote todas as instâncias em que o aplicativo modifica a entrada do usuário, em particular truncando-a, removendo dados, codificando ou decodificando.  Para quaisquer instâncias observadas, determine se uma string maliciosa pode ser inventada.</p>
+
+<p class = "p1">1. Se os dados forem removidos uma vez (não recursivamente), determine se você pode enviar uma string que compense isso.  Por exemplo, se o aplicativo filtra palavras-chave SQL como SELECT, envie SELSELECTECT e veja se a filtragem resultante remove a substring SELECT interna, deixando a palavra SELECT.</p>
+
+<p class = "p1">2. Se a validação de dados ocorre em uma ordem definida e um ou mais processos de validação modificam os dados, determine se isso pode ser usado para superar uma das etapas de validação anteriores.  Por exemplo, se o aplicativo executa a decodificação de URL e, em seguida, remove dados maliciosos, como a tag script, pode ser possível superar isso com strings como.</p>
+
+<p class = "p1">Os filtros de script entre sites frequentemente retiram, de forma inadvertida, todos os dados que ocorrem entre os pares de tags HTML. Geralmente, eles são vulneráveis ​​a esse tipo de ataque.</p>
+
+<h2>Exemplo 10: Abuso de uma função de pesquisa</h2>
+
+<p class = "p1">Os autores encontraram essa falha lógica em um aplicativo que fornece acesso baseado em assinatura a notícias e informações financeiras.</p>
+
+<p class = "p1">A mesma vulnerabilidade foi encontrada mais tarde em dois aplicativos completamente não relacionados, ilustrando a natureza sutil e abrangente de muitas falhas lógicas.</p>
+
+<p class = "p1">O aplicativo fornecia acesso a um grande arquivo de informações históricas e atuais, incluindo relatórios e contas da empresa, comunicados à imprensa, análises de mercado e assim por diante.  A maioria dessas informações estava acessível apenas para assinantes pagantes.</p>
+
+<p class = "p1">O aplicativo fornecia uma função de pesquisa poderosa e refinada que todos os usuários podiam acessar.  Quando um usuário anônimo executava uma consulta, a função de pesquisa retornava links para todos os documentos que correspondiam à consulta.  No entanto, era necessário que o usuário se inscrevesse para recuperar qualquer um dos documentos protegidos reais que sua consulta retornasse.  Os proprietários do aplicativo consideraram esse comportamento uma tática de marketing útil.</p>
+
+<p class = "p1">O designer do aplicativo presumiu que os usuários não poderiam usar a função de pesquisa para extrair qualquer informação útil sem pagar por isso.  Os títulos dos documentos listados nos resultados da pesquisa eram normalmente enigmáticos, como “Resultados anuais de 2010”, “Comunicado à imprensa 03/08/2011” e assim por diante.</p>
+
+<p class = "p1">Como a função de pesquisa indica quantos documentos correspondem a uma determinada consulta, um usuário astuto pode emitir um grande número de consultas e usar a inferência para extrair informações da função de pesquisa que normalmente precisam ser pagas.  Por exemplo, as seguintes consultas podem ser usadas para enfocar o conteúdo de um documento protegido individual.</p>
+
+<p class = "p1">Embora o usuário não consiga visualizar o documento em si, com imaginação suficiente e uso de solicitações de script, ele pode ser capaz de construir uma compreensão bastante precisa de seu conteúdo.</p>
+
+<p class = "p1">Em certas situações, ser capaz de obter informações por meio de uma função de pesquisa dessa maneira pode ser crítico para a segurança do próprio aplicativo, revelando efetivamente detalhes de funções administrativas, senhas e tecnologias em uso.</p>
+
+<p class = "p1">Essa técnica provou ser um ataque eficaz contra o software de gerenciamento de documentos internos.  Os autores usaram essa técnica para usar a força bruta de uma senha de chave de um arquivo de configuração armazenado em um wiki.</p>
+
+<p class = "p1">Como o wiki retornou um hit se a string de pesquisa aparecesse em qualquer lugar da página (em vez de corresponder a palavras inteiras), era possível usar força bruta na senha letra por letra, procurando o seguinte.</p>
+
+<h2>Exemplo 11: Snarfing mensagens de depuração</h2>
+
+<p class = "p1">Os autores encontraram esta falha lógica em um aplicativo da web usado por uma empresa de serviços.</p>
+
+<p class = "p1">O aplicativo foi implantado recentemente.</p>
+
+<p class = "p1">Como muitos softwares novos, ele ainda continha vários bugs relacionados à funcionalidade.</p>
+
+<p class = "p1">Intermitentemente, várias operações falhariam de maneira imprevisível e os usuários receberiam uma mensagem de erro.</p>
+
+<p class = "p1">Para facilitar a investigação de erros, os desenvolvedores decidiram incluir informações detalhadas e detalhadas nessas mensagens, incluindo os seguintes detalhes.</p>
+
+<p class = "p1">Todos os parâmetros fornecidos com a solicitação que gerou o erro</p>
+
+<p class = "p1">A geração dessas mensagens provou ser útil quando o pessoal do help desk tentava investigar e se recuperar de falhas do sistema.  Eles também ajudaram a eliminar os bugs de funcionalidade restantes.</p>
+
+<p class = "p1">Apesar dos avisos usuais dos consultores de segurança de que mensagens de depuração detalhadas desse tipo poderiam ser utilizadas indevidamente por um invasor, os desenvolvedores raciocinaram que não estavam abrindo nenhuma vulnerabilidade de segurança.</p>
+
+<p class = "p1">O usuário pode obter prontamente todas as informações contidas na mensagem de depuração inspecionando as solicitações e respostas processadas por seu navegador.  As mensagens não incluíam nenhum detalhe sobre a falha real, como rastreamentos de pilha, portanto, concebivelmente, não foram úteis na formulação de um ataque contra o aplicativo.</p>
+
+<p class = "p1">Apesar de seu raciocínio sobre o conteúdo das mensagens de depuração, a suposição dos desenvolvedores foi falha por causa dos erros que cometeram na implementação da criação de mensagens de depuração.</p>
+
+<p class = "p1">Quando ocorria um erro, um componente do aplicativo reunia todas as informações necessárias e as armazenava.</p>
+
+<p class = "p1">O usuário recebeu um redirecionamento HTTP para um URL que exibia essas informações armazenadas.  O problema era que o armazenamento de informações de depuração do aplicativo e o acesso do usuário à mensagem de erro não era baseado em sessão.</p>
+
+<p class = "p1">Em vez disso, as informações de depuração eram armazenadas em um contêiner estático e o URL da mensagem de erro sempre exibia as informações que foram colocadas pela última vez nesse contêiner.  Os desenvolvedores presumiram que os usuários após o redirecionamento veriam, portanto, apenas as informações de depuração relacionadas ao erro.</p>
+
+<p class = "p1">Na verdade, nesta situação, os usuários comuns ocasionalmente seriam apresentados com as informações de depuração relacionadas ao erro de um usuário diferente, porque os dois erros ocorreram quase simultaneamente.  Mas, além das questões sobre a segurança do thread (veja o próximo exemplo), esta não era simplesmente uma condição de corrida.</p>
+
+<p class = "p1">Um invasor que descobrisse como o mecanismo de erro funcionava poderia simplesmente pesquisar o URL da mensagem repetidamente e registrar os resultados cada vez que eles fossem alterados.</p>
+
+<p class = "p1">Durante um período de algumas horas, esse registro conteria dados confidenciais sobre vários usuários do aplicativo.</p>
+
+<p class = "p1">Um conjunto de nomes de usuário que podem ser usados ​​em um ataque de adivinhação de senha</p>
+
+<p class = "p1">Um conjunto de tokens de sessão que podem ser usados ​​para sequestrar sessões</p>
+
+<p class = "p1">Um conjunto de entradas fornecidas pelo usuário, que pode conter senhas e outros itens confidenciais</p>
+
+<p class = "p1">O mecanismo de erro, portanto, apresentava uma ameaça crítica à segurança.  Como os usuários administrativos às vezes recebiam essas mensagens de erro detalhadas, um invasor que monitorasse as mensagens de erro logo obteria informações suficientes para comprometer todo o aplicativo.</p>
+
+<p class = "p1">1. Para detectar uma falha desse tipo, primeiro catalogue todos os eventos e condições anômalos que podem ser gerados e que envolvem informações específicas do usuário interessantes que são retornadas ao navegador de uma forma incomum, como uma mensagem de erro de depuração.</p>
+
+<p class = "p1">2. Usando o aplicativo como dois usuários em paralelo, planeje sistematicamente cada condição usando um ou ambos os usuários e determine se o outro usuário é afetado em cada caso.</p>
+
+<h2>Exemplo 12: Correndo contra o login</h2>
+
+<p class = "p1">Essa falha lógica afetou várias aplicações importantes no passado recente.</p>
+
+<p class = "p1">O aplicativo implementou um processo robusto de login em vários estágios, no qual os usuários eram solicitados a fornecer várias credenciais diferentes para obter acesso.</p>
+
+<p class = "p1">O mecanismo de autenticação foi sujeito a várias análises de design e testes de penetração.  Os proprietários estavam confiantes de que não existia nenhum meio viável de atacar o mecanismo para obter acesso não autorizado.</p>
+
+<p class = "p1">Na verdade, o mecanismo de autenticação continha uma falha sutil.</p>
+
+<p class = "p1">Ocasionalmente, quando um cliente fazia login, ele ganhava acesso à conta de um usuário completamente diferente, permitindo-lhe ver todos os detalhes financeiros desse usuário e até mesmo fazer pagamentos da conta do outro usuário.  O comportamento do aplicativo inicialmente parecia ser aleatório: o usuário não havia realizado nenhuma ação incomum para obter acesso não autorizado, e a anomalia não se repetiu em logins subsequentes.</p>
+
+<p class = "p1">Após alguma investigação, o banco descobriu que o erro estava ocorrendo quando dois usuários diferentes logaram no aplicativo precisamente no mesmo momento.  Isto não ocorreu em todas essas ocasiões - apenas em um subconjunto delas.  A causa raiz era que o aplicativo estava armazenando brevemente um identificador de chave sobre cada usuário recém-autenticado em uma variável estática (sem sessão).</p>
+
+<p class = "p1">Depois de ser escrito, o valor desta variável foi lido um instante depois.  Se um thread diferente (processando outro login) tivesse escrito na variável durante este instante, o usuário anterior iria parar em uma sessão autenticada pertencente ao usuário subsequente.</p>
+
+<p class = "p1">A vulnerabilidade surgiu do mesmo tipo de erro que no exemplo de mensagem de erro descrito anteriormente: o aplicativo estava usando armazenamento estático para reter informações que deveriam ter sido armazenadas por thread ou por sessão.</p>
+
+<p class = "p1">No entanto, o presente exemplo é muito mais sutil de detectar e é mais difícil de explorar porque não pode ser reproduzido de forma confiável.</p>
+
+<p class = "p1">Falhas desse tipo são conhecidas como “condições de corrida” porque envolvem uma vulnerabilidade que surge por um breve período de tempo sob certas circunstâncias específicas.</p>
+
+<p class = "p1">Como a vulnerabilidade existe apenas por um curto período, um invasor “corre” para explorá-la antes que o aplicativo feche novamente.  Nos casos em que o invasor é local para o aplicativo, geralmente é possível projetar as circunstâncias exatas sob as quais a condição de corrida surge e explorar de forma confiável a vulnerabilidade durante a janela disponível.</p>
+
+<p class = "p1">Onde o invasor está remoto para o aplicativo, isso normalmente é muito mais difícil de conseguir.</p>
+
+<p class = "p1">Um invasor remoto que entende a natureza da vulnerabilidade pode concebivelmente ter planejado um ataque para explorá-la usando um script para fazer logon continuamente e verificar os detalhes da conta acessada.  Mas a pequena janela durante a qual a vulnerabilidade poderia ser explorada significava que um grande número de solicitações seria necessário.</p>
+
+<p class = "p1">Não foi surpreendente que a condição de corrida não foi descoberta durante o teste de penetração normal.  As condições em que ela surgiu surgiram apenas quando o aplicativo ganhou uma base de usuários grande o suficiente para que ocorressem anomalias aleatórias, que foram relatadas pelos clientes.  No entanto, uma análise detalhada do código da lógica de autenticação e gerenciamento de sessão teria identificado o problema.</p>
+
+<p class = "p1">A execução de testes remotos de caixa preta para problemas sutis de segurança de thread desse tipo não é simples.  Deve ser considerado um empreendimento especializado, provavelmente necessário apenas nos aplicativos mais críticos para a segurança.</p>
+
+<p class = "p1">1. Almeje itens selecionados de funcionalidade principal, como mecanismos de login, funções de alteração de senha e processos de transferência de fundos.</p>
+
+<p class = "p1">2. Para cada função testada, identifique uma única solicitação, ou um pequeno número de solicitações, que um determinado usuário pode usar para executar uma única ação.  Encontre também o meio mais simples de confirmar o resultado da ação, como verificar se o login de um determinado usuário resultou no acesso às informações da conta dessa pessoa.</p>
+
+<p class = "p1">3. Usando várias máquinas de alta especificação, acessando o aplicativo de diferentes locais de rede, crie um script de ataque para executar a mesma ação repetidamente em nome de vários usuários diferentes.  Confirme se cada ação tem o resultado esperado.</p>
+
+<p class = "p1">4. Esteja preparado para um grande volume de falsos positivos.</p>
+
+<p class = "p1">Dependendo da escala da infraestrutura de suporte do aplicativo, esta atividade pode muito bem equivaler a um teste de carga da instalação.  Anomalias podem ser experimentadas por razões que nada têm a ver com segurança.</p>
+</section>
+</body>
+</html>
