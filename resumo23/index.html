@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <title>Resumo 11</title>
+    <meta charset="UTF-8">
+    <meta name="keywords" content="desenvolvedor hat, hacking, linux">
+    <meta name="description" content="introducao a várias vulnerabilidades web, resumo 23">
+    <meta name="robots" content="index">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link type="text/css" rel="stylesheet" href="style.css">
+    <script src='https://kit.fontawesome.com/a076d05399.js'></script>
+    <script data-ad-client="ca-pub-6493599991997784" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css">
+  </head>
+  <body>
+    <menu>
+      <nav class="n1">
+        <a href="/index.html" class="menu">HOME</a>
+      </nav>
+    </menu>
+
+<section>
+
+
+<h1>Contornando os Obstáculos aos Ataques Transversais</h1>
+
+<p class = "p1">Se suas tentativas iniciais de realizar um ataque transversal (conforme descrito) não tiverem êxito, isso não significa que o aplicativo não seja vulnerável.  Muitos desenvolvedores de aplicativos estão cientes das vulnerabilidades de travessia de caminho e implementam vários tipos de verificações de validação de entrada na tentativa de evitá-las.</p>
+
+<p class = "p1">No entanto, essas defesas costumam apresentar falhas e podem ser contornadas por um invasor habilidoso.</p>
+
+<p class = "p1">O primeiro tipo de filtro de entrada comumente encontrado envolve verificar se o parâmetro de nome de arquivo contém alguma sequência de passagem de caminho.  Em caso afirmativo, o filtro rejeita a solicitação ou tenta limpar a entrada para remover as sequências.</p>
+
+<p class = "p1">Este tipo de filtro é frequentemente vulnerável a vários ataques que usam codificações alternativas e outros truques para derrotar o filtro.</p>
+
+<p class = "p1">Todos esses ataques exploram o tipo de problemas de canonização enfrentados pelos mecanismos de validação de entrada, conforme descrito no Capítulo 2.</p>
+
+<p class = "p1">1. Sempre tente sequências de percurso de caminho usando barras e barras invertidas.  Muitos filtros de entrada verificam apenas um deles, quando o sistema de arquivos pode suportar ambos.</p>
+
+<p class = "p1">2. Experimente representações simples codificadas por URL de sequências de passagem usando as seguintes codificações.  Certifique-se de codificar cada barra e ponto em sua entrada</p>
+
+<p class = "p1">3. Tente usar a codificação Unicode de 16 bits</p>
+
+<p class = "p1">4. Experimente a codificação dupla de URL</p>
+
+<p class = "p1">5. Experimente a codificação UTF-8 Unicode prolongada</p>
+
+<p class = "p1">Você pode usar o tipo de carga útil Unicode ilegal dentro do Burp Intruder para gerar um grande número de representações alternativas de qualquer caractere e enviá-lo no local relevante dentro de seu parâmetro de destino.</p>
+
+<p class = "p1">Essas representações violam estritamente as regras para representação Unicode, mas, no entanto, são aceitas por muitas implementações de decodificadores Unicode, particularmente na plataforma Windows.</p>
+
+<p class = "p1">6. Se o aplicativo está tentando limpar a entrada do usuário removendo sequências de passagem e não aplicar este filtro recursivamente, pode ser possível contornar o filtro colocando uma sequência dentro de outra.  Por exemplo.</p>
+
+<p class = "p1">O segundo tipo de filtro de entrada comumente encontrado em defesas contra ataques de passagem de caminho envolve verificar se o nome do arquivo fornecido pelo usuário contém um sufixo (tipo de arquivo) ou prefixo (diretório inicial) que o aplicativo espera.  Este tipo de defesa pode ser usado em conjunto com os filtros já descritos.</p>
+
+<p class = "p1">1. Alguns aplicativos verificam se o nome do arquivo fornecido pelo usuário termina em um determinado tipo de arquivo ou conjunto de tipos de arquivo e rejeitam as tentativas de acesso a qualquer outro.  Às vezes, essa verificação pode ser subvertida colocando um byte nulo codificado por URL no final do nome do arquivo solicitado, seguido por um tipo de arquivo que o aplicativo aceita.  Por exemplo.</p>
+
+<p class = "p1">A razão pela qual esse ataque às vezes é bem-sucedido é que a verificação do tipo de arquivo é implementada usando uma API em um ambiente de execução gerenciado no qual as strings podem conter caracteres nulos (como String.endsWith () em Java).  No entanto, quando o arquivo é realmente recuperado, o aplicativo usa uma API em um ambiente não gerenciado no qual as strings são terminadas em nulo.</p>
+
+<p class = "p1">Portanto, seu nome de arquivo é efetivamente atribuído ao valor desejado.</p>
+
+<p class = "p1">2. Alguns aplicativos tentam controlar o tipo de arquivo que está sendo acessado, anexando seu próprio sufixo de tipo de arquivo ao nome do arquivo fornecido pelo usuário.</p>
+
+<p class = "p1">Nessa situação, qualquer uma das explorações anteriores pode ser eficaz, pelos mesmos motivos.</p>
+
+<p class = "p1">3. Alguns aplicativos verificam se o nome do arquivo fornecido pelo usuário começa com um subdiretório específico do diretório inicial ou até mesmo com um nome de arquivo específico.</p>
+
+<p class = "p1">Essa verificação pode, é claro, ser ignorada facilmente da seguinte forma.</p>
+
+<p class = "p1">4. Se nenhum dos ataques anteriores contra filtros de entrada for bem-sucedido individualmente, o aplicativo pode estar implementando vários tipos de filtros.</p>
+
+<p class = "p1">Portanto, você precisa combinar vários desses ataques simultaneamente (contra filtros de sequência de passagem e tipos de arquivo ou filtros de diretório).  Se possível, a melhor abordagem aqui é tentar dividir o problema em estágios separados.  Por exemplo, se a solicitação de.</p>
+
+<p class = "p1">falhar, tente todos os desvios de sequência de travessia possíveis até que uma variação na segunda solicitação seja bem-sucedida.  Se esses desvios de sequência de travessia bem-sucedidos não permitirem que você acesse / etc / passwd, verifique se alguma filtragem de tipo de arquivo está implementada e pode ser ignorada solicitando.</p>
+
+<p class = "p1">Trabalhando inteiramente dentro do diretório inicial definido pelo aplicativo, tente sondar para entender todos os filtros que estão sendo implementados e ver se cada um pode ser ignorado individualmente com as técnicas descritas.</p>
+
+<p class = "p1">5. Claro, se você tiver acesso à caixa branca para o aplicativo, sua tarefa será muito mais fácil, porque você pode trabalhar sistematicamente por meio de diferentes tipos de entrada e verificar conclusivamente qual nome de arquivo (se houver) está realmente alcançando o sistema de arquivos.</p>
+
+<h2>Lidando com a codificação personalizada</h2>
+
+<p class = "p1">Provavelmente, o bug mais louco de travessia de caminho que os autores encontraram envolveu um esquema de codificação personalizado para nomes de arquivos que foram tratados de maneira insegura.  Ele demonstrou como a ofuscação não substitui a segurança.</p>
+
+<p class = "p1">O aplicativo continha algumas funcionalidades de fluxo de trabalho que permitiam aos usuários fazer upload e download de arquivos.  A solicitação de upload forneceu um parâmetro de nome de arquivo que era vulnerável a um ataque de passagem de caminho ao gravar o arquivo.</p>
+
+<p class = "p1">Quando um arquivo foi carregado com sucesso, o aplicativo fornece aos usuários um URL para baixá-lo novamente.  Havia duas advertências importantes.</p>
+
+<p class = "p1">O aplicativo verificou se o arquivo a ser gravado já existia.  Em caso afirmativo, o aplicativo se recusou a sobrescrevê-lo.</p>
+
+<p class = "p1">Os URLs gerados para baixar os arquivos dos usuários foram representados usando um esquema de ofuscação proprietário.  Esta parecia ser uma forma personalizada de codificação Base64 na qual um conjunto de caracteres diferente era empregado em cada posição do nome de arquivo codificado.</p>
+
+<p class = "p1">Juntas, essas advertências apresentaram uma barreira para a exploração direta da vulnerabilidade.</p>
+
+<p class = "p1">Primeiro, embora fosse possível gravar arquivos arbitrários no sistema de arquivos do servidor, não era possível sobrescrever nenhum arquivo existente.  Além disso, os baixos privilégios do processo do servidor web significava que não era possível criar um novo arquivo em nenhum local interessante.</p>
+
+<p class = "p1">Em segundo lugar, não foi possível solicitar um arquivo existente arbitrário (como / etc / passwd) sem engenharia reversa da codificação personalizada, o que representava um desafio longo e desagradável.</p>
+
+<p class = "p1">Uma pequena experiência revelou que os URLs ofuscados continham a string do nome do arquivo original fornecida pelo usuário.  Por exemplo.</p>
+
+<p class = "p1">A diferença no comprimento dos URLs codificados indicou que nenhuma canonização do caminho foi realizada antes de a codificação ser aplicada.</p>
+
+<p class = "p1">Esse comportamento nos deu apoio suficiente para explorar a vulnerabilidade.  A primeira etapa foi enviar um arquivo com o seguinte nome.</p>
+
+<p class = "p1">Portanto, ele pode ser escrito pelo servidor da web.  O upload deste arquivo produziu um URL de download contendo o seguinte nome de arquivo ofuscado.</p>
+
+<p class = "p1">Para modificar este valor para retornar o arquivo / etc / passwd, simplesmente precisávamos truncar no ponto certo, que era.</p>
+
+<p class = "p1">A tentativa de baixar um arquivo usando este valor retornou o arquivo passwd do servidor conforme o esperado.  O servidor nos deu recursos suficientes para ser capaz de codificar caminhos de arquivo arbitrários usando seu esquema, sem nem mesmo decifrar o algoritmo de ofuscação que está sendo usado!</p>
+
+<p class = "p1">Você deve ter notado a aparência de um ./ redundante no nome de nosso arquivo enviado.</p>
+
+<p class = "p1">Isso foi necessário para garantir que nosso URL truncado terminasse em um limite de 3 bytes de texto não criptografado e, portanto, em um limite de 4 bytes de texto codificado, de acordo com o esquema de codificação Base64.  Truncando um URL codificado em meio a um bloco codificado quase certamente causaria um erro ao ser decodificado no servidor.</p>
+</section>
+</body>
+</html>
