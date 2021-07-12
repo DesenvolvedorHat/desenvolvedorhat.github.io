@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <title>Resumo 11</title>
+    <meta charset="UTF-8">
+    <meta name="keywords" content="desenvolvedor hat, hacking, linux">
+    <meta name="description" content="introducao a várias vulnerabilidades web, resumo 27">
+    <meta name="robots" content="index">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link type="text/css" rel="stylesheet" href="style.css">
+    <script src='https://kit.fontawesome.com/a076d05399.js'></script>
+    <script data-ad-client="ca-pub-6493599991997784" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css">
+  </head>
+  <body>
+    <menu>
+      <nav class="n1">
+        <a href="/index.html" class="menu">HOME</a>
+      </nav>
+    </menu>
+
+<section>
+
+<h1>Injeção de parâmetro HTTP</h1>
+
+<p class = "p1">A injeção de parâmetro HTTP (HPI) surge quando parâmetros fornecidos pelo usuário são usados ​​como parâmetros em uma solicitação HTTP de back-end.</p>
+
+<p class = "p1">Considere a seguinte variação na funcionalidade de transferência bancária que era anteriormente vulnerável à injeção de SOAP.</p>
+
+<p class = "p1">Essa solicitação de front-end, enviada do navegador do usuário, faz com que o aplicativo faça uma outra solicitação de back-end HTTP para outro servidor da web dentro da infraestrutura do banco.  Nessa solicitação de back-end, o aplicativo copia alguns dos valores de parâmetro da solicitação de front-end.</p>
+
+<p class = "p1">Essa solicitação faz com que o servidor back-end verifique se há fundos compensados ​​disponíveis para realizar a transferência e, em caso afirmativo, para realizá-la.</p>
+
+<p class = "p1">No entanto, o servidor front-end pode, opcionalmente, especificar que os fundos compensados ​​estão disponíveis e, portanto, ignorar a verificação, fornecendo o seguinte parâmetro.</p>
+
+<p class = "p1">Se o invasor estiver ciente desse comportamento, ele pode tentar executar um ataque HPI para injetar o parâmetro clearfunds na solicitação de back-end.  Para fazer isso, ele adiciona o parâmetro necessário ao final do valor de um parâmetro existente e codifica em URL os caracteres & e =, que são usados ​​para separar nomes e valores.</p>
+
+<p class = "p1">Quando o servidor de aplicativos processa essa solicitação, ele decodifica por URL os valores dos parâmetros da maneira normal.  Portanto, o valor do parâmetro ToAccount que o aplicativo front-end recebe é o seguinte.</p>
+
+<p class = "p1">Se o aplicativo front-end não validar esse valor e o passar sem verificação para a solicitação de back-end, a seguinte solicitação de back-end é feita, que ignora com êxito o cheque de fundos liberados.</p>
+
+<p class = "p1">Ao contrário da injeção de SOAP, é improvável que a injeção de parâmetros inesperados arbitrários em uma solicitação de back-end cause qualquer tipo de erro.</p>
+
+<p class = "p1">Portanto, um ataque bem-sucedido normalmente requer conhecimento exato dos parâmetros de back-end que estão sendo usados.  Embora isso possa ser difícil de determinar em uma caixa preta contexto, pode ser simples se o aplicativo usa componentes de terceiros cujo código pode ser obtido e pesquisado.</p>
+
+<h2>Poluição de parâmetro HTTP</h2>
+
+<p class = "p1">HPP é uma técnica de ataque que surge em vários contextos (consulte os Capítulos 12 e 13 para outros exemplos) e que geralmente se aplica no contexto de ataques HPI.</p>
+
+<p class = "p1">As especificações HTTP não fornecem orientações sobre como os servidores da web devem se comportar quando uma solicitação contém vários parâmetros com o mesmo nome.  Dentro da prática, diferentes servidores web se comportam de maneiras diferentes. Aqui estão alguns comportamentos comuns.</p>
+
+<p class = "p1">Use a primeira instância do parâmetro.</p>
+
+<p class = "p1">Use a última instância do parâmetro.</p>
+
+<p class = "p1">Concatene os valores dos parâmetros, talvez adicionando um separador entre eles.</p>
+
+<p class = "p1">Construa uma matriz contendo todos os valores fornecidos.</p>
+
+<p class = "p1">No exemplo HPI anterior, o invasor pode adicionar um novo parâmetro a uma solicitação de back-end.  Na verdade, é mais provável na prática que a solicitação na qual o invasor pode injetar já contenha um parâmetro com o nome que ele tem como alvo.  Nesta situação, o invasor pode usar a condição HPI para injetar um segunda instância do mesmo parâmetro.  O comportamento do aplicativo resultante depende de como o servidor HTTP back-end trata o parâmetro duplicado.</p>
+
+<p class = "p1">O invasor pode ser capaz de usar a técnica HPP para “substituir” o valor do parâmetro original com o valor de seu parâmetro injetado.</p>
+
+<p class = "p1">Por exemplo, se a solicitação de back-end original for a seguinte.</p>
+
+<p class = "p1">Se o servidor back-end usa a primeira instância de qualquer parâmetro duplicado, um o invasor pode colocar o ataque no parâmetro FromAccount no front-end solicitação.</p>
+
+<p class = "p1">Por outro lado, neste exemplo, se o servidor back-end usa a última instância de qualquer parâmetro duplicado, o invasor pode colocar o ataque no parâmetro ToAccount na solicitação de front-end.</p>
+
+<p class = "p1">Os resultados dos ataques HPP dependem muito de como o servidor de aplicativos de destino lida com várias ocorrências do mesmo parâmetro e do ponto de inserção preciso na solicitação de back-end.  Isso tem consequências significativas se duas tecnologias precisarem processar a mesma solicitação HTTP.  Um firewall de aplicativo da web ou proxy reverso pode processar uma solicitação e passá-la para o aplicativo da web, que pode prosseguir descartando variáveis ​​ou até mesmo construir strings de porções anteriormente díspares da solicitação!</p>
+
+<p class = "p1">Um bom artigo cobrindo os diferentes comportamentos dos servidores de aplicativos comuns pode ser encontrado aqui.</p>
+
+<h2>Ataques contra tradução de URL</h2>
+
+<p class = "p1">Muitos servidores reescrevem URLs solicitados na chegada para mapeá-los nas funções de back-end relevantes dentro do aplicativo.  Além da regravação de URL convencional, esse comportamento pode surgir no contexto de parâmetros de estilo REST, wrappers de navegação customizados e outros métodos de tradução de URL. O tipo de processamento que esse comportamento envolve pode ser vulnerável a ataques HPI e HPP.</p>
+
+<p class = "p1">Para simplificar e auxiliar a navegação, alguns aplicativos colocam valores de parâmetro no caminho do arquivo da URL, em vez da string de consulta.</p>
+
+<p class = "p1">Muitas vezes, isso pode ser alcançado com algumas regras simples para transformar a URL e encaminhá-la para o destino verdadeiro.  As seguintes regras mod_rewrite no Apache são usadas para lidar com o acesso público aos perfis de usuário.</p>
+
+<p class = "p1">e os transforma em solicitações de back-end para a funcionalidade de visualização contida na página de gerenciamento de usuário user_mgr.php.  Ele move o parâmetro marcus para a string de consulta e adiciona o parâmetro.</p>
+
+<p class = "p1">Nessa situação, pode ser possível usar um ataque HPI para injetar um segundo parâmetro de modo no URL reescrito. Por exemplo, se o invasor solicitar.</p>
+
+<p class = "p1">Conforme descrito para ataques HPP, o sucesso dessa exploração depende de como o servidor lida com o parâmetro agora duplicado.  Na plataforma PHP, o parâmetro mode é tratado como tendo o valor editado, portanto, o ataque é bem-sucedido.</p>
+
+<p class = "p1">1. Direcione cada parâmetro de solicitação por vez e tente anexar um novo parâmetro injetado usando várias sintaxes.</p>
+
+<p class = "p1">2. Identifique todas as instâncias em que o aplicativo se comporta como se o parâmetro original não tivesse sido modificado.  (Isso se aplica apenas a parâmetros que geralmente causam alguma diferença na resposta do aplicativo quando modificados.)</p>
+
+<p class = "p1">3. Cada instância identificada na etapa anterior tem uma chance de injeção de parâmetro.</p>
+
+<p class = "p1">Tente injetar um parâmetro conhecido em vários pontos da solicitação para ver se ele pode substituir ou modificar um parâmetro existente.</p>
+
+<p class = "p1">4. Se isso fizer com que o novo valor substitua o existente, determine se você pode ignorar qualquer validação de front-end injetando um valor que é lido por um servidor back-end.</p>
+
+<p class = "p1">5. Substitua o parâmetro conhecido injetado por nomes de parâmetro adicionais, conforme descrito para mapeamento de aplicativo e descoberta de conteúdo no Capítulo 4.</p>
+
+<p class = "p1">6. Teste a tolerância do aplicativo a vários envios do mesmo parâmetro em uma solicitação. Envie valores redundantes antes e depois de outros parâmetros e em locais diferentes dentro da solicitação (dentro da string de consulta, cookies e o corpo da mensagem).</p>
+</section>
+</body>
+</html>
