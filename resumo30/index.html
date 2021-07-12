@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <title>Resumo 11</title>
+    <meta charset="UTF-8">
+    <meta name="keywords" content="desenvolvedor hat, hacking, linux">
+    <meta name="description" content="introducao a várias vulnerabilidades web, resumo 30">
+    <meta name="robots" content="index">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link type="text/css" rel="stylesheet" href="style.css">
+    <script src='https://kit.fontawesome.com/a076d05399.js'></script>
+    <script data-ad-client="ca-pub-6493599991997784" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css">
+  </head>
+  <body>
+    <menu>
+      <nav class="n1">
+        <a href="/index.html" class="menu">HOME</a>
+      </nav>
+    </menu>
+
+<section>
+
+<h1>Resumo 30</h1>
+
+<p class = "p1">Exemplo 2: Enganar uma função de alteração de senha</p>
+
+<p class = "p1">Os autores encontraram essa falha lógica em um aplicativo da web implementado por uma empresa de serviços financeiros e também no aplicativo AOL AIM Enterprise Gateway.</p>
+
+<h2>A Funcionalidade<h2>
+
+<p class = "p1">O aplicativo implementou uma função de alteração de senha para usuários finais.  É necessário que o usuário preencha os campos de nome de usuário, senha existente, nova senha e confirme a nova senha.</p>
+
+<p class = "p1">Havia também uma função de alteração de senha para uso dos administradores.  Isso permitiu que eles alterassem a senha de qualquer usuário sem fornecer a senha existente.  As duas funções foram implementadas no mesmo script do lado do servidor.</p>
+
+<h2>A suposição</h2>
+
+<p class = "p1">A interface do lado do cliente apresentada aos usuários e administradores diferia em um aspecto.</p>
+
+<p class = "p1">A interface do administrador não continha um campo para a senha existente.  Quando o aplicativo do lado do servidor processava uma solicitação de alteração de senha, ele usava a presença ou ausência do parâmetro de senha existente para indicar se a solicitação era de um administrador ou de um usuário comum.  Em outras palavras, assumiu que usuários comuns sempre forneceriam um parâmetro de senha existente.</p>
+
+<h2>O ataque</h2>
+
+<p class = "p1">Quando a suposição é explicitamente declarada dessa forma, a falha lógica se torna óbvia.  Obviamente, um usuário comum poderia emitir uma solicitação que não contivesse um parâmetro de senha existente, porque os usuários controlavam todos os aspectos das solicitações que emitiam.</p>
+
+<p class = "p1">Essa falha de lógica foi devastadora para o aplicativo.  Ele permitiu que um invasor redefinir a senha de qualquer outro usuário e assumisse o controle total da conta dessa pessoa.</p>
+
+<p class = "p1">1. Ao investigar a funcionalidade principal em busca de falhas lógicas, tente remover, por sua vez, cada parâmetro enviado nas solicitações, incluindo cookies, campos de string de consulta e itens de dados POST.</p>
+
+<p class = "p1">2. Certifique-se de excluir o nome real do parâmetro, bem como seu valor.</p>
+
+<p class = "p1">Não envie apenas uma string vazia, porque normalmente o servidor lida com isso de maneira diferente.</p>
+
+<p class = "p1">3. Ataque apenas um parâmetro por vez para garantir que todos os caminhos de código relevantes dentro do aplicativo sejam alcançados.</p>
+
+<p class = "p1">4. Se a solicitação que você está manipulando fizer parte de um processo de vários estágios, siga o processo até a conclusão, porque alguma lógica posterior pode processar dados que foram fornecidos nas etapas anteriores e armazenados na sessão.</p>
+
+<h2>Exemplo 3: Prosseguindo para o Check-out</h2>
+
+<p class = "p1">Os autores encontraram essa falha lógica no aplicativo da web empregado por um varejista online.</p>
+
+<h2>A Funcionalidade</h2>
+
+<p class = "p1">O processo de colocação de um pedido envolveu as seguintes etapas.</p>
+
+<p class = "p1">1. Navegue pelo catálogo de produtos e adicione itens à cesta de compras.</p>
+
+<p class = "p1">2. Retorne ao carrinho de compras e finalize o pedido.</p>
+
+<p class = "p1">3. Insira as informações de pagamento.</p>
+
+<p class = "p1">4. Insira as informações de entrega.</p>
+
+<h2>A suposição</h2>
+
+<p class = "p1">Os desenvolvedores presumiram que os usuários sempre acessarem os estágios no pretendido sequência, porque esta foi a ordem em que as etapas são entregues ao usuário pelos links de navegação e formulários apresentados ao navegador do usuário.</p>
+
+<p class = "p1">Portanto, qualquer usuário que concluiu o processo de pedido deve ter enviado detalhes de pagamento satisfatórios ao longo do caminho.</p>
+
+<h2>O ataque</h2>
+
+<p class = "p1">A suposição dos desenvolvedores foi falha por razões bastante óbvias.  Os usuários controlavam todas as solicitações feitas ao aplicativo e, portanto, podiam acessar qualquer estágio do processo de pedido em qualquer sequência.  Ao prosseguir diretamente do estágio 2 para o estágio 4, um invasor pode gerar um pedido que foi finalizado para entrega, mas que não foi realmente pago.</p>
+
+<p class = "p1">A técnica para localizar e explorar falhas desse tipo é conhecida como navegação forçada.  Envolve contornar quaisquer controles impostos pela navegação no navegador na sequência em que as funções do aplicativo podem ser acessadas.</p>
+
+<p class = "p1">1. Quando um processo de vários estágios envolve uma sequência definida de solicitações, tente enviar essas solicitações fora da sequência esperada.</p>
+
+<p class = "p1">Tente pular certos estágios, acessando um único estágio mais de uma vez e acessando os primeiros estágios após os posteriores.</p>
+
+<p class = "p1">2. A sequência de estágios pode ser acessada por meio de uma série de solicitações GET ou POST para URLs distintos, ou podem envolver o envio de diferentes conjuntos de parâmetros para o mesmo URL.  O estágio que está sendo solicitado pode ser especificado enviando um nome de função ou índice em um parâmetro de solicitação.  Certifique-se de compreender totalmente os mecanismos que o aplicativo está empregando para fornecer acesso a estágios distintos.</p>
+
+<p class = "p1">3. A partir do contexto da funcionalidade implementada, tente entender quais suposições os desenvolvedores podem ter feito e onde se encontra a superfície de ataque principal.  Tente identificar formas de violar essas suposições para causar um comportamento indesejável dentro do aplicativo.</p>
+
+<p class = "p1">4. Quando as funções de vários estágios são acessadas fora da sequência, é comum encontrar uma variedade de condições anômalas dentro do aplicativo, como variáveis ​​com valores nulos ou não inicializados, um parcialmente definido ou estado inconsistente e outro comportamento imprevisível.  Nessa situação, o aplicativo pode retornar uma mensagem de erro interessante e saída de depuração, que você pode usar para entender melhor seu funcionamento interno e, assim, ajuste a corrente ou um ataque diferente (consulte o Capítulo 15).  Às vezes, o aplicativo pode entrar em um estado totalmente inesperado pelos desenvolvedores, o que pode levar a sérias falhas de segurança.</p>
+
+<p class = "p1">Muitos tipos de vulnerabilidade de controle de acesso são de natureza semelhante a essa falha lógica.</p>
+
+<p class = "p1">Quando uma função privilegiada envolve vários estágios que normalmente são acessados ​​em uma sequência definida, o aplicativo pode assumir que os usuários sempre continuarão com a funcionalidade nesta sequência.  O aplicativo pode impor controle de acesso estrito nos estágios iniciais do processo e assumir que qualquer usuário que alcance os estágios posteriores, portanto, deve ser autorizado.  Se um usuário com poucos privilégios passar diretamente para um estágio posterior, ele poderá acessá-lo sem quaisquer restrições.  Consulte o Capítulo 8 para obter mais detalhes sobre como encontrar e explorar vulnerabilidades desse tipo.</p>
+
+<h2>Exemplo 4: Lançamento do seu próprio seguro</h2>
+
+<p class = "p1">Os autores encontraram essa falha lógica em um aplicativo da web implantado por uma empresa de serviços financeiros.</p>
+
+<h2>A Funcionalidade</h2>
+
+<p class = "p1">O aplicativo permitiu que os usuários obtivessem cotações de seguro e, se desejado, preenchessem e enviassem um formulário de seguro online.  O processo foi espalhado em uma dúzia de estágios.</p>
+
+<p class = "p1">No primeiro estágio, o requerente apresentou algumas informações básicas e especificou um prêmio mensal preferencial ou o valor pelo qual desejava seguro.  O aplicativo oferecia uma cotação, calculando o valor que o candidato não especificou.</p>
+
+<p class = "p1">Em vários estágios, o requerente forneceu vários outros detalhes pessoais, incluindo saúde, ocupação e passatempos.</p>
+
+<p class = "p1">Por fim, o pedido foi transmitido a um subscritor da seguradora.</p>
+
+<p class = "p1">Usando o mesmo aplicativo da web, o segurador revisou os detalhes e decidiu aceitar o aplicativo como está ou modificar a cotação inicial para refletir quaisquer riscos adicionais.</p>
+
+<p class = "p1">Por meio de cada uma das etapas descritas, o aplicativo utilizou um componente compartilhado para processar cada parâmetro dos dados do usuário que lhe eram enviados.  Este componente analisou todos os dados em cada solicitação POST em pares de nome / valor e atualizou suas informações de estado com cada item de dados recebido.</p>
+
+<h2>A suposição</h2>
+
+<p class = "p1">O componente que processou os dados fornecidos pelo usuário presumiu que cada solicitação conteria apenas os parâmetros solicitados ao usuário no formulário HTML relevante.  Os desenvolvedores não consideraram o que aconteceria se um usuário enviasse parâmetros que ele não foi solicitado a fornecer.</p>
+
+<h2>O ataque</h2>
+
+<p class = "p1">Claro, a suposição era falha, porque os usuários podiam enviar nomes e valores de parâmetros com cada solicitação.</p>
+
+<p class = "p1">Como resultado, a funcionalidade central do aplicativo foi quebrada de várias maneiras.</p>
+
+<p class = "p1">Um invasor pode explorar o componente compartilhado para ignorar todas as validações de entrada do lado do servidor.  Em cada etapa do processo de cotação, o aplicativo executou a validação estrita dos dados esperados naquela etapa e rejeitou todos os dados que não passaram nessa validação.  Mas o componente compartilhado atualizava o estado do aplicativo com todos os parâmetros fornecidos pelo usuário.  Portanto, se um invasor enviar dados fora da sequência, fornecendo um par nome / valor que o aplicativo esperava em um estágio anterior, esses dados seriam aceitos e processados, sem que a validação fosse realizada.  Por acaso, essa possibilidade abriu o caminho para um ataque de script entre sites armazenados que tinha como alvo o segurador, o que permitia que um usuário mal-intencionado acessasse as informações pessoais de outros candidatos (consulte o Capítulo 12).</p>
+
+<p class = "p1">Um invasor pode comprar seguro por um preço arbitrário.  No primeiro estágio do processo de cotação, o requerente especificou seu prêmio mensal preferido ou o valor que ela queria segurar, e o aplicativo computou o outro item de acordo.  No entanto, se um usuário fornecesse novos valores para um ou ambos os itens em um estágio posterior, o estado do aplicativo era atualizado com esses valores.  Ao enviar esses parâmetros fora da sequência, um invasor pode obter uma cotação de seguro em um valor arbitrário e prêmio mensal arbitrário.</p>
+
+<p class = "p1">Não havia controles de acesso sobre quais parâmetros um determinado tipo de usuário poderia fornecer.  Quando um segurador analisava um formulário preenchido, ele atualizava vários itens de dados, incluindo a decisão de aceitação.</p>
+
+<p class = "p1">Esses dados foram processados ​​pelo componente compartilhado da mesma forma que os dados fornecidos por um usuário comum. Se um invasor souber ou adivinhar os nomes dos parâmetros usados ​​quando o segurador revisou um aplicativo, o invasor poderia simplesmente enviá-los, aceitando assim seu próprio aplicativo sem qualquer subscrição real.</p>
+
+<p class = "p1">As falhas neste aplicativo eram fundamentais para sua segurança, mas nenhuma delas teria sido identificada por um invasor que simplesmente interceptou as solicitações do navegador e modificou os valores dos parâmetros enviados.</p>
+
+<p class = "p1">1. Sempre que um aplicativo implementa uma ação-chave em vários estágios, você deve pegar os parâmetros que são enviados em um estágio do processo e tentar enviá-los para um estágio diferente.  Se os itens relevantes de dados são atualizados dentro do estado do aplicativo, você deve explorar as ramificações desse comportamento para determinar se você pode aproveitá-lo para realizar qualquer ação maliciosa, como nos três exemplos anteriores.</p>
+
+<p class = "p1">2. Se o aplicativo implementa funcionalidades pela qual diferentes categorias de usuário podem atualizar ou executar outras ações em uma coleção comum de dados, você deve percorrer o processo usando cada tipo de usuário e observar os parâmetros enviados.</p>
+
+<p class = "p1">Onde diferentes parâmetros são normalmente enviados por diferentes usuários, pegue cada parâmetro enviado por um usuário e tente enviá-lo como o outro usuário.  Se o parâmetro é aceito e processado como esse usuário, explore as implicações desse comportamento conforme descrito anteriormente.</p>
+
+<h2>Exemplo 5: quebrando o banco</h2>
+
+<p class = "p1">Os autores encontraram essa falha lógica no aplicativo da web implantado por uma grande empresa de serviços financeiros.</p>
+
+<p class = "p1">O aplicativo permitiu que os clientes existentes que ainda não usavam o aplicativo online se registrassem para fazê-lo.  Os novos usuários foram solicitados a fornecer algumas informações pessoais básicas para fornecer um grau de garantia de sua identidade.  Essas informações incluíam nome, endereço e data de nascimento, mas não incluíam nada secreto, como uma senha ou PIN existente.</p>
+
+<p class = "p1">Depois que essas informações foram inseridas corretamente, o aplicativo encaminhou a solicitação de registro aos sistemas back-end para processamento.  Um pacote de informações foi enviado para o endereço residencial registrado do usuário.  Este pacote inclui instruções para ativar seu acesso online por meio de uma chamada telefônica para a central de atendimento da empresa e também uma senha de uso único para usar ao fazer o primeiro login no aplicativo.</p>
+
+<p class = "p1">Os designers do aplicativo acreditaram que este mecanismo forneceu uma defesa robusta contra o acesso não autorizado ao aplicativo.  O mecanismo implementou três camadas de proteção.</p>
+
+<p class = "p1">Uma quantidade modesta de dados pessoais foi necessária antecipadamente para impedir que um invasor mal-intencionado ou um usuário malicioso tentasse iniciar o processo de registro em nome de outros usuários.</p>
+
+<p class = "p1">O processo envolveu a transmissão de um segredo de chave fora da banda para o endereço residencial registrado do cliente.  Um invasor precisa ter acesso ao e-mail pessoal da vítima.</p>
+
+<p class = "p1">O cliente era obrigado a telefonar para o call center e ali se autenticar da forma usual, com base em informações pessoais e dígitos selecionados de um PIN.</p>
+
+<p class = "p1">Este design era realmente robusto.  A falha lógica está na implementação do mecanismo.</p>
+
+<p class = "p1">Os desenvolvedores que implementaram o mecanismo de registro precisavam de uma maneira de armazenar os dados pessoais enviados pelo usuário e correlacionar isso com uma identidade de cliente exclusiva no banco de dados da empresa.  Ansiosos para reutilizar o código existente, eles encontraram a seguinte classe, que parecia servir aos seus propósitos.</p>
+
+<p class = "p1">Depois que as informações do usuário foram capturadas, este objeto foi instanciado, preenchido com as informações fornecidas e armazenado na sessão do usuário.  O aplicativo, então, verificou os detalhes do usuário e, se eles fossem válidos, recuperou o número de cliente exclusivo desse usuário, que foi usado em todos os sistemas da empresa.  Este número foi adicionado ao objeto, juntamente com algumas outras informações úteis sobre o usuário.  O objeto foi então transmitido ao sistema back-end relevante para que a solicitação de registro fosse processada.</p>
+
+<p class = "p1">Os desenvolvedores presumiram que o uso desse componente de código era inofensivo e não levaria a um problema de segurança.  No entanto, a suposição era falha, com consequências graves.</p>
+
+<p class = "p1">O mesmo componente de código que foi incorporado à funcionalidade de registro também foi usado em outro lugar dentro do aplicativo, incluindo dentro da funcionalidade principal.  Isso deu aos usuários autenticados acesso a detalhes da conta, extratos, transferências de fundos e outras informações.  Quando um usuário registrado se autenticava com sucesso no aplicativo, esse mesmo objeto era instanciado e salvo em sua sessão para armazenar informações importantes sobre sua identidade.  A maioria das funcionalidades do aplicativo referenciam as informações dentro deste objeto para realizar suas ações.  Por exemplo, os detalhes da conta apresentados ao usuário em sua página principal foram gerados com base no número de cliente exclusivo contido neste objeto.</p>
+
+<p class = "p1">A maneira como o componente de código já estava sendo empregado dentro do aplicativo significava que a suposição dos desenvolvedores era falha, e a maneira como eles o reutilizaram realmente abriu uma vulnerabilidade significativa.</p>
+
+<p class = "p1">Embora a vulnerabilidade fosse séria, na verdade era relativamente sutil de detectar e explorar.</p>
+
+<p class = "p1">O acesso à funcionalidade principal do aplicativo era protegido por controles de acesso em várias camadas, e um usuário precisava ter uma sessão totalmente autenticada para passar por esses controles.</p>
+
+<p class = "p1">Para explorar a falha lógica, portanto, um invasor precisava seguir estas etapas.</p>
+
+<p class = "p1">Faça login no aplicativo usando suas próprias credenciais de conta válidas.</p>
+
+<p class = "p1">Usando a sessão autenticada resultante, acesse a funcionalidade de registro e envie as informações pessoais de um cliente diferente.  Isso fez com que o aplicativo substituísse o objeto CCustomer original na sessão do invasor por um novo objeto relacionado ao cliente-alvo.</p>
+
+<p class = "p1">Retorne à funcionalidade principal do aplicativo e acesse a conta do outro cliente.</p>
+
+<p class = "p1">Uma vulnerabilidade desse tipo não é fácil de detectar ao investigar o aplicativo de uma perspectiva de caixa preta.</p>
+
+<p class = "p1">No entanto, também é difícil identificar ao revisar ou escrever o código-fonte real.  Sem uma compreensão clara do aplicativo como um todo e como os diferentes componentes são usados ​​em diferentes áreas, a suposição errada feita pelos desenvolvedores pode não ser evidente.  Claro, o código-fonte claramente comentado e a documentação do projeto reduziria a probabilidade de tal defeito ser introduzido ou permanecer não detectado.</p>
+
+<p class = "p1">1. Em um aplicativo complexo envolvendo a segregação de privilégios horizontal ou vertical, tente localizar quaisquer instâncias em que um usuário individual possa acumular uma quantidade de estado dentro de sua sessão que se relacione de alguma forma com sua identidade.</p>
+
+<p class = "p1">2. Tente percorrer uma área de funcionalidade e, em seguida, mude para uma área não relacionada, para determinar se alguma informação de estado acumulada tem um efeito no comportamento do aplicativo.</p>
+
+<h2>Exemplo 6: Superando um Limite de Negócios</h2>
+
+<p class = "p1">Os autores encontraram essa falha lógica em um aplicativo de planejamento de recursos corporativos baseado na web usado em uma empresa de manufatura.</p>
+
+<p class = "p1">O pessoal de finanças pode realizar transferências de fundos entre várias contas bancárias propriedade da empresa e de seus principais clientes e fornecedores.</p>
+
+<p class = "p1">Como precaução contra fraudes, o aplicativo evitou que a maioria dos usuários processasse transferências com um valor superior a US $ 10.000.  Qualquer transferência maior do que isso exigia a aprovação de um gerente sênior.</p>
+
+<p class = "p1">Os desenvolvedores presumiram que esse cheque transparente era à prova de balas.  Nenhuma transação maior do que o limite configurado poderia escapar do requisito de aprovação secundária.</p>
+
+<p class = "p1">A suposição dos desenvolvedores foi falha porque eles negligenciaram a possibilidade que um usuário tentaria processar uma transferência de um valor negativo.  Qualquer número negativo limparia o teste de aprovação, porque é menor que o limite.</p>
+
+<p class = "p1">No entanto, o módulo bancário do aplicativo aceita transferências negativas e simplesmente os processou como transferências positivas na direção oposta.  Portanto, qualquer usuário que desejasse transferir $ 20.000 da conta A para a conta B poderia simplesmente iniciar uma transferência de-$ 20.000 da conta B para a conta A, que teve o mesmo efeito e não exigiu aprovação.  As defesas antifraude embutidas no aplicativo podem ser facilmente contornadas!</p>
+
+<p class = "p1">Muitos tipos de aplicativos da web empregam limites numéricos em sua lógica de negócios.</p>
+
+<p class = "p1">Um aplicativo de varejo pode impedir que um usuário peça mais do que o número de unidades disponíveis em estoque.</p>
+
+<p class = "p1">Um aplicativo bancário pode impedir que um usuário faça pagamentos de contas que excedam seu saldo em conta corrente.</p>
+
+<p class = "p1">Um aplicativo de seguro pode ajustar suas cotações com base nos limites de idade.</p>
+
+<p class = "p1">Encontrar uma maneira de superar esses limites geralmente não representa um comprometimento da segurança do próprio aplicativo.  No entanto, isso pode ter consequências comerciais sérias e representar uma violação dos controles que o proprietário está contando com o aplicativo para aplicar.</p>
+
+<p class = "p1">As vulnerabilidades mais óbvias desse tipo geralmente são detectadas durante o teste de aceitação do usuário que normalmente ocorre antes de um aplicativo ser iniciado.  No entanto, manifestações mais sutis do problema podem permanecer, particularmente quando parâmetros ocultos estão sendo manipulados.</p>
+
+<p class = "p1">A primeira etapa na tentativa de superar um limite de negócios é entender quais caracteres são aceitos na entrada relevante que você controla.</p>
+
+<p class = "p1">1. Tente inserir valores negativos e veja se o aplicativo os aceita e os processa da maneira esperada.</p>
+
+<p class = "p1">2. Você pode precisar realizar várias etapas para projetar uma mudança no estado do aplicativo que pode ser explorada para uma finalidade útil.</p>
+
+<p class = "p1">Por exemplo, várias transferências entre contas podem ser necessárias até que um saldo adequado seja acumulado que possa realmente ser extraído.</p>
+</section>
+</body>
+</html>
