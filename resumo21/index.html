@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <title>Resumo 11</title>
+    <meta charset="UTF-8">
+    <meta name="keywords" content="desenvolvedor hat, hacking, linux">
+    <meta name="description" content="introducao a várias vulnerabilidades web, resumo 21">
+    <meta name="robots" content="index">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link type="text/css" rel="stylesheet" href="style.css">
+    <script src='https://kit.fontawesome.com/a076d05399.js'></script>
+    <script data-ad-client="ca-pub-6493599991997784" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css">
+  </head>
+  <body>
+    <menu>
+      <nav class="n1">
+        <a href="/index.html" class="menu">HOME</a>
+      </nav>
+    </menu>
+
+<section>
+
+<h1>Encontrando falhas de injeção de comando do sistema operacional</h1>
+
+<p class = "p1">Em seus exercícios de mapeamento de aplicativo (consulte o Capítulo 4), você deve ter identificado todas as instâncias em que o aplicativo da web parece estar interagindo com o sistema operacional subjacente, chamando processos externos ou acessando o sistema de arquivos.  Você deve testar todas essas funções, procurando por falhas de injeção de comando.  Na verdade, no entanto, o aplicativo pode emitir comandos do sistema operacional contendo absolutamente qualquer item de dados fornecidos pelo usuário, incluindo cada URL e parâmetro do corpo e todos os cookies.  Para realizar um teste completo do aplicativo, portanto, você precisa direcionar todos esses itens dentro de cada função do aplicativo.</p>
+
+<p class = "p1">Diferentes interpretadores de comando lidam com metacaracteres shell de maneiras diferentes.</p>
+
+<p class = "p1">Em princípio, qualquer tipo de plataforma de desenvolvimento de aplicativos ou servidor web pode chamar qualquer tipo de interpretador de shell, rodando em seu próprio sistema operacional ou em qualquer outro host.  Portanto, você não deve fazer suposições sobre o manuseio do aplicativo de metacaracteres com base em qualquer conhecimento do sistema operacional do servidor da web.</p>
+
+<p class = "p1">Dois tipos amplos de metacaracteres podem ser usados ​​para injetar um comando separado em um comando predefinido existente</p>
+
+<p class = "p1">Os caracteres de nova linha podem ser usados ​​para agrupar vários comandos, um após o outro.  Em alguns casos, esses caracteres podem ser duplicados com efeitos diferentes.  Por exemplo, no interpretador de comandos do Windows, o uso de && faz com que o segundo comando seja executado apenas se o primeiro for bem-sucedido.</p>
+
+<p class = "p1">Usando ||  faz com que o segundo comando sempre seja executado, independentemente do sucesso do primeiro.</p>
+
+<p class = "p1">O caractere crase (`) pode ser usado para encapsular um comando separado dentro de um item de dados sendo processado pelo comando original.  Colocar um comando injetado dentro de crases faz com que o interpretador de shell execute o comando e substitua o texto encapsulado pelos resultados deste antes de continuar a executar a string de comando resultante.</p>
+
+<p class = "p1">Nos exemplos anteriores, foi simples verificar se a injeção de comando era possível e recuperar os resultados do comando injetado, porque esses resultados foram retornados imediatamente na resposta do aplicativo.</p>
+
+<p class = "p1">Em muitos casos, entretanto, isso pode não ser possível.  Você pode estar injetando em um comando que não retorna resultados e que não afeta o processamento subsequente do aplicativo de nenhuma forma identificável.  Ou o método que você usou para injetar o comando escolhido pode ser tal que seus resultados sejam perdidos à medida que vários comandos são agrupados.</p>
+
+<p class = "p1">Em geral, a maneira mais confiável de detectar se a injeção de comando é possível é usar a inferência de retardo de tempo de maneira semelhante à descrita para explorar a injeção cega de SQL.  Se uma vulnerabilidade potencial parece existir, você pode usar outros métodos para confirmar isso e recuperar os resultados de seus comandos injetados.</p>
+
+<p class = "p1">1. Normalmente, você pode usar o comando ping como meio de acionar um atraso de tempo, fazendo com que o servidor execute ping em sua interface de loopback por um período específico. Existem pequenas diferenças entre como as plataformas baseadas em Windows e UNIX lidam com separadores de comando e o comando ping.</p>
+
+<p class = "p1">No entanto, a seguinte string de teste multifuncional deve induzir um atraso de 30 segundos em qualquer plataforma se nenhuma filtragem estiver em vigor:</p>
+
+<p class = "p1">Para maximizar suas chances de detectar uma falha de injeção de comando se o aplicativo estiver filtrando determinados separadores de comando, você também deve enviar cada uma das seguintes strings de teste para cada parâmetro de destino, um de cada vez e monitorar o tempo que leva para o aplicativo responder:</p>
+
+<p class = "p1">2. Se ocorrer um atraso de tempo, o aplicativo pode ficar vulnerável à injeção de comando.  Repita o caso de teste várias vezes para confirmar que o atraso não foi resultado da latência da rede ou de outras anomalias.  Você pode tentar mudar o valor dos parâmetros -n ou -i e a confirmação de que o atraso experimentado varia sistematicamente com o valor fornecido.</p>
+
+<p class = "p1">3. Usando qualquer uma das strings de injeção que foi considerada bem-sucedida, tente injetar um comando mais interessante (como ls ou dir).</p>
+
+<p class = "p1">Determine se você pode recuperar os resultados do comando para o seu navegador.</p>
+
+<p class = "p1">4. Se você não conseguir recuperar os resultados diretamente, você tem outras opções:</p>
+
+<p class = "p1">Você pode tentar abrir um canal fora de banda de volta para o seu computador.</p>
+
+<p class = "p1">Tente usar TFTP para copiar ferramentas para o servidor, usar telnet ou netcat para criar um shell reverso de volta para seu computador e usar o comando mail para enviar saída de comando via SMTP.</p>
+
+<p class = "p1">Você pode redirecionar os resultados dos seus comandos para um arquivo na raiz da web, que pode ser recuperado diretamente usando o navegador.  Por exemplo:</p>
+
+<p class = "p1">5. Quando tiver encontrado um meio de injetar comandos e recuperar os resultados, você deve determinar seu nível de privilégio (usando whoami ou algo semelhante, ou tentando gravar um arquivo inofensivo em um diretório protegido).  Você pode então tentar escalar privilégios, obter acesso backdoor a dados confidenciais de aplicativos ou atacar outros hosts acessíveis a partir do servidor comprometido.</p>
+
+<p class = "p1">Em alguns casos, pode não ser possível injetar um comando totalmente separado devido à filtragem de caracteres necessários ou ao comportamento da API de comando que está sendo usada pelo aplicativo.  No entanto, ainda pode ser possível interferir com o comportamento do comando que está sendo executado para alcançar algum resultado desejado.</p>
+
+<p class = "p1">Em uma instância vista pelos autores, o aplicativo passou a entrada do usuário ao comando nslookup do sistema operacional para localizar o endereço IP de um nome de domínio fornecido pelo usuário.</p>
+
+<p class = "p1">Os metacaracteres necessários para injetar novos comandos estavam sendo bloqueados, mas os caracteres <e> usados ​​para redirecionar a entrada e saída do comando foram permitidas.  O comando nslookup geralmente produz o endereço IP de um nome de domínio, que não parece fornecer um vetor de ataque eficaz.  No entanto, se um nome de domínio inválido for fornecido, o comando gerará uma mensagem de erro que inclui o domínio do nome que foi pesquisado.</p>
+
+<p class = "p1">Este comportamento provou ser suficiente para entregar um ataque sério</p>
+
+<p class = "p1">Envie um fragmento de código de script executável do servidor como o nome de domínio a ser resolvido.  O script pode ser encapsulado entre aspas para garantir que o interpretador de comandos o trate como um único token.</p>
+
+<p class = "p1">Use o caractere> para redirecionar a saída do comando para um arquivo em uma pasta executável na raiz da web.  O comando executado pelo sistema operacional é o seguinte:</p>
+
+<p class = "p1">Quando o comando é executado, a seguinte saída é redirecionada para o arquivo executável:</p>
+
+<p class = "p1">Esse arquivo pode então ser chamado usando um navegador e o código de script injetado é executado no servidor.</p>
+
+<p class = "p1">Como a maioria das linguagens de script permite que as páginas contenham uma mistura de conteúdo do lado do cliente e marcação do lado do servidor, as partes da mensagem de erro que o invasor não controla são tratadas apenas como texto simples e a marcação no script injetado é executada.  O ataque, portanto, consegue alavancar uma condição de injeção de comando restrita para introduzir uma porta dos fundos irrestrita no servidor de aplicativos.</p>
+
+<p class = "p1">1. Os caracteres <e> são usados, respectivamente, para direcionar o conteúdo de um arquivo para a entrada do comando e para direcionar a saída do comando para um arquivo.</p>
+
+<p class = "p1">Se não for possível usar as técnicas anteriores para injetar um comando totalmente separado, você ainda poderá ler e gravar conteúdo de arquivo arbitrário usando os caracteres.</p>
+
+<p class = "p1">2. Muitos comandos do sistema operacional que os aplicativos invocam aceitam vários parâmetros de linha de comando que controlam seu comportamento. Freqüentemente, a entrada fornecida pelo usuário é passada para o comando como um desses parâmetros, e você pode adicionar outros parâmetros simplesmente inserindo um espaço seguido pelo parâmetro relevante.</p>
+
+<p class = "p1">Por exemplo, um aplicativo de criação na web pode conter uma função na qual o servidor recupera uma URL especificada pelo usuário e renderiza seu conteúdo no navegador para edição.  Se o aplicativo simplesmente chama o programa wget, você pode escrever o conteúdo do arquivo ao sistema de arquivos do servidor, anexando o parâmetro de linha de comando usado pelo wget.  Por exemplo</p>
+
+<p class = "p1">Muitos ataques de injeção de comando exigem que você injete espaços para separar argumentos de linha de comando.  Se você achar que os espaços estão sendo filtrados pelo aplicativo e a plataforma que você está atacando é baseada em UNIX, você pode ser capaz de usar a variável de ambiente IFS, que contém os separadores de campo de espaço em branco.</p>
+
+<p class = "p1">Encontrando Vulnerabilidades de Execução Dinâmica</p>
+
+<p class = "p1">Vulnerabilidades de execução dinâmica surgem mais comumente em linguagens como PHP e Perl.  Mas, em princípio, qualquer tipo de plataforma de aplicativo pode passar a entrada fornecida pelo usuário para um interpretador baseado em script, às vezes em um servidor back-end diferente.</p>
+
+<p class = "p1">1. Qualquer item de dados fornecidos pelo usuário pode ser passado para uma função de execução dinâmica.</p>
+
+<p class = "p1">Alguns dos itens mais comumente usados ​​dessa forma são os nomes e valores de parâmetros de cookies e dados persistentes armazenados em perfis de usuário como resultado de ações anteriores.</p>
+
+<p class = "p1">2. Tente enviar os seguintes valores, um por vez, como cada parâmetro de destino:</p>
+
+<p class = "p1">3. Revise as respostas do aplicativo.  Se a string 111111 for retornada sozinha (não é precedida pelo resto da string de comando), o aplicativo provavelmente estará vulnerável à injeção de comandos de script.</p>
+
+<p class = "p1">4. Se a string 111111 não for retornada, procure por mensagens de erro que indiquem que sua entrada está sendo executada dinamicamente e que você pode precisar ajustar sua sintaxe para obter a injeção de comandos arbitrários.</p>
+
+<p class = "p1">5. Se o aplicativo que você está atacando usa PHP, você pode usar a string de teste phpinfo (), que, se bem-sucedida, retorna os detalhes de configuração do ambiente PHP.</p>
+
+<p class = "p1">6. Se o aplicativo parecer vulnerável, verifique injetando alguns comandos que resultam em atrasos, conforme descrito anteriormente para injeção de comandos do sistema operacional.  Por exemplo</p>
+</section>
+</body>
+</html>
