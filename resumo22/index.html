@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <title>Resumo 11</title>
+    <meta charset="UTF-8">
+    <meta name="keywords" content="desenvolvedor hat, hacking, linux">
+    <meta name="description" content="introducao a várias vulnerabilidades web, resumo 22">
+    <meta name="robots" content="index">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link type="text/css" rel="stylesheet" href="style.css">
+    <script src='https://kit.fontawesome.com/a076d05399.js'></script>
+    <script data-ad-client="ca-pub-6493599991997784" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css">
+  </head>
+  <body>
+    <menu>
+      <nav class="n1">
+        <a href="/index.html" class="menu">HOME</a>
+      </nav>
+    </menu>
+
+<section>
+
+<h1>Prevenindo injeção de comando do sistema operacional</h1>
+
+<p class = "p1">Em geral, a melhor maneira de evitar o surgimento de falhas de injeção de comando do sistema operacional é evitar chamar diretamente os comandos do sistema operacional.  Praticamente qualquer tarefa concebível que um aplicativo da web precise realizar pode ser realizada usando APIs integradas que não podem ser manipuladas para executar comandos diferentes do pretendido.</p>
+
+<p class = "p1">Se for considerado inevitável incorporar dados fornecidos pelo usuário em strings de comando que são passadas para um interpretador de comando do sistema operacional, o aplicativo deve aplicar defesas rigorosas para evitar o surgimento de uma vulnerabilidade.</p>
+
+<p class = "p1">Se possível, uma lista de desbloqueio deve ser usada para restringir a entrada do usuário a um conjunto específico de valores esperados.  Como alternativa, a entrada deve ser restrita a um conjunto de caracteres muito restrito, como apenas caracteres alfanuméricos.  Entrada contendo qualquer outro dados, incluindo qualquer metacaractere concebível ou espaço em branco, devem ser rejeitados.</p>
+
+<p class = "p1">Como uma camada adicional de proteção, o aplicativo deve usar APIs de comando que iniciam um processo específico por meio de seu nome e parâmetros de linha de comando, em vez de passar uma string de comando para um interpretador de shell que ofereça suporte ao encadeamento e redirecionamento de comandos. Por exemplo, o Java API Runtime.exec e o ASP.NET API Process.Start não oferecem suporte a metacaracteres de shell.</p>
+
+<p class = "p1">Se usados ​​corretamente, eles podem garantir que apenas o comando pretendido pelo desenvolvedor será executado. Consulte o Capítulo 19 para obter mais detalhes sobre APIs de execução de comandos.</p>
+
+<p class = "p1">Prevenção de vulnerabilidades de injeção de script</p>
+
+<p class = "p1">Em geral, a melhor maneira de evitar vulnerabilidades de injeção de script é não passar a entrada fornecida pelo usuário, ou dados derivados dela, em qualquer execução dinâmica ou funções de inclusão. Se isso for considerado inevitável por algum motivo, a entrada relevante deve ser estritamente validada para evitar que qualquer ataque ocorra.</p>
+
+<p class = "p1">Se possível, use uma lista de desbloqueio de valores válidos conhecidos que o aplicativo espera e rejeite qualquer entrada que não apareça nesta lista. Caso contrário, verifique os caracteres usados ​​na entrada em relação a um conjunto conhecido como inofensivo, como caracteres alfanuméricos excluindo espaços em branco.</p>
+
+<h2>Manipulando caminhos de arquivo</h2>
+
+<p class = "p1">Muitos tipos de funcionalidade comumente encontrados em aplicativos da web envolvem o processamento de entrada fornecida pelo usuário como um arquivo ou nome de diretório.  Normalmente, a entrada é passada para uma API que aceita um caminho de arquivo, como na recuperação de um arquivo do sistema de arquivos local.</p>
+
+<p class = "p1">O aplicativo processa o resultado da chamada da API em sua resposta à solicitação do usuário.  Se a entrada fornecida pelo usuário for validada incorretamente, esse comportamento pode levar a várias vulnerabilidades de segurança, as mais comuns das quais são bugs de passagem de caminho de arquivo e bugs de inclusão de arquivo.</p>
+
+<h2>Vulnerabilidades de passagem de caminho</h2>
+
+<p class = "p1">Vulnerabilidades de travessia de caminho surgem quando o aplicativo usa dados controláveis ​​pelo usuário para acessar arquivos e diretórios no servidor de aplicativos ou em outro sistema de arquivos de back-end de maneira insegura.  Ao enviar uma entrada criada, um invasor pode fazer com que conteúdo arbitrário seja lido ou gravado em qualquer lugar do sistema de arquivos que está sendo acessado.</p>
+
+<p class = "p1">Isso geralmente permite que um invasor leia informações confidenciais do servidor ou substitua arquivos confidenciais, levando a execução arbitrária de comandos no servidor.</p>
+
+<p class = "p1">Considere o exemplo a seguir, no qual um aplicativo usa uma página dinâmica para retornar imagens estáticas ao cliente. O nome da imagem solicitada é especificado em um parâmetro de string de consulta.</p>
+
+<p class = "p1">Quando o servidor processa essa solicitação, ele segue estas etapas.</p>
+
+<p class = "p1">1. Extrai o valor do parâmetro de nome de arquivo da string de consulta.</p>
+
+<p class = "p1">2. Anexa esse valor ao prefixo C: \ filestore \.</p>
+
+<p class = "p1">3. Abre o arquivo com este nome.</p>
+
+<p class = "p1">4. Lê o conteúdo do arquivo e o devolve ao cliente.</p>
+
+<p class = "p1">A vulnerabilidade surge porque um invasor pode colocar sequências de passagem de caminho no nome do arquivo para retroceder a partir do diretório especificado na etapa 2 e, portanto, acessar arquivos de qualquer lugar no servidor que o contexto do usuário usado pelo aplicativo tenha privilégios de acesso.  A sequência de percurso do caminho é conhecida como “ponto-ponto-barra”;  um ataque típico se parece com isto.</p>
+
+<p class = "p1">Quando o aplicativo anexa o valor do parâmetro filename ao nome do diretório de imagens, ele obtém o seguinte caminho.</p>
+
+<p class = "p1">As duas sequências de passagem efetivamente avançam do diretório de imagens para a raiz da unidade C :, portanto, o caminho anterior é equivalente a este.</p>
+
+<p class = "p1">Portanto, em vez de retornar um arquivo de imagem, o servidor realmente retorna um arquivo de configuração padrão do Windows.</p>
+
+<p class = "p1">Em versões anteriores do servidor da Web Windows IIS, os aplicativos seriam, por padrão, executados com privilégios de sistema local, permitindo acesso a qualquer arquivo legível no sistema de arquivos local.  Em versões mais recentes, em comum com muitos outros servidores da web, o processo do servidor por padrão é executado em um contexto de usuário menos privilegiado.  Por esse motivo, ao investigar vulnerabilidades de travessia de caminho, é melhor solicitar um arquivo padrão que possa ser lido por qualquer tipo de usuário, como c: \ windows \ win.ini.</p>
+
+<p class = "p1">Neste exemplo simples, o aplicativo não implementa nenhuma defesa para evitar ataques de travessia de caminho.</p>
+
+<p class = "p1">No entanto, como esses ataques são amplamente conhecidos há algum tempo, é comum encontrar aplicativos que implementam várias defesas contra eles, geralmente com base em filtros de validação de entrada.  Como você verá, esses filtros muitas vezes são mal projetados e podem ser contornados por um atacante habilidoso.</p>
+
+<p class = "p1">Encontrando e explorando vulnerabilidades de travessia de caminho.</p>
+
+<p class = "p1">Muitos tipos de funcionalidade requerem que um aplicativo da web leia ou grave em um sistema de arquivos com base nos parâmetros fornecidos nas solicitações do usuário.  Se essas operações forem realizadas de maneira insegura, um invasor pode enviar uma entrada criada que faz com que o aplicativo acesse arquivos que o designer do aplicativo não pretendia acessar. Conhecidos como vulnerabilidades de travessia de caminho, esses defeitos podem permitir que o invasor leia dados confidenciais, incluindo senhas e logs de aplicativos, ou sobrescreva itens críticos de segurança, como arquivos de configuração e binários de software.  Nos casos mais graves, a vulnerabilidade pode permitir que um invasor comprometa completamente o aplicativo e o aplicativo sistema operacional.</p>
+
+<p class = "p1">As falhas de travessia de caminho às vezes são sutis de detectar e muitos aplicativos da web implementam defesas contra elas que podem ser vulneráveis ​​a desvios. Descreveremos todas as várias técnicas de que você precisará, desde a identificação de alvos em potencial, a sondagem de comportamento vulnerável, contornar as defesas do aplicativo e lidar com a codificação personalizada.</p>
+
+<h2>Localização de alvos para ataque</h2>
+
+<p class = "p1">Durante o mapeamento inicial do aplicativo, você já deve ter identificado todas as áreas óbvias da superfície de ataque em relação às vulnerabilidades de travessia de caminho.</p>
+
+<p class = "p1">Qualquer funcionalidade cujo propósito explícito seja o upload ou download de arquivos deve ser completamente testada.  Essa funcionalidade é frequentemente encontrada em aplicativos de fluxo de trabalho onde os usuários podem compartilhar documentos, em aplicativos de blog e leilão onde os usuários podem fazer upload de imagens e em aplicativos informativos onde os usuários podem recuperar documentos como e-books, manuais técnicos e relatórios da empresa.</p>
+
+<p class = "p1">Além da funcionalidade de destino óbvia desse tipo, vários outros tipos de comportamento podem sugerir interação relevante com o sistema de arquivos.</p>
+
+
+<p class = "p1">1. Revise as informações coletadas durante o mapeamento do aplicativo para identificar o seguinte.</p>
+
+<p class = "p1">Qualquer instância em que um parâmetro de solicitação parece conter o nome de um arquivo ou diretório, como include = main.inc ou template = / en / sidebar.</p>
+
+<p class = "p1">Qualquer função de aplicativo cuja implementação possa envolver a recuperação de dados de um sistema de arquivos do servidor (em oposição a um banco de dados de back-end), como a exibição de documentos ou imagens de escritório.</p>
+
+<p class = "p1">2. Durante todos os testes realizados em relação a todos os outros tipos de vulnerabilidade, procure mensagens de erro ou outros eventos anômalos que sejam de seu interesse.  Tente encontrar qualquer evidência de instâncias onde dados fornecidos pelo usuário estão sendo passados ​​para APIs de arquivo ou como parâmetros para comandos do sistema operacional.</p>
+
+<p class = "p1">Se você tiver acesso local ao aplicativo (seja em um exercício de teste de caixa branca ou porque comprometeu o sistema operacional do servidor), a identificação de alvos para o teste de travessia de caminho geralmente é simples, porque você pode monitorar toda a interação do sistema de arquivos que o aplicativo executa.</p>
+
+<p class = "p1">Se você tiver acesso local ao aplicativo da web, faça o seguinte</p>
+
+<p class = "p1">1. Use uma ferramenta adequada para monitorar todas as atividades do sistema de arquivos no servidor.  Por exemplo, a ferramenta FileMon da SysInternals pode ser usada na plataforma Windows, as ferramentas ltrace / strace podem ser usadas no Linux e o truss comando pode ser usado no Solaris da Sun.</p>
+
+<p class = "p1">2. Teste cada página do aplicativo inserindo uma única string exclusiva (como traversaltest) em cada parâmetro enviado (incluindo todos os cookies, campos de string de consulta e itens de dados POST).  Almeje apenas um parâmetro por vez e use as técnicas automatizadas descritas no Capítulo 14 para acelerar o processo.</p>
+
+<p class = "p1">3. Defina um filtro na ferramenta de monitoramento do sistema de arquivos para identificar todos os eventos do sistema de arquivos que contêm sua string de teste.</p>
+
+<p class = "p1">4. Se algum evento for identificado onde sua string de teste foi usada ou incorporada a um nome de arquivo ou diretório, teste cada instância (conforme descrito a seguir) para determinar se ela é vulnerável a ataques path traversal.</p>
+
+<h2>Detectando vulnerabilidades de passagem de caminho</h2>
+
+<p class = "p1">Tendo identificado os vários alvos potenciais para o teste de travessia de caminho, você precisa testar cada instância individualmente para determinar se os dados controláveis ​​pelo usuário estão sendo passados ​​para operações relevantes do sistema de arquivos de maneira insegura.</p>
+
+<p class = "p1">Para cada parâmetro fornecido pelo usuário sendo testado, determine se as sequências de passagem estão sendo bloqueadas pelo aplicativo ou se funcionam conforme o esperado.</p>
+
+<p class = "p1">Um teste inicial que geralmente é confiável é enviar sequências de passagem de uma maneira que não envolva voltar atrás do diretório inicial.</p>
+
+<p class = "p1">1. Trabalhar na suposição de que o parâmetro que você está almejando está sendo anexado a um diretório pré definido especificado pelo aplicativo, modifique o valor do parâmetro para inserir um subdiretório arbitrário e uma única sequência transversal.  Por exemplo, se o aplicativo enviar este parâmetro.</p>
+
+<p class = "p1">Se o comportamento do aplicativo for idêntico nos dois casos, ele pode estar vulnerável.  Você deve prosseguir diretamente para tentar acessar um arquivo diferente percorrendo acima do diretório inicial.</p>
+
+<p class = "p1">2. Se o comportamento do aplicativo for diferente nos dois casos, pode estar bloqueando, removendo ou higienizando sequências de passagem, resultando em um caminho de arquivo inválido.  Você deve examinar se há alguma maneira de contornar os filtros de validação do aplicativo (descritos na próxima seção).</p>
+
+<p class = "p1">A razão pela qual este teste é eficaz, mesmo se o subdiretório “bar” não existir, é que a maioria dos sistemas de arquivos comuns realiza a canonização do caminho do arquivo antes de tentar recuperá-lo.  A sequência transversal cancela o diretório inventado, de forma que o servidor não verifica se ele está presente.</p>
+
+<p class = "p1">Se você encontrar qualquer instância em que o envio de sequências de passagem sem passar por cima do diretório inicial não afete o comportamento do aplicativo, o próximo teste é tentar sair do diretório inicial e acessar arquivos de outro lugar no sistema de arquivos do servidor.</p>
+
+<p class = "p1">1. Se a função do aplicativo que você está atacando fornece acesso de leitura a um arquivo, tente acessar um arquivo legível mundialmente conhecido no sistema operacional em questão.  Envie um dos seguintes valores como o parâmetro do nome do arquivo que você controla.</p>
+
+<p class = "p1">Se você tiver sorte, seu navegador exibirá o conteúdo do arquivo que você solicitou, conforme mostrado na Figura 10-5.</p>
+
+<p class = "p1">2. Se a função que você está atacando fornece acesso de gravação a um arquivo, pode ser mais difícil verificar conclusivamente se o aplicativo é vulnerável.</p>
+
+<p class = "p1">Um teste que geralmente é eficaz é tentar gravar dois arquivos - um que deve ser gravável por qualquer usuário e outro que não deve ser gravável nem mesmo pelo root ou administrador.  Por exemplo, em plataformas Windows, você pode tentar isto.</p>
+
+<p class = "p1">Em plataformas baseadas em UNIX, os arquivos que o root pode não gravar dependem da versão, mas a tentativa de sobrescrever um diretório com um arquivo sempre deve falhar, então você pode tentar isto.</p>
+
+<p class = "p1">Para cada par de testes, se o comportamento do aplicativo for diferente em resposta à primeira e à segunda solicitações (por exemplo, se o segundo retornar uma mensagem de erro, mas o primeiro não), o aplicativo provavelmente está vulnerável.</p>
+
+<p class = "p1">3. Um método alternativo para verificar uma falha de passagem com acesso de gravação é tentar gravar um novo arquivo na raiz da web do servidor da web e, em seguida, tentar recuperá-lo com um navegador.  No entanto, este método não pode funcionar se você não souber a localização do diretório raiz da web ou se o contexto do usuário no qual o acesso ao arquivo ocorre não tiver permissão para escrever nele.</p>
+
+<p class = "p1">Praticamente todos os sistemas de arquivos toleram sequências de passagem redundantes que parecem tentar se mover acima da raiz do sistema de arquivos.</p>
+
+<p class = "p1">Conseqüentemente, geralmente é aconselhável enviar um grande número de sequências de travessia ao sondar uma falha, como nos exemplos dados aqui.  É possível que o diretório inicial ao qual seus dados são anexados estão nas profundezas do sistema de arquivos, portanto, usar um número excessivo de sequências ajuda a evitar falsos negativos.</p>
+
+<p class = "p1">Além disso, a plataforma Windows tolera barras e barras invertidas como separadores de diretório, enquanto as plataformas baseadas em UNIX toleram apenas a barra.</p>
+
+<p class = "p1">Além disso, alguns aplicativos da web filtram uma versão, mas não a outra.  Mesmo se você tiver certeza de que o servidor da Web está executando um sistema operacional baseado em UNIX, o aplicativo ainda pode estar chamando um componente de back-end baseado em Windows.</p>
+
+<p class = "p1">Por causa disso, é sempre aconselhável tentar as duas versões ao testar falhas de passagem.</p>
+</section>
+</body>
+</html>
