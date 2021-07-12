@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <title>Resumo 11</title>
+    <meta charset="UTF-8">
+    <meta name="keywords" content="desenvolvedor hat, hacking, linux">
+    <meta name="description" content="introducao a várias vulnerabilidades web, resumo 25">
+    <meta name="robots" content="index">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link type="text/css" rel="stylesheet" href="style.css">
+    <script src='https://kit.fontawesome.com/a076d05399.js'></script>
+    <script data-ad-client="ca-pub-6493599991997784" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css">
+  </head>
+  <body>
+    <menu>
+      <nav class="n1">
+        <a href="/index.html" class="menu">HOME</a>
+      </nav>
+    </menu>
+
+<section>
+
+<h1>Injetando XML Entidades Externas</h1>
+
+<p class = "p1">Nos aplicativos da web de hoje, o XML é frequentemente usado para enviar dados do cliente para o servidor.  O aplicativo do lado do servidor atua sobre esses dados e pode retornar uma resposta contendo XML ou dados em qualquer outro formato.</p>
+
+<p class = "p1">Esse comportamento é mais comumente encontrado em aplicativos baseados em Ajax, onde solicitações assíncronas são usadas para comunicação em segundo plano.  Ele também pode aparecer no contexto de componentes de extensão do navegador e outras tecnologias do lado do cliente.</p>
+
+<p class = "p1">Por exemplo, considere uma função de pesquisa que, para fornecer uma experiência perfeita ao usuário, é implementada usando Ajax.  Quando um usuário insere um termo de pesquisa, um script do lado do cliente emite a seguinte solicitação ao servidor.</p>
+
+<p class = "p1">A resposta do servidor é a seguinte (embora possam existir vulnerabilidades, independentemente do formato usado nas respostas).</p>
+
+<p class = "p1">O script do lado do cliente processa essa resposta e atualiza parte da interface do usuário com os resultados da pesquisa.</p>
+
+<p class = "p1">Ao encontrar esse tipo de funcionalidade, você deve sempre verificar a injeção de entidade externa XML (XXE).</p>
+
+<p class = "p1">Essa vulnerabilidade surge porque as bibliotecas de análise XML padrão oferecem suporte ao uso de referências de entidade.</p>
+
+<p class = "p1">Estes são simplesmente um método de referência de dados dentro ou fora do documento XML.  As referências de entidades devem ser familiares em outros contextos.  Por exemplo, as entidades correspondentes aos caracteres <e> são as seguintes.</p>
+
+<p class = "p1">O formato XML permite que entidades personalizadas sejam definidas no próprio documento XML.  Isso é feito dentro do elemento DOCTYPE opcional no início do documento.</p>
+
+<p class = "p1">Se um documento contém esta definição, o analisador substitui quaisquer ocorrências do & testref;  referência de entidade dentro do documento com o valor definido, testrefvalue.</p>
+
+<p class = "p1">Além disso, a especificação XML permite que entidades sejam definidas usando referências externas, cujo valor é buscado dinamicamente pelo analisador XML.</p>
+
+<p class = "p1">Essas definições de entidade externa usam o formato de URL e podem referir-se a URLs da web externos ou recursos no sistema de arquivos local.  O analisador XML busca o conteúdo da URL ou arquivo especificado e usa isso como o valor da entidade definida.  Se o aplicativo retornar em sua resposta quaisquer partes dos dados XML que usar uma entidade definida externamente, o conteúdo do arquivo ou URL especificado é retornado na resposta.</p>
+
+<p class = "p1">Entidades externas podem ser especificadas na solicitação baseada em XML do invasor adicionando um elemento DOCTYPE adequado ao XML (ou modificando o elemento se ele já existir).</p>
+
+<p class = "p1">Uma referência de entidade externa é especificada usando a palavra-chave SYSTEM, e sua definição é uma URL que pode usar o protocolo file:.</p>
+
+<p class = "p1">No exemplo anterior, o invasor pode enviar a seguinte solicitação, que define uma entidade externa XML que faz referência a um arquivo no sistema de arquivos do servidor.</p>
+
+<p class = "p1">Isso faz com que o analisador XML busque o conteúdo do arquivo especificado e use-o no lugar da referência de entidade definida, que o invasor usou no elemento SearchTerm.</p>
+
+<p class = "p1">Como o valor desse elemento é ecoado na resposta do aplicativo, isso faz com que o servidor responda com o conteúdo do arquivo, da seguinte maneira.</p>
+
+<p class = "p1">Além de usar o protocolo file: para especificar recursos no sistema de arquivos local, o invasor pode usar protocolos como http: para fazer com que o servidor busque recursos na rede.  Esses URLs podem especificar hosts, endereços IP e portas arbitrários.</p>
+
+<p class = "p1">Eles podem permitir que o invasor interaja com serviços de rede em sistemas back-end que não podem ser acessados ​​diretamente pela Internet.</p>
+
+<p class = "p1">Por exemplo, o seguinte ataque tenta se conectar a um servidor de e-mail em execução na porta 25 no endereço IP privado 192.168.1.1:</p>
+
+<p class = "p1">Esta técnica pode permitir a execução de vários ataques.</p>
+
+<p class = "p1">O invasor pode usar o aplicativo como proxy, recuperando conteúdo confidencial de qualquer servidor da Web que o aplicativo possa acessar, incluindo aqueles executados internamente na organização em um espaço de endereço privado não roteável.</p>
+
+<p class = "p1">O invasor pode explorar vulnerabilidades em aplicativos da web de back-end, desde que possam ser explorados por meio do URL.</p>
+
+<p class = "p1">O invasor pode testar portas abertas em sistemas back-end percorrendo um grande número de endereços IP e números de porta.</p>
+
+<p class = "p1">Em alguns casos, as diferenças de tempo podem ser usadas para inferir o estado de uma porta solicitada.  Em outros casos, os banners de serviço de alguns serviços podem realmente ser retornados nas respostas do aplicativo.</p>
+
+<p class = "p1">Finalmente, se o aplicativo recupera a entidade externa, mas não retorna isso nas respostas, ainda pode ser possível causar uma negação de serviço lendo um fluxo de arquivo indefinidamente.</p>
+
+<h2>Injetando em serviços SOAP</h2>
+
+<p class = "p1">O protocolo SOAP (Simple Object Access Protocol) é uma tecnologia de comunicação baseada em mensagens que usa o formato XML para encapsular dados.</p>
+
+<p class = "p1">Ele pode ser usado para compartilhar informações e transmitir mensagens entre sistemas, mesmo que estes sejam executados em sistemas operacionais e arquiteturas diferentes.  Seu uso principal é na web Serviços.  No contexto de um aplicativo da web acessado por navegador, é mais provável que você encontre SOAP nas comunicações que ocorrem entre os componentes do aplicativo de backend.</p>
+
+<p class = "p1">SOAP é freqüentemente usado em aplicativos corporativos de grande escala, onde tarefas individuais são executadas por diferentes computadores para melhorar o desempenho.  Também é frequentemente encontrado onde um aplicativo da web foi implantado como um front-end para um aplicativo existente. Nessa situação, as comunicações entre diferentes componentes podem ser implementadas usando SOAP para garantir a modularidade e a interoperabilidade.</p>
+
+<p class = "p1">Como o XML é uma linguagem interpretada, o SOAP é potencialmente vulnerável à injeção de código de maneira semelhante aos outros exemplos já descritos.  XML os elementos são representados sintaticamente, usando os metacaracteres <,> e /.  Se dados fornecidos pelo usuário contendo esses caracteres são inseridos diretamente em um SOAP mensagem, um invasor pode ser capaz de interferir na estrutura da mensagem e portanto, interfere na lógica do aplicativo ou causa outros efeitos indesejáveis.</p>
+
+<p class = "p1">Considere um aplicativo bancário no qual um usuário inicia uma transferência de fundos usando uma solicitação HTTP como a seguinte.</p>
+
+<p class = "p1">No decorrer do processamento desta solicitação, a seguinte mensagem SOAP é enviada entre dois dos componentes de back-end do aplicativo.</p>
+
+<p class = "p1">Observe como os elementos XML na mensagem correspondem aos parâmetros na solicitação HTTP e também a adição do elemento ClearedFunds.  Neste ponto na lógica do aplicativo, ele determinou que fundos insuficientes estão disponíveis para realizar a transferência solicitada e definiu o valor deste elemento como False.</p>
+
+<p class = "p1">Como resultado, o componente que recebe a mensagem SOAP não age sobre ele.</p>
+
+<p class = "p1">Nessa situação, existem várias maneiras pelas quais você pode procurar injetar na mensagem SOAP e, portanto, interferir na lógica do aplicativo. Por exemplo, o envio da solicitação a seguir faz com que um elemento ClearedFunds adicional seja inserido na mensagem antes do elemento original (enquanto preservando a validade sintática do SQL).  Se o aplicativo processar o primeiro elemento ClearedFunds que encontrar, você poderá realizar uma transferência quando não houver fundos disponíveis.</p>
+
+<p class = "p1">Por outro lado, se o aplicativo processar o último elemento ClearedFunds que encontrar, você poderá injetar um ataque semelhante no parâmetro ToAccount.</p>
+
+<p class = "p1">Um tipo diferente de ataque seria usar comentários XML para remover parte da mensagem SOAP original e substituir os elementos removidos pelos seus.</p>
+
+<p class = "p1">Por exemplo, a solicitação a seguir injeta um elemento ClearedFunds por meio de Amount parâmetro, fornece a tag de abertura para o elemento ToAccount, abre um comentário e fecha o comentário no parâmetro ToAccount, preservando assim a validade sintática do XML.</p>
+
+<p class = "p1">Outro tipo de ataque seria tentar completar a mensagem SOAP inteira de dentro de um parâmetro injetado e comentar o restante da mensagem.  No entanto, como o comentário de abertura não será correspondido por um comentário de fechamento, este ataque produz XML estritamente inválido, que muitos os analisadores XML serão rejeitados.  É provável que esse ataque funcione apenas contra um analisador XML interno e personalizado, em vez de qualquer biblioteca de análise XML.</p>
+
+<p class = "p1">Este exemplo contém uma mensagem de erro útil que permite que você ajuste seu ataque.</p>
+
+<p class = "p1">Os exemplos a seguir contêm vulnerabilidade idêntica, mas o feedback do erro é muito mais esparso.  Vê como pode ser difícil explorar a injeção de SOAP sem mensagens de erro úteis?</p>
+</section>
+</body>
+</html>
