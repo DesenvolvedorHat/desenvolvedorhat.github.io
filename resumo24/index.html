@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <title>Resumo 11</title>
+    <meta charset="UTF-8">
+    <meta name="keywords" content="desenvolvedor hat, hacking, linux">
+    <meta name="description" content="introducao a várias vulnerabilidades web, resumo 24">
+    <meta name="robots" content="index">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link type="text/css" rel="stylesheet" href="style.css">
+    <script src='https://kit.fontawesome.com/a076d05399.js'></script>
+    <script data-ad-client="ca-pub-6493599991997784" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css">
+  </head>
+  <body>
+    <menu>
+      <nav class="n1">
+        <a href="/index.html" class="menu">HOME</a>
+      </nav>
+    </menu>
+
+<section>
+
+<h1>Explorando vulnerabilidades transversais</h1>
+
+<p class = "p1">Tendo identificado uma vulnerabilidade de passagem de caminho que fornece acesso de leitura ou gravação a arquivos arbitrários no sistema de arquivos do servidor, que tipo de ataques você pode realizar explorando-os?  Na maioria dos casos, você descobrirá que tem o mesmo nível de acesso de leitura / gravação ao sistema de arquivos que o processo do servidor da web tem.</p>
+
+<p class = "p1">Você pode explorar falhas de passagem de caminho de acesso de leitura para recuperar arquivos interessantes do servidor que podem conter informações úteis diretamente ou que ajudam a refinar ataques contra outras vulnerabilidades.  Por exemplo.</p>
+
+<h2>Arquivos de senha para o sistema operacional e aplicativo</h2>
+
+<p class = "p1">Arquivos de configuração de servidor e aplicativo para descobrir outras vulnerabilidades ou ajustar um ataque diferente</p>
+
+<p class = "p1">Incluir arquivos que podem conter credenciais de banco de dados</p>
+
+<p class = "p1">Fontes de dados usadas pelo aplicativo, como arquivos de banco de dados MySQL ou arquivos XML</p>
+
+<p class = "p1">O código-fonte para páginas executáveis ​​do servidor para realizar uma revisão de código em busca de bugs (por exemplo, GetImage.aspx? File = GetImage.aspx)</p>
+
+<p class = "p1">Arquivos de log do aplicativo que podem conter nomes de usuário e tokens de sessão e semelhantes</p>
+
+<p class = "p1">Se você encontrar uma vulnerabilidade de travessia de caminho que conceda acesso de gravação, seu objetivo principal deve ser explorá-la para obter a execução arbitrária de comandos no servidor.  Aqui estão algumas maneiras de explorar esta vulnerabilidade:</p>
+
+<p class = "p1">Crie scripts nas pastas de inicialização dos usuários.</p>
+
+<p class = "p1">Modifique arquivos como in.ftpd para executar comandos arbitrários na próxima conexão do usuário.</p>
+
+<p class = "p1">Grave scripts em um diretório da web com permissões de execução e chame-os de seu navegador.</p>
+
+<p class = "p1">Prevenção de vulnerabilidades de passagem de caminho</p>
+
+<p class = "p1">De longe, o meio mais eficaz de eliminar vulnerabilidades de travessia de caminho é evitar a passagem de dados enviados pelo usuário para qualquer API do sistema de arquivos.  Em muitos casos, incluindo o exemplo original GetFile.ashx? Filename = keira.jpg, é desnecessário para um aplicativo fazer isso.</p>
+
+<p class = "p1">A maioria dos arquivos que não estão sujeitos a nenhum controle de acesso podem simplesmente ser colocados na raiz da web e acessados ​​por meio de um URL direto.  Se isso não for possível, o aplicativo pode manter uma lista codificada de arquivos de imagem que podem ser veiculados pela página.  Ele pode usar um identificador diferente para especificar qual arquivo é necessário, como um número de índice.  Qualquer solicitação contendo um identificador inválido pode ser rejeitada e não há superfície de ataque para os usuários manipularem o caminho dos arquivos entregues pela página.</p>
+
+<p class = "p1">Em alguns casos, como acontece com a funcionalidade de fluxo de trabalho que permite o upload e download de arquivos, pode ser desejável permitir que os usuários especifiquem os arquivos por nome.</p>
+
+<p class = "p1">Os desenvolvedores podem decidir que a maneira mais fácil de implementar isso é passando o nome do arquivo fornecido pelo usuário às APIs do sistema de arquivos.  Nessa situação, o aplicativo deve adotar uma abordagem de defesa em profundidade para colocar vários obstáculos no caminho de um ataque de travessia de caminho.</p>
+
+<p class = "p1">Aqui estão alguns exemplos de defesas que podem ser usadas;  idealmente, tantos deles quanto possível devem ser implementados juntos.</p>
+
+<p class = "p1">Depois de realizar toda a decodificação e canonização relevantes do nome do arquivo enviado pelo usuário, o aplicativo deve verificar se ele contém uma das sequências de percurso do caminho (usando barras invertidas ou barras) ou quaisquer bytes nulos.  Nesse caso, o aplicativo deve parar de processar a solicitação.  Ele não deve tentar executar nenhuma limpeza no nome do arquivo malicioso.</p>
+
+<p class = "p1">O aplicativo deve usar uma lista codificada de tipos de arquivos permitidos e rejeitar qualquer solicitação de um tipo diferente (após a decodificação e canonização anteriores terem sido realizadas).</p>
+
+<p class = "p1">Depois de realizar toda a filtragem no nome do arquivo fornecido pelo usuário, o aplicativo deve usar APIs de sistema de arquivos adequadas para verificar se nada está errado e se o arquivo a ser acessado com esse nome de arquivo está localizado no diretório inicial especificado pelo aplicativo.</p>
+
+<p class = "p1">Em Java, isso pode ser obtido instanciando um objeto java.io.File usando o nome de arquivo fornecido pelo usuário e, em seguida, chamando o método getCanonicalPath neste objeto.  Se a string retornada por este método não começar com o nome do diretório inicial, o usuário de alguma forma contornou os filtros de entrada do aplicativo e a solicitação deve ser rejeitada.</p>
+
+<p class = "p1">No ASP.NET, isso pode ser obtido passando o nome do arquivo fornecido pelo usuário para o método System.Io.Path.GetFullPath e verificando a string retornada da mesma maneira descrita para Java.</p>
+
+<p class = "p1">O aplicativo pode mitigar o impacto da maioria das vulnerabilidades de travessia de caminho exploráveis ​​usando um ambiente chroot para acessar o diretório que contém os arquivos a serem acessados.</p>
+
+<p class = "p1">Nessa situação, o diretório chrootado é tratado como se fosse a raiz do sistema de arquivos e quaisquer sequências de travessia redundantes que tentem subir acima dele são ignoradas.</p>
+
+<p class = "p1">Sistemas de arquivos chroot são suportados nativamente na maioria das plataformas baseadas em UNIX.  Um efeito semelhante pode ser alcançado em plataformas Windows (em relação a vulnerabilidades de passagem, pelo menos) montando o diretório inicial relevante como uma nova unidade lógica e usando a letra de unidade associada para acessar seu conteúdo.</p>
+
+<p class = "p1">O aplicativo deve integrar suas defesas contra ataques de travessia de caminho com seus mecanismos de registro e alerta.  Sempre que uma solicitação que contém sequências de passagem de caminho é recebida, isso indica provável intenção maliciosa por parte do usuário.  O aplicativo deve registrar a solicitação como uma tentativa de violação de segurança, encerrar a sessão do usuário e, se aplicável, suspender a conta do usuário e gerar um alerta para um administrador.</p>
+
+<h2>Vulnerabilidades de inclusão de arquivo</h2>
+
+<p class = "p1">Muitas linguagens de script suportam o uso de arquivos de inclusão.</p>
+
+<p class = "p1">Esse recurso permite que os desenvolvedores coloquem componentes de código reutilizáveis ​​em arquivos separados e os incluam em arquivos de código específicos de função como e quando forem necessários.  O código dentro do arquivo incluído é interpretado como se tivesse sido inserido no local da diretiva de inclusão.</p>
+
+<h2>Inclusão de arquivo remoto</h2>
+
+<p class = "p1">A linguagem PHP é particularmente suscetível a vulnerabilidades de inclusão de arquivo porque suas funções de inclusão podem aceitar um caminho de arquivo remoto.  Essa tem sido a base de inúmeras vulnerabilidades em aplicativos PHP.</p>
+
+<p class = "p1">Considere um aplicativo que entrega conteúdo diferente para pessoas em locais diferentes.  Quando os usuários escolhem sua localização, isso é comunicado ao servidor por meio de um parâmetro de solicitação, da seguinte maneira.</p>
+
+<p class = "p1">O aplicativo processa o parâmetro País da seguinte forma.</p>
+
+<p class = "p1">Isso faz com que o ambiente de execução carregue o arquivo US.php que está localizado no sistema de arquivos do servidor web.  O conteúdo deste arquivo é efetivamente copiado para o arquivo main.php e executado.</p>
+
+<p class = "p1">Um invasor pode explorar esse comportamento de diferentes maneiras, a mais séria delas é especificar uma URL externa como o local do arquivo de inclusão.</p>
+
+<p class = "p1">A função de inclusão do PHP aceita isso como entrada e o ambiente de execução recupera o arquivo especificado e executa seu conteúdo.  Portanto, um invasor pode construir um script malicioso contendo conteúdo arbitrariamente complexo, hospedá-lo em um servidor da web que ele controla e invocá-lo para execução por meio do aplicativo vulnerável à função.</p>
+
+<h2>Inclusão de arquivo local</h2>
+
+<p class = "p1">Em alguns casos, os arquivos de inclusão são carregados com base em dados controláveis ​​pelo usuário, mas não é possível especificar uma URL para um arquivo em um servidor externo. Por exemplo, se dados controláveis ​​pelo usuário forem passados ​​para a função ASP Server.Execute, um invasor poderá fazer com que um script ASP arbitrário seja executado, desde que esse script pertença ao mesmo aplicativo que está chamando a função.</p>
+
+<p class = "p1">Nessa situação, você ainda pode explorar o comportamento do aplicativo para realizar ações não autorizadas.</p>
+
+<p class = "p1">Pode haver arquivos executáveis ​​do servidor no servidor que você não pode acessar pela rota normal.  Por exemplo, quaisquer solicitações para o caminho / admin podem ser bloqueadas por meio de controles de acesso de todo o aplicativo.  Se você pode fazer com que uma funcionalidade confidencial seja incluída em uma página que você está autorizado para acessar, você pode obter acesso a essa funcionalidade.</p>
+
+<p class = "p1">Pode haver recursos estáticos no servidor que são protegidos de forma semelhante contra acesso direto.  Se você puder fazer com que eles sejam incluídos dinamicamente em outras páginas do aplicativo, o ambiente de execução geralmente simplesmente copia o conteúdo do recurso estático em sua resposta.</p>
+
+<h2>Encontrando vulnerabilidades de inclusão de arquivo</h2>
+
+<p class = "p1">Vulnerabilidades de inclusão de arquivo podem surgir em relação a qualquer item de dados fornecidos pelo usuário.</p>
+
+<p class = "p1">Eles são particularmente comuns em parâmetros de solicitação que especificam um idioma ou local. Eles também costumam surgir quando o nome de um arquivo do lado do servidor é passado explicitamente como um parâmetro.</p>
+
+<p class = "p1">Para testar as falhas de inclusão de arquivo remoto, siga estas etapas.</p>
+
+<p class = "p1">1. Envie em cada parâmetro de destino uma URL para um recurso em um servidor da web que você controla e determine se alguma solicitação é recebida do servidor que hospeda o aplicativo de destino.</p>
+
+<p class = "p1">2. Se o primeiro teste falhar, tente enviar um URL contendo um endereço IP inexistente e determine se ocorre um tempo limite enquanto o servidor tenta se conectar.</p>
+
+<p class = "p1">3. Se o aplicativo for considerado vulnerável à inclusão de arquivo remoto, construa um script malicioso usando as APIs disponíveis no idioma relevante, conforme descrito para ataques de execução dinâmica.</p>
+
+<p class = "p1">As vulnerabilidades de inclusão de arquivo local podem existir em uma gama muito mais ampla de ambientes de script do que aqueles que oferecem suporte à inclusão de arquivo remoto.  Para testar vulnerabilidades de inclusão de arquivo local, siga estas etapas.</p>
+
+<p class = "p1">1. Envie o nome de um recurso executável conhecido no servidor e determine se ocorre alguma alteração no comportamento do aplicativo.</p>
+
+<p class = "p1">2. Envie o nome de um recurso estático conhecido no servidor e determine se seu conteúdo é copiado na resposta do aplicativo.</p>
+
+<p class = "p1">3. Se o aplicativo for vulnerável à inclusão de arquivo local, tente acessar qualquer funcionalidade ou recursos confidenciais que você não possa acessar diretamente através do servidor da web.</p>
+
+<p class = "p1">4. Teste para ver se você pode acessar arquivos em outros diretórios usando as técnicas de travessia descritas anteriormente.</p>
+
+<h2>Injetando em intérpretes XML</h2>
+
+<p class = "p1">XML é amplamente usado nos aplicativos da web de hoje, tanto em solicitações e respostas entre o navegador e o servidor de aplicativos front-end e em mensagens entre componentes de aplicativos back-end, como serviços SOAP.  Ambos os locais são suscetíveis a ataques nos quais a entrada criada é usada para interferir na operação do aplicativo e normalmente executa alguma ação não autorizada.</p>
+</section>
+</body>
+</html>
