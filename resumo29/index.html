@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <title>Resumo 11</title>
+    <meta charset="UTF-8">
+    <meta name="keywords" content="desenvolvedor hat, hacking, linux">
+    <meta name="description" content="introducao a várias vulnerabilidades web, resumo 29">
+    <meta name="robots" content="index">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link type="text/css" rel="stylesheet" href="style.css">
+    <script src='https://kit.fontawesome.com/a076d05399.js'></script>
+    <script data-ad-client="ca-pub-6493599991997784" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css">
+  </head>
+  <body>
+    <menu>
+      <nav class="n1">
+        <a href="/index.html" class="menu">HOME</a>
+      </nav>
+    </menu>
+
+<section>
+
+<h1>Lógica de aplicativo de ataque</h1>
+
+<p class = "p1">Todos os aplicativos da web empregam lógica para fornecer sua funcionalidade.  Escrever código em uma linguagem de programação envolve, em sua raiz, nada mais do que quebrar um processo complexo em etapas lógicas simples e discretas.  Traduzir uma funcionalidade significativa para os seres humanos em uma sequência de pequenas operações que podem ser executadas por um computador envolve muita habilidade e discrição.  Fazer isso de maneira elegante e segura é ainda mais difícil.  Quando grandes designers e programadores diferentes trabalham em paralelo no mesmo aplicativo, há muitas oportunidades para a ocorrência de erros.</p>
+
+<p class = "p1">Em todos os aplicativos da web, exceto os mais simples, uma grande quantidade de lógica é executada em cada estágio.  Essa lógica apresenta uma superfície de ataque intrincada que está sempre presente, mas muitas vezes esquecida.  Muitas revisões de código e testes de penetração se concentram exclusivamente em vulnerabilidades comuns de "título", como injeção de SQL e script entre sites, porque eles têm uma assinatura facilmente reconhecível e um vetor de exploração bem pesquisado.  Em contraste, as falhas na lógica de um aplicativo são mais difíceis de caracterizar: cada instância pode parecer ser única ocorrência, e geralmente não são identificados por nenhuma vulnerabilidade automatizada scanners.</p>
+
+<p class = "p1">Como resultado, eles geralmente não são tão apreciados ou compreendidos e, portanto, são de grande interesse para um invasor.</p>
+
+<p class = "p1">Este capítulo descreve os tipos de falhas lógicas que muitas vezes existem em aplicativos da web e as etapas práticas que você pode realizar para sondar e atacar a lógica de um aplicativo.</p>
+
+<p class = "p1">Apresentaremos uma série de exemplos do mundo real, cada um dos quais manifesta um tipo diferente de defeito lógico.  Juntos, eles ilustram a variedade de suposições que designers e desenvolvedores fazem que podem levar diretamente a uma lógica defeituosa e expor um aplicativo a vulnerabilidades de segurança.</p>
+
+<h2>A natureza das falhas lógicas</h2>
+
+<p class = "p1">As falhas lógicas em aplicativos da web são extremamente variadas.  Eles variam de simples bugs manifestados em um punhado de linhas de código a vulnerabilidades complexas que surgem da interoperação de vários componentes centrais do aplicativo.  Em alguns casos, eles podem ser óbvios e fáceis de detectar;  em outros casos, eles podem ser excepcionalmente sutis e passíveis de iludir até mesmo a mais rigorosa revisão de código ou teste de penetração.</p>
+
+<p class = "p1">Ao contrário de outras falhas de codificação, como injeção de SQL ou script entre sites, nenhuma “assinatura” comum está associada a falhas lógicas.  A característica definidora, é claro, é que a lógica implementada no aplicativo é defeituosa de alguma forma.  Em muitos casos, o defeito pode ser representado em termos de uma suposição específica feita pelo designer ou desenvolvedor, explícita ou implicitamente, que acaba sendo falha.  Em termos gerais, um programador pode ter raciocinado algo como “Se A acontecer, então B deve ser o caso, então farei C.”  O programador não fez a pergunta totalmente diferente "Mas e se X ocorrer?"  e, portanto, falhou em considerar um cenário que viola a suposição.  Dependendo das circunstâncias, essa suposição falha pode abrir uma vulnerabilidade de segurança significativa.</p>
+
+<p class = "p1">Como a conscientização sobre vulnerabilidades comuns de aplicativos da web aumentou nos últimos anos, a incidência e a gravidade de algumas categorias de vulnerabilidades diminuíram visivelmente.  No entanto, devido à natureza das falhas lógicas, é improvável que elas sejam eliminadas por meio de padrões para desenvolvimento seguro, uso de ferramentas de auditoria de código ou teste de penetração normal.  A natureza diversa das falhas lógicas e o fato de que detectá-las e preveni-las geralmente requer uma boa medida de pensamento lateral sugere que elas prevaleceram por um bom tempo.</p>
+
+<p class = "p1">Qualquer invasor sério, portanto, precisa prestar muita atenção à lógica empregada no aplicativo que está sendo direcionado para tentar descobrir as suposições que os designers e desenvolvedores provavelmente fizeram. Em seguida, ele deve pensar com imaginação sobre como essas suposições podem ser violadas.</p>
+
+<h2>Falhas de lógica do mundo real</h2>
+
+<p class = "p1">A melhor maneira de aprender sobre as falhas lógicas não é teorizando, mas familiarizando-se com alguns exemplos reais.  Embora as instâncias individuais de falhas lógicas sejam muito diferentes, elas compartilham muitos temas comuns e demonstram os tipos de erros que os desenvolvedores humanos sempre estarão propensos a cometer.</p>
+
+<p class = "p1">Portanto, os insights obtidos a partir do estudo de uma amostra de falhas lógicas devem ajudá-lo a descobrir novas falhas em situações totalmente diferentes.</p>
+
+<h2>Exemplo 1: Perguntando ao Oráculo</h2>
+
+<p class = "p1">Os autores encontraram ocorrências da falha do "oráculo de criptografia" em muitos diferentes tipos de aplicativos.  Eles o usaram em vários ataques, desde descriptografar credenciais de domínio em software de impressão até quebrar a computação em nuvem.  A seguir está um exemplo clássico da falha encontrada em um site de vendas de software.</p>
+
+<h2>A Funcionalidade</h2>
+
+<p class = "p1">O aplicativo implementou uma função “lembre-se de mim” por meio da qual um usuário pode evitar o login no aplicativo em cada visita, permitindo que o aplicativo defina um cookie permanente no navegador.  Este cookie foi protegido contra adulteração ou divulgação por um algoritmo de criptografia que foi executado em uma string composta do nome, ID do usuário e dados voláteis para garantir que o valor resultante fosse único e não pudesse ser previsto.</p>
+
+<p class = "p1">Para garantir que não pudesse ser reproduzido por um invasor que obtivesse acesso a ele, dados específicos da máquina também foram coletados, incluindo o endereço IP.</p>
+
+<p class = "p1">Esse cookie foi justificadamente considerado uma solução robusta para proteger uma parte potencialmente vulnerável da funcionalidade de negócios necessária.</p>
+
+<p class = "p1">Além da função "lembrar de mim", o aplicativo tinha a funcionalidade de armazenar o nome de tela do usuário em um cookie chamado ScreenName.  Dessa forma, o usuário poderia receber uma saudação personalizada no canto do site sempre que visitar o site novamente.</p>
+
+<p class = "p1">Decidindo que esse nome também era uma informação de segurança, considerou-se que também deveria ser criptografado.</p>
+
+<h2>A suposição</h2>
+
+<p class = "p1">Os desenvolvedores decidiram que, porque o cookie ScreenName era consideravelmente menos valor para um invasor do que o cookie RememberMe, eles também podem usar o mesmo algoritmo de criptografia para protegê-lo.</p>
+
+<p class = "p1">O que eles não consideram é que um usuário pode especificar seu nome de tela e visualizá-lo na tela.  Isso inadvertidamente deu aos usuários acesso à função de criptografia (e chave de criptografia) usada para proteger o token de autenticação persistente RememberMe.</p>
+
+<h2>O ataque</h2>
+
+<p class = "p1">Em um ataque simples, um usuário forneceu o valor criptografado de seu RememberMe cookie no lugar do cookie criptografado ScreenName.  Ao exibir o nome da tela de volta para o usuário, o aplicativo descriptografa o valor, verifica se a descriptografia funcionou e, em seguida, imprime o resultado na tela.</p>
+
+<p class = "p1">Embora isso fosse interessante, não era necessariamente um problema de alto risco.  Significava simplesmente que, dado um cookie RememberMe criptografado, um invasor poderia listar o conteúdo, incluindo um nome de usuário, ID de usuário e endereço IP.</p>
+
+<p class = "p1">Como nenhuma senha foi armazenada no cookie, não havia uma maneira imediata de agir com base nas informações obtidas.</p>
+
+<p class = "p1">O verdadeiro problema surgiu do fato de que os usuários podiam especificar seus nomes de tela.</p>
+
+<p class = "p1">Como resultado, um usuário pode escolher este nome de tela, por exemplo.</p>
+
+<p class = "p1">Quando o usuário fez logout e login novamente, o aplicativo criptografou esse valor e o armazenou no navegador do usuário como o cookie ScreenName criptografado.</p>
+
+<p class = "p1">Se um invasor enviou este token criptografado como o valor do cookie RememberMe, o aplicativo o descriptografou, leu a ID do usuário e registrou o invasor como administrador!</p>
+
+<p class = "p1">Mesmo que a criptografia fosse Triple DES, usando uma chave forte e protegida contra ataques de repetição, o aplicativo poderia ser aproveitado como um “oráculo de criptografia” para descriptografar e criptografar valores arbitrários.</p>
+
+<p class = "p1">Manifestações desse tipo de vulnerabilidade podem ser encontradas em diversos locais.</p>
+
+<p class = "p1">Os exemplos incluem tokens de recuperação de conta, acesso baseado em token a recursos autenticados e qualquer outro valor enviado ao cliente que precisa ser à prova de violação ou ilegível para o usuário.</p>
+
+<p class = "p1">1. Procure locais onde a criptografia (não hash) é usada no aplicativo.</p>
+
+<p class = "p1">Determine todos os locais onde o aplicativo criptografa ou descriptografa valores fornecidos por um usuário e tente substituir quaisquer outros valores criptografados encontrados no aplicativo.  Tente causar um erro no aplicativo que revele o valor descriptografado ou onde o valor descriptografado é propositalmente exibido na tela.</p>
+
+<p class = "p1">2. Procure por uma vulnerabilidade de "revelação do oráculo" determinando onde um valor criptografado pode ser fornecido que resulta na exibição do valor descriptografado correspondente na resposta do aplicativo.</p>
+
+<p class = "p1">Determine se isso leva à divulgação de informações confidenciais, como senha ou cartão de crédito.</p>
+
+<p class = "p1">3. Procure uma vulnerabilidade de “criptografia de oráculo” determinando onde fornecer um valor de texto não criptografado faz com que o aplicativo retorne um valor criptografado correspondente.  Determine onde isso pode ser abusado, especificando valores arbitrários ou cargas maliciosas que o aplicativo irá processar.</p>
+</section>
+</body>
+</html>
