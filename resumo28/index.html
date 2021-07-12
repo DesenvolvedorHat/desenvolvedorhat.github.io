@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <title>Resumo 11</title>
+    <meta charset="UTF-8">
+    <meta name="keywords" content="desenvolvedor hat, hacking, linux">
+    <meta name="description" content="introducao a várias vulnerabilidades web, resumo 28">
+    <meta name="robots" content="index">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link type="text/css" rel="stylesheet" href="style.css">
+    <script src='https://kit.fontawesome.com/a076d05399.js'></script>
+    <script data-ad-client="ca-pub-6493599991997784" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css">
+  </head>
+  <body>
+    <menu>
+      <nav class="n1">
+        <a href="/index.html" class="menu">HOME</a>
+      </nav>
+    </menu>
+
+<section>
+
+<h1>Injetando em serviços de correio</h1>
+
+<p class = "p1">Muitos aplicativos contêm um recurso para os usuários enviarem mensagens por meio do aplicativo, como relatar um problema para a equipe de suporte ou fornecer feedback sobre o site.</p>
+
+<p class = "p1">Este recurso é geralmente implementado por meio de uma interface com um servidor de correio (ou SMTP).</p>
+
+<p class = "p1">Normalmente, a entrada fornecida pelo usuário é inserida na conversa SMTP que o servidor de aplicativos conduz com o servidor de correio. Se um invasor puder enviar uma entrada elaborada adequada que não seja filtrada ou higienizada, ele poderá injetar comandos STMP arbitrários nesta conversa.</p>
+
+<p class = "p1">Na maioria dos casos, o aplicativo permite que você especifique o conteúdo da mensagem e seu próprio endereço de e-mail (que é inserido no campo De do e-mail resultante).  Você também pode especificar o assunto da mensagem e outros detalhes.  Qualquer campo relevante que você controla pode estar vulnerável à injeção de SMTP.</p>
+
+<p class = "p1">As vulnerabilidades de injeção de SMTP são frequentemente exploradas por spammers que fazem a varredura na Internet em busca de formulários de e-mail vulneráveis ​​e os usam para gerar grandes volumes de e-mail incômodo.</p>
+
+<h2>Manipulação de Cabeçalho de E-mail</h2>
+
+<p class = "p1">Considere o formulário mostrado na Figura 10-6, que permite aos usuários enviar feedback sobre o aplicativo.</p>
+
+<p class = "p1">Aqui, os usuários podem especificar um endereço De e o conteúdo da mensagem.  O aplicativo passa essa entrada para o comando PHP mail (), que constrói o e-mail e executa a conversa SMTP necessária com seu servidor de e-mail configurado.  O correio gerado é o seguinte.</p>
+
+<p class = "p1">A página de confirmação do pedido não carrega</p>
+
+<p class = "p1">O comando PHP mail () usa um parâmetro additional_headers para definir o endereço De da mensagem.  Este parâmetro também é usado para especificar outros cabeçalhos, incluindo Cc e Bcc, separando cada cabeçalho necessário com um caractere de nova linha.</p>
+
+<p class = "p1">Conseqüentemente, um invasor pode fazer com que a mensagem seja enviada a destinatários arbitrários, injetando um desses cabeçalhos no campo De, conforme ilustrado na Figura 10-7.</p>
+
+<p class = "p1">A página de confirmação do pedido não carrega</p>
+
+<h2>Injeção de Comando SMTP</h2>
+
+<p class = "p1">Em outros casos, o aplicativo pode realizar a própria conversa SMTP ou pode passar a entrada fornecida pelo usuário a um componente diferente para fazer isso.  Nessa situação, pode ser possível injetar comandos SMTP arbitrários diretamente nesta conversa, potencialmente assumindo o controle total das mensagens que estão sendo geradas pelo aplicativo.</p>
+
+<p class = "p1">Por exemplo, considere um aplicativo que usa solicitações do seguinte formulário para enviar feedback sobre o site.</p>
+
+ <p class = "p1">Isso faz com que o aplicativo da web execute uma conversa SMTP com os seguintes comandos.</p>
+
+<p class = "p1">Depois que o cliente SMTP emite o comando DATA, ele envia o conteúdo da mensagem de e-mail, incluindo os cabeçalhos e o corpo da mensagem.  Em seguida, ele envia um único caractere de ponto em sua própria linha.  Isso informa ao servidor que a mensagem está completa, e o cliente pode então emitir outros comandos SMTP para enviar mais mensagens.</p>
+
+<p class = "p1">Nessa situação, você pode injetar comandos SMTP arbitrários em qualquer um dos campos de e-mail que você controla.  Por exemplo, você pode tentar injetar no campo Assunto da seguinte maneira.</p>
+
+<p class = "p1">Se o aplicativo estiver vulnerável, isso resultará na seguinte conversa SMTP, que gera duas mensagens de email diferentes.</p>
+
+<h2>Encontrando Falhas de Injeção de SMTP</h2>
+
+<p class = "p1">Para sondar a funcionalidade de e-mail de um aplicativo de forma eficaz, você precisa direcionar todos os parâmetros que são enviados a uma função relacionada a e-mail, mesmo aqueles que podem inicialmente parecem não estar relacionados ao conteúdo da mensagem gerada.  Você também deve testar cada tipo de ataque e executar cada caso de teste usando caracteres de nova linha no estilo Windows e UNIX.</p>
+
+<p class = "p1">1. Você deve enviar cada uma das seguintes strings de teste como cada parâmetro, inserindo seu próprio endereço de e-mail na posição relevante.</p>
+
+<p class = "p1">2. Observe todas as mensagens de erro que o aplicativo retorna.</p>
+
+<p class = "p1">Se eles parecem estar relacionados a algum problema na função de e-mail, investigue se você precisa ajustar sua entrada para explorar uma vulnerabilidade.</p>
+
+<p class = "p1">3. As respostas do aplicativo podem não indicar de forma alguma se uma vulnerabilidade existe ou foi explorada com sucesso.  Você deve monitorar o endereço de e-mail especificado para ver se algum e-mail foi recebido.</p>
+
+<p class = "p1">4. Reveja atentamente o formulário HTML que gera a solicitação relevante.  Isso pode conter dicas sobre o software do lado do servidor que está sendo usado.  Ele também pode conter um campo oculto ou desativado que especifica o endereço Para do e-mail, que você pode modificar diretamente.</p>
+
+<p class = "p1">As funções de envio de e-mails para a equipe de suporte do aplicativo são frequentemente consideradas periféricas e podem não estar sujeitas aos mesmos padrões de segurança ou testes da funcionalidade principal do aplicativo.  Além disso, como envolvem uma interface com um componente de back-end incomum, geralmente são implementados por meio de uma chamada direta para o comando do sistema operacional relevante.  Portanto, além de sondar a injeção de SMTP, você também deve revisar de perto todas as funcionalidades relacionadas ao e-mail para falhas de injeção de comando do sistema operacional.</p>
+
+<h2>Prevenção de injeção de SMTP</h2>
+
+<p class = "p1">Vulnerabilidades de injeção SMTP geralmente podem ser evitadas implementando uma validação rigorosa de quaisquer dados fornecidos pelo usuário que são passados ​​para uma função de e-mail ou usados ​​em uma conversa SMTP.  Cada item deve ser validado o mais estritamente possível, considerando a finalidade para a qual está sendo usado.</p>
+
+<p class = "p1">Os endereços de e-mail devem ser verificados em relação a uma expressão regular adequada (que deve, é claro, rejeitar quaisquer caracteres de nova linha).</p>
+
+<p class = "p1">O assunto da mensagem não deve conter nenhum caractere de nova linha e pode ser limitado a um comprimento adequado.</p>
+
+<p class = "p1">Se o conteúdo de uma mensagem estiver sendo usado diretamente em uma conversa SMTP, as linhas que contêm apenas um único ponto não devem ser permitidas.</p>
+
+<p class = "p1">Examinamos uma ampla gama de ataques direcionados a componentes de aplicativos de back-end e as etapas práticas que você pode realizar para identificar e explorar cada um.  Muitas vulnerabilidades do mundo real podem ser descobertas nos primeiros segundos de interação com um aplicativo.  Por exemplo, você pode inserir alguma sintaxe inesperada em uma caixa de pesquisa.</p>
+
+<p class = "p1">Em outros casos, essas vulnerabilidades podem ser altamente sutis, manifestando-se em diferenças quase imperceptíveis no comportamento do aplicativo ou acessíveis apenas por meio de um processo de vários estágios de envio e manipulação de entrada criada.</p>
+
+<p class = "p1">Para ter certeza de que descobriu as falhas de injeção de back-end que existem em uma aplicação, você precisa ser minucioso e paciente.  Praticamente todo tipo de vulnerabilidade pode se manifestar no processamento de praticamente qualquer item de dados fornecidos pelo usuário, incluindo nomes e valores de parâmetros de string de consulta, dados POST e cookies e outros cabeçalhos HTTP.</p>
+
+<p class = "p1">Em muitos casos, um defeito surge somente após extensa sondagem do parâmetro relevante, conforme você aprende exatamente que tipo de processamento está sendo executado em sua entrada e examine os obstáculos que se interpõem em seu caminho.</p>
+
+<p class = "p1">Diante da enorme superfície de ataque potencial apresentada por ataques potenciais contra componentes de aplicativos de back-end, você pode sentir que qualquer ataque sério a um aplicativo deve envolver um esforço titânico.</p>
+
+<p class = "p1">No entanto, parte do aprendizado da arte de atacar software é adquirir um sexto sentido para saber onde o tesouro está escondido e como seu alvo provavelmente se abrirá para que você possa roubá-lo.  A única maneira de obter esse sentido é através da prática.  Você deve ensaiar as técnicas descrevendo os aplicativos da vida real que você encontra e vê como eles se comportam.</p>
+</section>
+</body>
+</html>
