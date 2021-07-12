@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <title>Resumo 11</title>
+    <meta charset="UTF-8">
+    <meta name="keywords" content="desenvolvedor hat, hacking, linux">
+    <meta name="description" content="introducao a várias vulnerabilidades web, resumo 32">
+    <meta name="robots" content="index">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link type="text/css" rel="stylesheet" href="style.css">
+    <script src='https://kit.fontawesome.com/a076d05399.js'></script>
+    <script data-ad-client="ca-pub-6493599991997784" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css">
+  </head>
+  <body>
+    <menu>
+      <nav class="n1">
+        <a href="/index.html" class="menu">HOME</a>
+      </nav>
+    </menu>
+
+<section>
+
+<h1>Evitando Falhas de Lógica</h1>
+
+<p class = "p1">Assim como não existe uma assinatura única pela qual as falhas lógicas em aplicativos da web possam ser identificadas, também não existe uma solução mágica que o protegerá.  Por exemplo, não há equivalente ao conselho direto de usar uma alternativa segura para uma API perigosa.</p>
+
+<p class = "p1">No entanto, uma série de boas práticas pode ser aplicada para reduzir significativamente o risco de falhas lógicas aparecerem em seus aplicativos.</p>
+
+<p class = "p1">Certifique-se de que todos os aspectos do design do aplicativo sejam claramente documentados em detalhes suficientes para que um estranho entenda todas as suposições feitas pelo designer.</p>
+
+<p class = "p1">Todas essas suposições devem ser registradas explicitamente na documentação do projeto.</p>
+
+<p class = "p1">Exigir que todo o código-fonte seja claramente comentado para incluir as seguintes informações.</p>
+
+<p class = "p1">A finalidade e os usos pretendidos de cada componente do código.</p>
+
+<p class = "p1">As suposições feitas por cada componente sobre qualquer coisa que esteja fora de seu controle direto.</p>
+
+<p class = "p1">Referências a todos os códigos de cliente que usam o componente.</p>
+
+<p class = "p1">Uma documentação clara para esse efeito poderia ter evitado a falha lógica na funcionalidade de registro online.</p>
+
+<p class = "p1">Observe que "cliente" aqui não se refere ao usuário fim da relação cliente / servidor, mas para outro código para o qual o componente que está sendo considerado é uma dependência imediata.</p>
+
+<p class = "p1">Durante as revisões do design do aplicativo com foco na segurança, reflita sobre cada suposição feita dentro do design e tente imaginar as circunstâncias em que cada suposição pode ser violada.</p>
+
+<p class = "p1">Concentre-se em quaisquer condições presumidas que possam estar sob o controle dos usuários do aplicativo.</p>
+
+<p class = "p1">Durante as revisões de código com foco na segurança, pense lateralmente em duas áreas principais.</p>
+
+<p class = "p1">As maneiras pelas quais o aplicativo irá lidar com o comportamento inesperado do usuário e os efeitos colaterais potenciais de quaisquer dependências e interoperação entre diferentes componentes de código e diferentes funções de aplicativo.</p>
+
+<p class = "p1">Em relação aos exemplos específicos de falhas lógicas que descrevemos, uma série de lições individuais podem ser aprendidas.</p>
+
+<p class = "p1">Esteja constantemente ciente de que os usuários controlam todos os aspectos de cada solicitação (consulte o Capítulo 1).</p>
+
+<p class = "p1">Eles podem acessar funções de vários estágios em qualquer sequência.</p>
+
+<p class = "p1">Eles podem enviar parâmetros que o aplicativo não solicitou.</p>
+
+<p class = "p1">Eles podem omitir certos parâmetros, não apenas interferir com os valores dos parâmetros.</p>
+
+<p class = "p1">Dirija todas as decisões relacionadas à identidade e ao status de um usuário em sua sessão (consulte o Capítulo 8).</p>
+
+<p class = "p1">Não faça suposições sobre os privilégios do usuário com base em qualquer outro recurso da solicitação, incluindo o fato de que ela ocorre.</p>
+
+<p class = "p1">Ao implementar funções que atualizam os dados da sessão com base na entrada recebida do usuário, ou ações realizadas pelo usuário, considere cuidadosamente qualquer impacto que os dados atualizados possam ter em outra funcionalidade dentro do aplicativo.  Esteja ciente de que efeitos colaterais inesperados podem ocorrer em funcionalidades totalmente não relacionadas escritas por um programador diferente ou mesmo por uma equipe de desenvolvimento diferente.</p>
+
+<p class = "p1">Se uma função de pesquisa puder indexar dados confidenciais que alguns usuários não estão autorizados a acessar, certifique-se de que a função não forneça nenhum meio para esses usuários inferirem informações com base nos resultados da pesquisa.  Se apropriado, manter vários índices de pesquisa com base em diferentes níveis de privilégio do usuário ou realizar pesquisas dinâmicas de repositórios de informações com os privilégios do usuário solicitante.</p>
+
+<p class = "p1">Seja extremamente cauteloso ao implementar qualquer funcionalidade que permita a qualquer usuário excluir itens de uma trilha de auditoria.  Além disso, considere o possível impacto de um usuário com altos privilégios criar outro usuário com o mesmo nível de privilégio em aplicativos altamente auditados e modelos de autorização dupla.</p>
+
+<p class = "p1">Ao realizar verificações com base em limites e limites numéricos de negócios, execute canonicalização estrita e validação de dados em todas as entradas do usuário antes de processá-las.  Se não forem esperados números negativos, rejeite explicitamente solicitações que os contêm.</p>
+
+<p class = "p1">Ao implementar descontos com base nos volumes de pedidos, certifique-se de que os pedidos sejam finalizados antes de realmente aplicar o desconto.</p>
+
+<p class = "p1">Ao escapar de dados fornecidos pelo usuário antes de passar para um componente de aplicativo potencialmente vulnerável, sempre certifique-se de escapar o caractere de escape em si, ou todo o mecanismo de validação pode ser quebrado.</p>
+
+<p class = "p1">Sempre use o armazenamento apropriado para manter quaisquer dados relacionados a um usuário individual - seja na sessão ou no perfil do usuário.</p>
+
+<p class = "p1">Atacar a lógica de um aplicativo envolve uma mistura de sondagem sistemática e pensamento lateral.</p>
+
+<p class = "p1">Descrevemos várias verificações importantes que você sempre deve realizar para testar o comportamento do aplicativo em resposta a uma entrada inesperada.</p>
+
+<p class = "p1">Isso inclui a remoção de parâmetros de solicitações, o uso de navegação forçada para acessar funções fora da sequência e o envio de parâmetros a diferentes locais no aplicativo.</p>
+
+<p class = "p1">Freqüentemente, a forma como um aplicativo responde a essas ações aponta para alguma suposição defeituosa que você pode violar, com efeitos maliciosos.</p>
+
+<p class = "p1">Além desses testes básicos, o desafio mais importante ao sondar por falhas lógicas é tentar entrar na mente dos desenvolvedores.  Você precisa entender o que eles estavam tentando alcançar, que suposições provavelmente fizeram, que atalhos provavelmente tomaram e que erros podem ter cometido.</p>
+
+<p class = "p1">Imagine que você esteja trabalhando em um prazo apertado, preocupando-se principalmente com a funcionalidade em vez da segurança, tentando adicionar uma nova função a uma base de código existente ou usando APIs mal documentadas e escritas por outra pessoa.  Nessa situação, o que você erraria e como isso poderia ser explorado?</p>
+</section>
+</body>
+</html>
